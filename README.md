@@ -16,7 +16,6 @@ Place the "SerpentsHand.dll" file in your sm_plugins folder.
 * A custom spawn location
 * Commands to spawn individual members and a squad manually
 * Announcements for a squad of Serpent's Hand spawning, as well as one for chaos spawning to let the players know which one spawned
-* Unique ways for Serpent's Hand to work with SCPs, including utilizing 106's ability to walk through doors to their advantage
 * Disables Chaos winning with SCPs (can be changed in configs)
 
 # Configs
