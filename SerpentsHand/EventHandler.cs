@@ -79,7 +79,7 @@ namespace SerpentsHand
 			int SHAlive = SerpentsHand.shPlayers.Count;
 
 			if (SHAlive > 0 && ScpAlive > 0 || (SHAlive > 0 && MTFAlive < 1 && CiAlive < 1 && ScpAlive < 1 && DClassAlive < 1 && ScientistsAlive < 1))
-				ev.Status = ROUND_END_STATUS.ON_GOING;
+				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
 			if ((CiAlive > 0 && ScpAlive > 0 && !plugin.GetConfigBool("sh_ci_win_with_scp")) || (SHAlive > 0 && (MTFAlive > 0 || CiAlive > 0 || DClassAlive > 0 || ScientistsAlive > 0)))
 				ev.Status = ROUND_END_STATUS.ON_GOING;
 		}
