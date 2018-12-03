@@ -6,7 +6,7 @@ A plugin that adds a new class to your server named "Serpent's Hand".
 
 **[Smod2](https://github.com/Grover-c13/Smod2) must be installed for this to work.**
 
-Place the "PlayerXP.dll" file in your sm_plugins folder.
+Place the "SerpentsHand.dll" file in your sm_plugins folder.
 
 # Features
 * Uses the tutorial model for this class
