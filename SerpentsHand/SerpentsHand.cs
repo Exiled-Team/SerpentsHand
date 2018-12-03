@@ -43,7 +43,7 @@ namespace SerpentsHand
 			AddEventHandlers(new EventHandler(this));
 
 			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_chance", 50, Smod2.Config.SettingType.NUMERIC, true, ""));
-			AddConfig(new Smod2.Config.ConfigSetting("sh_entry_announcement", "", Smod2.Config.SettingType.STRING, true, ""));
+			AddConfig(new Smod2.Config.ConfigSetting("sh_entry_announcement", "serpents hand entered", Smod2.Config.SettingType.STRING, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_items", "20,26,12,14,10", Smod2.Config.SettingType.STRING, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_ci_entry_announcement", "", Smod2.Config.SettingType.STRING, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_friendly_fire", false, Smod2.Config.SettingType.BOOL, true, ""));
