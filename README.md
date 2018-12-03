@@ -22,7 +22,7 @@ Place the "PlayerXP.dll" file in your sm_plugins folder.
 | :-------------: | :---------: | :------: | :--------- |
 | sh_spawn_chance | 1-100 | 50 | The percent chance for a squad of Serpent's Hand to spawn instead of chaos. |
 | sh_entry_announcement | String | serpents hand entered | The announcement to be played when Serpent's Hand are spawned, sentences must be written exactly to work with CASSIE's available phrases (Ex. serpents hand . number two hundred and thirty two), all phrases can be found [here](https://github.com/Cyanox62/CustomAnnouncements/wiki/CASSIE-Phrases). |
-| sh_ci_entry_announcement | String | | The annoumcement to be played when Chaos spawn instead of Serpent's Hand, same rules as the other announcement config apply |
+| sh_ci_entry_announcement | String | | The annoumcement to be played when Chaos spawn instead of Serpent's Hand, same rules as the other announcement config apply. |
 | sh_spawn_items | List | 20,26,12,14,10 | The item IDs that Serpent's Hand members should spawn with. A full list of item IDs can be found [here](https://github.com/Cyanox62/SerpentsHand/wiki/Item-IDs). |
 | sh_friendly_fire | Boolean | False | Should SCPs and Serpent's Hand be able to hurt eachother. This includes 106's pocket dimension, with this disabled, Serpent's Hand members will never die no matter which exit they take in the Pocket Dimension. **Note: Having AdminToolbox installed will prevent Serpent's Hand members from hurting eachother regardless of this config option.** |
 | sh_teleport_to_106 | Boolean | True | When a Serpent's hand member escapes the Pocket Dimension, should they teleport to 106 instead of spawning at his chamber. |
