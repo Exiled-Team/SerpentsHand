@@ -1,6 +1,6 @@
 # SerpentsHand
 
-A plugin that adds a new class to your server named "Serpent's Hand".
+A plugin that adds a new class to your server named "Serpent's Hand". This class works with the SCPs to eliminate all other beings.
 
 # Installation
 
