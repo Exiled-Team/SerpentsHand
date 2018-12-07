@@ -1,14 +1,18 @@
 ﻿using System.Threading;
 using Smod2.API;
+using System.Collections.Generic;
 
 namespace SerpentsHand
 {
 	class SpawnDelay
 	{
-		public SpawnDelay(Player player, int delay)
+		public SpawnDelay(List<Player> Playerlist, int delay)
 		{
 			Thread.Sleep(delay);
-			SerpentsHand.SpawnPlayer(player);
+			foreach (Player player in Playerlist)
+			{
+				SerpentsHand.SpawnPlayer(player);
+			}
 		}
 	}
 }

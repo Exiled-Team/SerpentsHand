@@ -29,12 +29,9 @@ namespace SerpentsHand
 			if (ev.SpawnChaos)
 			{
 				if (rand.Next(0, 101) <= plugin.GetConfigInt("sh_spawn_chance"))
-				{
-					foreach (Player player in ev.PlayerList)
-					{
-						Thread SpawnDelay = new Thread(new ThreadStart(() => new SpawnDelay(player, 100)));
-						SpawnDelay.Start();
-					}
+				{ 
+					Thread SpawnDelay = new Thread(new ThreadStart(() => new SpawnDelay(ev.PlayerList, 100)));
+					SpawnDelay.Start();
 					plugin.pluginManager.Server.Map.AnnounceCustomMessage(plugin.GetConfigString("sh_entry_announcement"));
 				}
 				else
