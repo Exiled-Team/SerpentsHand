@@ -68,17 +68,28 @@ namespace SerpentsHand
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
-			int MTFAlive = SerpentsHand.CountRoles(Team.NINETAILFOX);
-			int CiAlive = SerpentsHand.CountRoles(Team.CHAOS_INSURGENCY);
-			int ScpAlive = SerpentsHand.CountRoles(Team.SCP);
-			int DClassAlive = SerpentsHand.CountRoles(Team.CLASSD);
-			int ScientistsAlive = SerpentsHand.CountRoles(Team.SCIENTISTS);
-			int SHAlive = SerpentsHand.shPlayers.Count;
+			bool MTFAlive = (SerpentsHand.CountRoles(Team.NINETAILFOX) > 0) ? true : false;
+			bool CiAlive = (SerpentsHand.CountRoles(Team.CHAOS_INSURGENCY) > 0) ? true : false;
+			bool ScpAlive = (SerpentsHand.CountRoles(Team.SCP ) > 0) ? true : false;
+			bool DClassAlive = (SerpentsHand.CountRoles(Team.CLASSD) > 0) ? true : false;
+			bool ScientistsAlive = (SerpentsHand.CountRoles(Team.SCIENTISTS) > 0) ? true : false;
+			bool SHAlive = (SerpentsHand.shPlayers.Count > 0) ? true : false;
 
-			if (SHAlive > 0 && ScpAlive > 0 || (SHAlive > 0 && MTFAlive < 1 && CiAlive < 1 && ScpAlive < 1 && DClassAlive < 1 && ScientistsAlive < 1))
-				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
-			if ((CiAlive > 0 && ScpAlive > 0 && !plugin.GetConfigBool("sh_ci_win_with_scp")) || (SHAlive > 0 && (MTFAlive > 0 || CiAlive > 0 || DClassAlive > 0 || ScientistsAlive > 0)))
+			if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
 				ev.Status = ROUND_END_STATUS.ON_GOING;
+			else if (CiAlive && (MTFAlive || (DClassAlive && ScpAlive) || ScientistsAlive || SHAlive || DClassAlive))
+				ev.Status = ROUND_END_STATUS.ON_GOING;
+			else if (ScpAlive && (MTFAlive || DClassAlive || ScientistsAlive))
+				ev.Status = ROUND_END_STATUS.ON_GOING;
+			else if (SHAlive && ScpAlive && !MTFAlive && !CiAlive && !DClassAlive && !ScientistsAlive)
+				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
+			else if (CiAlive && ScpAlive && !plugin.GetConfigBool("sh_ci_win_with_scp"))
+				ev.Status = ROUND_END_STATUS.ON_GOING;
+
+			/*if (SHAlive > 0 && ScpAlive > 0 || (SHAlive > 0 && MTFAlive < 1 && CiAlive < 1 && ScpAlive < 1 && DClassAlive < 1 && ScientistsAlive < 1))
+				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
+			else if ((CiAlive > 0 && ScpAlive > 0 && !plugin.GetConfigBool("sh_ci_win_with_scp")) || (SHAlive > 0 && (MTFAlive > 0 || CiAlive > 0 || DClassAlive > 0 || ScientistsAlive > 0)))
+				ev.Status = ROUND_END_STATUS.ON_GOING;*/
 		}
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
