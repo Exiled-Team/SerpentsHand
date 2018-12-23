@@ -29,6 +29,7 @@ Place the "SerpentsHand.dll" file in your sm_plugins folder.
 | sh_teleport_to_106 | Boolean | True | When a Serpent's hand member escapes the Pocket Dimension, should they teleport to 106 instead of spawning at his chamber. |
 | sh_ci_win_with_scp | Boolean | False | Should the round end with SCPs and Chaos left. |
 | sh_health | Number | 120 | How much health Serpent's Hand members will have. |
+| sh_max_squad | Number | 8 | The maximum number of Serpent's Hand members allowed to spawn. |
 
 # Commands
 |     Command    | Value Type | Description |
