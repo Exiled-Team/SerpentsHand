@@ -25,14 +25,7 @@ namespace SerpentsHand
 		public static List<int> shItemList = new List<int>();
 		public static List<string> shPlayersInPocket = new List<string>();
 
-		public override void OnEnable()
-		{
-			foreach (string str in GetConfigString("sh_spawn_items").Split(','))
-				if (!Int32.TryParse(str, out int a))
-					Info("Error: '" + str + "' is not a valid item id.");
-				else
-					shItemList.Add(a);
-		}
+		public override void OnEnable() {}
 
 		public override void OnDisable() {}
 
@@ -50,6 +43,7 @@ namespace SerpentsHand
 			AddConfig(new Smod2.Config.ConfigSetting("sh_teleport_to_106", true, Smod2.Config.SettingType.BOOL, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_ci_win_with_scp", false, Smod2.Config.SettingType.BOOL, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_health", 120, Smod2.Config.SettingType.NUMERIC, true, ""));
+			AddConfig(new Smod2.Config.ConfigSetting("sh_max_squad", 8, Smod2.Config.SettingType.NUMERIC, true, ""));
 
 			AddCommands(new string[] { "spawnsh" }, new SpawnCommand(this));
 			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad(this));
@@ -146,7 +140,6 @@ namespace SerpentsHand
 
 			foreach (Item item in player.GetInventory())
 				item.Remove();
-
 			foreach (int a in shItemList)
 				player.GiveItem((ItemType)a);
 

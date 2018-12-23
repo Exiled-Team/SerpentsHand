@@ -22,21 +22,29 @@ namespace SerpentsHand
 		{
 			SerpentsHand.shPlayers.Clear();
 			SerpentsHand.shPlayersInPocket.Clear();
+
+			foreach (string str in plugin.GetConfigString("sh_spawn_items").Split(','))
+				if (!int.TryParse(str, out int a))
+					plugin.Info("Error: '" + str + "' is not a valid item id.");
+				else
+					SerpentsHand.shItemList.Add(a);
 		}
 
 		public void OnTeamRespawn(TeamRespawnEvent ev)
 		{
 			if (ev.SpawnChaos)
 			{
-				if (rand.Next(0, 101) <= plugin.GetConfigInt("sh_spawn_chance"))
+				if (rand.Next(1, 101) <= plugin.GetConfigInt("sh_spawn_chance"))
 				{ 
-					Thread SpawnDelay = new Thread(new ThreadStart(() => new SpawnDelay(ev.PlayerList, 100)));
+					Thread SpawnDelay = new Thread(new ThreadStart(() => new SpawnDelay(plugin, ev.PlayerList, 100)));
 					SpawnDelay.Start();
 					plugin.pluginManager.Server.Map.AnnounceCustomMessage(plugin.GetConfigString("sh_entry_announcement"));
 				}
 				else
 				{
-					plugin.pluginManager.Server.Map.AnnounceCustomMessage(plugin.GetConfigString("sh_ci_entry_announcement"));
+					string ann = plugin.GetConfigString("sh_ci_entry_announcement");
+					if (ann != "")
+						plugin.pluginManager.Server.Map.AnnounceCustomMessage(ann);
 				}
 			}
 		}
@@ -85,11 +93,6 @@ namespace SerpentsHand
 				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
 			else if (CiAlive && ScpAlive && !plugin.GetConfigBool("sh_ci_win_with_scp"))
 				ev.Status = ROUND_END_STATUS.ON_GOING;
-
-			/*if (SHAlive > 0 && ScpAlive > 0 || (SHAlive > 0 && MTFAlive < 1 && CiAlive < 1 && ScpAlive < 1 && DClassAlive < 1 && ScientistsAlive < 1))
-				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
-			else if ((CiAlive > 0 && ScpAlive > 0 && !plugin.GetConfigBool("sh_ci_win_with_scp")) || (SHAlive > 0 && (MTFAlive > 0 || CiAlive > 0 || DClassAlive > 0 || ScientistsAlive > 0)))
-				ev.Status = ROUND_END_STATUS.ON_GOING;*/
 		}
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
