@@ -78,7 +78,7 @@ namespace SerpentsHand
 		{
 			bool MTFAlive = (SerpentsHand.CountRoles(Team.NINETAILFOX) > 0) ? true : false;
 			bool CiAlive = (SerpentsHand.CountRoles(Team.CHAOS_INSURGENCY) > 0) ? true : false;
-			bool ScpAlive = (SerpentsHand.CountRoles(Team.SCP ) > 0) ? true : false;
+			bool ScpAlive = (SerpentsHand.CountRoles(Team.SCP) > 0) ? true : false;
 			bool DClassAlive = (SerpentsHand.CountRoles(Team.CLASSD) > 0) ? true : false;
 			bool ScientistsAlive = (SerpentsHand.CountRoles(Team.SCIENTISTS) > 0) ? true : false;
 			bool SHAlive = (SerpentsHand.shPlayers.Count > 0) ? true : false;
