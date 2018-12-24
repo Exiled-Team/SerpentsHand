@@ -129,6 +129,14 @@ namespace SerpentsHand
 			return null;
 		}
 
+		public static int GetItemCount(Player player)
+		{
+			int count = 0;
+			foreach (Item item in player.GetInventory())
+				count++;
+			return count;
+		}
+
 		public static void SpawnPlayer(Player player)
 		{
 			player.ChangeRole(Role.TUTORIAL);
@@ -141,7 +149,10 @@ namespace SerpentsHand
 			foreach (Item item in player.GetInventory())
 				item.Remove();
 			foreach (int a in shItemList)
-				player.GiveItem((ItemType)a);
+			{
+				if (GetItemCount(player) < shItemList.Count)
+					player.GiveItem((ItemType)a);
+			}
 
 			shPlayers.Add(player.SteamId);
 		}
