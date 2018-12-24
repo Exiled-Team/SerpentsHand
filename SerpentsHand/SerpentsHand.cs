@@ -150,7 +150,7 @@ namespace SerpentsHand
 				item.Remove();
 			foreach (int a in shItemList)
 			{
-				if (GetItemCount(player) < shItemList.Count)
+				if (GetItemCount(player) <= shItemList.Count)
 					player.GiveItem((ItemType)a);
 			}
 
