@@ -7,13 +7,6 @@ namespace SerpentsHand
 {
 	class SpawnSquad : ICommandHandler
 	{
-		private Plugin plugin;
-
-		public SpawnSquad(Plugin plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Spawns a Serpent's Hand squad.";
@@ -30,7 +23,7 @@ namespace SerpentsHand
 			{
 				if (Int32.TryParse(args[0], out int a))
 				{
-					SerpentsHand.SpawnSquad(a);
+					Plugin.SpawnSquad(a);
 				}
 				else
 				{
@@ -39,9 +32,9 @@ namespace SerpentsHand
 			}
 			else
 			{
-				SerpentsHand.SpawnSquad(5);
+				Plugin.SpawnSquad(5);
 			}
-			plugin.pluginManager.Server.Map.AnnounceCustomMessage(plugin.GetConfigString("sh_entry_announcement"));
+			PluginManager.Manager.Server.Map.AnnounceCustomMessage(Plugin.shAnnouncement);
 			return new string[] { "Spawned squad." };
 		}
 	}

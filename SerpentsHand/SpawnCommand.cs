@@ -6,13 +6,6 @@ namespace SerpentsHand
 {
 	class SpawnCommand : ICommandHandler
 	{
-		private Plugin plugin;
-
-		public SpawnCommand(Plugin plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Spawns a player as Serpents Hand.";
@@ -28,7 +21,7 @@ namespace SerpentsHand
 			if (args.Length > 0)
 			{
 				string id = "";
-				Player cPlayer = SerpentsHand.GetPlayer(args[0], out cPlayer);
+				Player cPlayer = Plugin.GetPlayer(args[0], out cPlayer);
 				if (cPlayer != null)
 				{
 					id = cPlayer.SteamId;
@@ -42,10 +35,10 @@ namespace SerpentsHand
 					return new string[] { "Error: invalid player id." };
 				}
 
-				Player tPlayer = SerpentsHand.FindPlayer(id);
+				Player tPlayer = Plugin.FindPlayer(id);
 				if (tPlayer != null)
 				{
-					SerpentsHand.SpawnPlayer(tPlayer);
+					Plugin.SpawnPlayer(tPlayer);
 					return new string[] { "Spawned player \"" + tPlayer.Name + "\" as Serpent's Hand." };
 				}
 			}

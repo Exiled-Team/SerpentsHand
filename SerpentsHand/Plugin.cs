@@ -4,6 +4,7 @@ using System;
 using Smod2.API;
 using System.Collections.Generic;
 using System.Threading;
+using scp4aiur;
 
 namespace SerpentsHand
 {
@@ -17,13 +18,29 @@ namespace SerpentsHand
 	SmodMinor = 0,
 	SmodRevision = 0
 	)]
-	public class SerpentsHand : Plugin
+	public class Plugin : Smod2.Plugin
     {
-		private static Vector shSpawnPos = new Vector(0, 1001, 8);
-		private static Plugin plugin;
+		public static Smod2.Plugin instance;
+
+		public static Random rand = new Random();
+
+		public static List<string> shPlayersInPocket = new List<string>();
 		public static List<string> shPlayers = new List<string>();
 		public static List<int> shItemList = new List<int>();
-		public static List<string> shPlayersInPocket = new List<string>();
+
+		private static Vector shSpawnPos = new Vector(0, 1001, 8);
+
+		public static string spawnItems;
+		public static string ciAnnouncement;
+		public static string shAnnouncement;
+
+		public static int spawnChance;
+		public static int shMaxSquad;
+		public static int shHealth;
+
+		public static bool friendlyFire;
+		public static bool ciWinWithSCP;
+		public static bool teleportTo106;
 
 		public override void OnEnable() {}
 
@@ -31,9 +48,11 @@ namespace SerpentsHand
 
 		public override void Register()
 		{
-			plugin = this;
+			instance = this;
 
-			AddEventHandlers(new EventHandler(this));
+			AddEventHandlers(new EventHandler());
+
+			Timing.Init(this);
 
 			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_chance", 50, Smod2.Config.SettingType.NUMERIC, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_entry_announcement", "serpents hand entered", Smod2.Config.SettingType.STRING, true, ""));
@@ -45,8 +64,8 @@ namespace SerpentsHand
 			AddConfig(new Smod2.Config.ConfigSetting("sh_health", 120, Smod2.Config.SettingType.NUMERIC, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_max_squad", 8, Smod2.Config.SettingType.NUMERIC, true, ""));
 
-			AddCommands(new string[] { "spawnsh" }, new SpawnCommand(this));
-			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad(this));
+			AddCommands(new string[] { "spawnsh" }, new SpawnCommand());
+			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad());
 		}
 
 		public static int LevenshteinDistance(string s, string t)
@@ -129,12 +148,19 @@ namespace SerpentsHand
 			return null;
 		}
 
-		public static int GetItemCount(Player player)
+		public static void TeleportTo106(Player Player)
 		{
-			int count = 0;
-			foreach (Item item in player.GetInventory())
-				count++;
-			return count;
+			foreach (Player player in PluginManager.Manager.Server.GetPlayers())
+			{
+				if (player.TeamRole.Role == Role.SCP_106)
+				{
+					Timing.Next(() =>
+					{
+						Player.Teleport(player.GetPosition());
+					});
+					break;
+				}
+			}
 		}
 
 		public static void SpawnPlayer(Player player)
@@ -143,7 +169,7 @@ namespace SerpentsHand
 			player.SetAmmo(AmmoType.DROPPED_5, 250);
 			player.SetAmmo(AmmoType.DROPPED_7, 250);
 			player.SetAmmo(AmmoType.DROPPED_9, 250);
-			player.SetHealth(plugin.GetConfigInt("sh_health"));
+			player.SetHealth(shHealth);
 			player.Teleport(shSpawnPos);
 
 			foreach (Item item in player.GetInventory())
@@ -155,6 +181,25 @@ namespace SerpentsHand
 			}
 
 			shPlayers.Add(player.SteamId);
+		}
+
+		public static void SpawnSHSquad(List<Player> Playerlist)
+		{
+			List<Player> SHPlayers = new List<Player>();
+			List<Player> CIPlayers = Playerlist;
+			for (int i = 0; i < shMaxSquad; i++)
+			{
+				Player player = CIPlayers[Plugin.rand.Next(CIPlayers.Count)];
+				SHPlayers.Add(player);
+				CIPlayers.Remove(player);
+			}
+
+			foreach (Player player in SHPlayers)
+				SpawnPlayer(player);
+			foreach (Player player in CIPlayers)
+				player.ChangeRole(Role.SPECTATOR);
+
+			PluginManager.Manager.Server.Map.AnnounceCustomMessage(shAnnouncement);
 		}
 
 		public static int CountRoles(Role role)
@@ -198,17 +243,12 @@ namespace SerpentsHand
 			}
 		}
 
-		public static void TeleportTo106(Player Player)
+		public static int GetItemCount(Player player)
 		{
-			foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-			{
-				if (player.TeamRole.Role == Role.SCP_106)
-				{
-					Thread TeleportDelay = new Thread(new ThreadStart(() => new TeleportDelay(Player, player, 100)));
-					TeleportDelay.Start();
-					break;
-				}
-			}
+			int count = 0;
+			foreach (Item item in player.GetInventory())
+				count++;
+			return count;
 		}
 	}
 }
