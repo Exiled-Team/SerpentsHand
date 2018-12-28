@@ -3,8 +3,10 @@ using Smod2.Attributes;
 using System;
 using Smod2.API;
 using System.Collections.Generic;
+using UnityEngine;
 using System.Threading;
 using scp4aiur;
+using Object = UnityEngine.Object;
 
 namespace SerpentsHand
 {
@@ -22,7 +24,7 @@ namespace SerpentsHand
     {
 		public static Smod2.Plugin instance;
 
-		public static Random rand = new Random();
+		public static System.Random rand = new System.Random();
 
 		public static List<string> shPlayersInPocket = new List<string>();
 		public static List<string> shPlayers = new List<string>();
@@ -165,20 +167,17 @@ namespace SerpentsHand
 
 		public static void SpawnPlayer(Player player)
 		{
-			player.ChangeRole(Role.TUTORIAL);
+			player.ChangeRole(Role.TUTORIAL, false);
 			player.SetAmmo(AmmoType.DROPPED_5, 250);
 			player.SetAmmo(AmmoType.DROPPED_7, 250);
 			player.SetAmmo(AmmoType.DROPPED_9, 250);
 			player.SetHealth(shHealth);
 			player.Teleport(shSpawnPos);
 
-			foreach (Item item in player.GetInventory())
+			foreach (Smod2.API.Item item in player.GetInventory())
 				item.Remove();
 			foreach (int a in shItemList)
-			{
-				if (GetItemCount(player) <= shItemList.Count)
-					player.GiveItem((ItemType)a);
-			}
+				player.GiveItem((ItemType)a);
 
 			shPlayers.Add(player.SteamId);
 		}
@@ -211,7 +210,7 @@ namespace SerpentsHand
 			return count;
 		}
 
-		public static int CountRoles(Team team)
+		public static int CountRoles(Smod2.API.Team team)
 		{
 			int count = 0;
 			foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
@@ -224,10 +223,9 @@ namespace SerpentsHand
 		{
 			List<Player> spec = new List<Player>();
 			List<Player> PlayerList = PluginManager.Manager.Server.GetPlayers();
-			Random rand = new Random();
 
 			foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-				if (player.TeamRole.Team == Team.SPECTATOR)
+				if (player.TeamRole.Team == Smod2.API.Team.SPECTATOR)
 					spec.Add(player);
 
 			int spawnCount = 1;
@@ -246,7 +244,7 @@ namespace SerpentsHand
 		public static int GetItemCount(Player player)
 		{
 			int count = 0;
-			foreach (Item item in player.GetInventory())
+			foreach (Smod2.API.Item item in player.GetInventory())
 				count++;
 			return count;
 		}

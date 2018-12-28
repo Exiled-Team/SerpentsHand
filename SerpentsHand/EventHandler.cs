@@ -67,8 +67,8 @@ namespace SerpentsHand
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-			if (((Plugin.shPlayers.Contains(ev.Player.SteamId) && (ev.Attacker.TeamRole.Team == Team.SCP || ev.DamageType == DamageType.POCKET)) ||
-				(Plugin.shPlayers.Contains(ev.Attacker.SteamId) && ev.Player.TeamRole.Team == Team.SCP) ||
+			if (((Plugin.shPlayers.Contains(ev.Player.SteamId) && (ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP || ev.DamageType == DamageType.POCKET)) ||
+				(Plugin.shPlayers.Contains(ev.Attacker.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
 				(Plugin.shPlayers.Contains(ev.Player.SteamId) && Plugin.shPlayers.Contains(ev.Attacker.SteamId) &&
 				ev.Player.SteamId != ev.Attacker.SteamId)) && !Plugin.friendlyFire)
 			{
@@ -92,11 +92,11 @@ namespace SerpentsHand
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
-			bool MTFAlive = Plugin.CountRoles(Team.NINETAILFOX) > 0;
-			bool CiAlive = Plugin.CountRoles(Team.CHAOS_INSURGENCY) > 0;
-			bool ScpAlive = Plugin.CountRoles(Team.SCP) > 0;
-			bool DClassAlive = Plugin.CountRoles(Team.CLASSD) > 0;
-			bool ScientistsAlive = Plugin.CountRoles(Team.SCIENTISTS) > 0;
+			bool MTFAlive = Plugin.CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
+			bool CiAlive = Plugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
+			bool ScpAlive = Plugin.CountRoles(Smod2.API.Team.SCP) > 0;
+			bool DClassAlive = Plugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
+			bool ScientistsAlive = Plugin.CountRoles(Smod2.API.Team.SCIENTISTS) > 0;
 			bool SHAlive = Plugin.shPlayers.Count > 0;
 
 			if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
