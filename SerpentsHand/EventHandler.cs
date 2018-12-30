@@ -49,7 +49,7 @@ namespace SerpentsHand
 		{
 			if (ev.SpawnChaos)
 			{
-				if (Plugin.rand.Next(1, 101) <= Plugin.spawnChance)
+				if (Plugin.rand.Next(1, 101) <= Plugin.spawnChance && ev.PlayerList.Count > 0)
 				{
 					Timing.InTicks(() =>
 					{
