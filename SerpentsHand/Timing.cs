@@ -1,4 +1,4 @@
-﻿// This was made by probe4aiur on GitHub. You can access the latest version here: 
+// This was made by probe4aiur on GitHub. You can access the latest version here: 
 // https://gist.github.com/probe4aiur/fc74510ea216d30cbb0b6b884c4ba84c
 
 using UnityEngine;
@@ -97,7 +97,6 @@ namespace scp4aiur
 
         private abstract class QueueItem
         {
-            private readonly Thread runThread;
             private readonly string name;
 
             protected Action action;
@@ -107,18 +106,11 @@ namespace scp4aiur
             protected QueueItem(string jobName)
             {
                 name = jobName;
-
-                runThread = new Thread(SafeRun);
             }
 
             public abstract bool RunThisTick();
 
             public void Run()
-            {
-                runThread.Start();
-            }
-
-            private void SafeRun()
             {
                 try
                 {
