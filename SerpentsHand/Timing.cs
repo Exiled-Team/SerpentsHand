@@ -8,14 +8,13 @@ using Smod2.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace scp4aiur
 {
     /// <summary>
     /// Module for easy and efficient frame-based timers
     /// </summary>
-    internal class Timing : IEventHandlerUpdate
+    internal class Timing : IEventHandlerUpdate, IEventHandlerRoundRestart
     {
         private static Action<string> log;
 
@@ -44,15 +43,6 @@ namespace scp4aiur
         }
 
         /// <summary>
-        /// Queues a job for the next tick.
-        /// </summary>
-        /// <param name="action">Job to execute.</param>
-        public static int Next(Action action)
-        {
-            return Queue(new NextTickQueue(action));
-        }
-
-        /// <summary>
         /// Removes a job from the queue.
         /// </summary>
         /// <param name="id">ID of the job to remove.</param>
@@ -62,13 +52,22 @@ namespace scp4aiur
         }
 
         /// <summary>
+        /// Queues a job for the next tick.
+        /// </summary>
+        /// <param name="action">Job to execute.</param>
+        public static int Next(Action action, bool persist = false)
+        {
+            return Queue(new NextTickQueue(action, persist));
+        }
+
+        /// <summary>
         /// Queues a job to run in a certain amount of ticks.
         /// </summary>
         /// <param name="action">Job to execute.</param>
         /// <param name="ticks">Number of ticks to wait.</param>
-        public static int InTicks(Action action, int ticks)
+        public static int InTicks(Action action, int ticks, bool persist = false)
         {
-            return Queue(new AfterTicksQueue(action, ticks));
+            return Queue(new AfterTicksQueue(action, ticks, persist));
         }
 
         /// <summary>
@@ -76,9 +75,9 @@ namespace scp4aiur
         /// </summary>
         /// <param name="action">Job to execute.</param>
         /// <param name="seconds">Number of seconds to wait.</param>
-        public static int In(Action<float> action, float seconds)
+        public static int In(Action<float> action, float seconds, bool persist = false)
         {
-            return Queue(new TimerQueue(action, seconds));
+            return Queue(new TimerQueue(action, seconds, persist));
         }
 
         /// <summary>
@@ -95,6 +94,19 @@ namespace scp4aiur
             }
         }
 
+        /// <summary>
+        /// <para>DO NOT USE</para>
+        /// <para>This is an event for Smod2 and as such should not be called by any external code </para>
+        /// </summary>
+        /// <param name="ev"></param>
+        public void OnRoundRestart(RoundRestartEvent ev)
+        {
+            foreach (KeyValuePair<int, QueueItem> job in jobs.Where(x => !x.Value.RoundPersist).ToArray())
+            {
+                jobs.Remove(job.Key);
+            }
+        }
+
         private abstract class QueueItem
         {
             private readonly string name;
@@ -102,9 +114,11 @@ namespace scp4aiur
             protected Action action;
 
             public Exception Exception { get; protected set; }
+            public bool RoundPersist { get; }
 
-            protected QueueItem(string jobName)
+            protected QueueItem(bool persist, string jobName)
             {
+                RoundPersist = persist;
                 name = jobName;
             }
 
@@ -125,7 +139,7 @@ namespace scp4aiur
 
         private class NextTickQueue : QueueItem
         {
-            public NextTickQueue(Action jobAction) : base("next-tick")
+            public NextTickQueue(Action jobAction, bool persist) : base(persist, "next-tick")
             {
                 action = jobAction;
             }
@@ -140,7 +154,7 @@ namespace scp4aiur
         {
             private int ticksLeft;
 
-            public AfterTicksQueue(Action jobAction, int ticks) : base("after-ticks")
+            public AfterTicksQueue(Action jobAction, int ticks, bool persist) : base(persist, "after-ticks")
             {
                 action = jobAction;
                 ticksLeft = ticks;
@@ -156,7 +170,7 @@ namespace scp4aiur
         {
             private float timeLeft;
 
-            public TimerQueue(Action<float> jobAction, float time) : base("timer")
+            public TimerQueue(Action<float> jobAction, float time, bool persist) : base(persist, "timer")
             {
                 action = () => jobAction(timeLeft);
                 timeLeft = time;
