@@ -3,10 +3,7 @@ using Smod2.Attributes;
 using System;
 using Smod2.API;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Threading;
 using scp4aiur;
-using Object = UnityEngine.Object;
 
 namespace SerpentsHand
 {

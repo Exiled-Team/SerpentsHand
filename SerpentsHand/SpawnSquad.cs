@@ -1,6 +1,5 @@
 ﻿using Smod2;
 using Smod2.Commands;
-using Smod2.API;
 using System;
 
 namespace SerpentsHand
