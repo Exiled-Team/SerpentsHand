@@ -4,15 +4,17 @@ using Smod2.EventSystem.Events;
 using Smod2.EventHandlers;
 using Smod2.API;
 using scp4aiur;
+using System.Collections.Generic;
 
 namespace SerpentsHand
 {
 	class EventHandler : IEventHandlerRoundStart, IEventHandlerTeamRespawn, IEventHandlerPocketDimensionEnter, IEventHandlerPocketDimensionDie,
-		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers
+		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers,
+		IEventHandlerSetRole
 	{
 		public void SetConfigs()
 		{
-			Plugin.spawnItems = Plugin.instance.GetConfigString("sh_spawn_items");
+			Plugin.shItemList = new List<int>(Plugin.instance.GetConfigIntList("sh_spawn_items"));
 			Plugin.shAnnouncement = Plugin.instance.GetConfigString("sh_entry_announcement");
 			Plugin.ciAnnouncement = Plugin.instance.GetConfigString("sh_ci_entry_announcement");
 
@@ -34,12 +36,15 @@ namespace SerpentsHand
 		{
 			Plugin.shPlayers.Clear();
 			Plugin.shPlayersInPocket.Clear();
+		}
 
-			foreach (string str in Plugin.spawnItems.Split(','))
-				if (!int.TryParse(str, out int a))
-					PluginManager.Manager.Logger.Info(Plugin.instance.Details.id, "Error: '" + str + "' is not a valid item id.");
-				else
-					Plugin.shItemList.Add(a);
+		public void OnSetRole(PlayerSetRoleEvent ev)
+		{
+			if (Plugin.shPlayers.Contains(ev.Player.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL)
+			{
+				ev.Items.Clear();
+				foreach (int a in Plugin.shItemList) ev.Items.Add((ItemType)a);
+			}
 		}
 
 		public void OnTeamRespawn(TeamRespawnEvent ev)

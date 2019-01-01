@@ -4,6 +4,7 @@ using System;
 using Smod2.API;
 using System.Collections.Generic;
 using scp4aiur;
+using System.Linq;
 
 namespace SerpentsHand
 {
@@ -29,7 +30,6 @@ namespace SerpentsHand
 
 		private static Vector shSpawnPos = new Vector(0, 1001, 8);
 
-		public static string spawnItems;
 		public static string ciAnnouncement;
 		public static string shAnnouncement;
 
@@ -55,7 +55,14 @@ namespace SerpentsHand
 
 			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_chance", 50, Smod2.Config.SettingType.NUMERIC, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_entry_announcement", "serpents hand entered", Smod2.Config.SettingType.STRING, true, ""));
-			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_items", "20,26,12,14,10", Smod2.Config.SettingType.STRING, true, ""));
+			AddConfig(new Smod2.Config.ConfigSetting("sh_spawn_items", new[] 
+			{
+				20,
+				26,
+				12,
+				14,
+				10
+			}, Smod2.Config.SettingType.NUMERIC_LIST, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_ci_entry_announcement", "", Smod2.Config.SettingType.STRING, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_friendly_fire", false, Smod2.Config.SettingType.BOOL, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_teleport_to_106", true, Smod2.Config.SettingType.BOOL, true, ""));
@@ -149,21 +156,19 @@ namespace SerpentsHand
 
 		public static void TeleportTo106(Player Player)
 		{
-			foreach (Player player in PluginManager.Manager.Server.GetPlayers())
+			foreach (Player player in PluginManager.Manager.Server.GetPlayers().Where(x => x.TeamRole.Role == Role.SCP_106))
 			{
-				if (player.TeamRole.Role == Role.SCP_106)
+				Timing.Next(() =>
 				{
-					Timing.Next(() =>
-					{
-						Player.Teleport(player.GetPosition());
-					});
-					break;
-				}
+					Player.Teleport(player.GetPosition());
+				});
+				break;
 			}
 		}
 
 		public static void SpawnPlayer(Player player)
 		{
+			shPlayers.Add(player.SteamId);
 			player.ChangeRole(Role.TUTORIAL, false);
 			player.SetAmmo(AmmoType.DROPPED_5, 250);
 			player.SetAmmo(AmmoType.DROPPED_7, 250);
@@ -173,10 +178,12 @@ namespace SerpentsHand
 
 			foreach (Smod2.API.Item item in player.GetInventory())
 				item.Remove();
-			foreach (int a in shItemList)
-				player.GiveItem((ItemType)a);
 
-			shPlayers.Add(player.SteamId);
+			player.GiveItem(ItemType.E11_STANDARD_RIFLE);
+			player.GiveItem(ItemType.CHAOS_INSURGENCY_DEVICE);
+			player.GiveItem(ItemType.RADIO);
+			player.GiveItem(ItemType.FLASHBANG);
+			player.GiveItem(ItemType.MEDKIT);
 		}
 
 		public static void SpawnSHSquad(List<Player> Playerlist)
@@ -185,7 +192,7 @@ namespace SerpentsHand
 			List<Player> CIPlayers = Playerlist;
 			for (int i = 0; i < shMaxSquad; i++)
 			{
-				Player player = CIPlayers[Plugin.rand.Next(CIPlayers.Count)];
+				Player player = CIPlayers[rand.Next(CIPlayers.Count)];
 				SHPlayers.Add(player);
 				CIPlayers.Remove(player);
 			}
