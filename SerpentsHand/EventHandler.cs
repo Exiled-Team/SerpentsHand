@@ -98,7 +98,7 @@ namespace SerpentsHand
 			bool CiAlive = Plugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
 			bool ScpAlive = Plugin.CountRoles(Smod2.API.Team.SCP) > 0;
 			bool DClassAlive = Plugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
-			bool ScientistsAlive = Plugin.CountRoles(Smod2.API.Team.SCIENTISTS) > 0;
+			bool ScientistsAlive = Plugin.CountRoles(Smod2.API.Team.SCIENTIST) > 0;
 			bool SHAlive = Plugin.shPlayers.Count > 0;
 
 			if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
