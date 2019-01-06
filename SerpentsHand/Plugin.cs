@@ -190,7 +190,7 @@ namespace SerpentsHand
 		{
 			List<Player> SHPlayers = new List<Player>();
 			List<Player> CIPlayers = Playerlist;
-			for (int i = 0; i < shMaxSquad; i++)
+			for (int i = 0; i < shMaxSquad && CIPlayers.Count > 0; i++)
 			{
 				Player player = CIPlayers[rand.Next(CIPlayers.Count)];
 				SHPlayers.Add(player);
