@@ -13,22 +13,19 @@ namespace SerpentsHand
 		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers,
 		IEventHandlerSetRole
 	{
-		private readonly SHPlugin plugin;
-		public EventHandler(SHPlugin plugin) => plugin = this.plugin;
-
 		public void SetConfigs()
 		{
 			SHPlugin.shItemList = new List<int>(SHPlugin.instance.GetConfigIntList("sh_spawn_items"));
-			SHPlugin.shAnnouncement = plugin.GetConfigString("sh_entry_announcement");
-			SHPlugin.ciAnnouncement = plugin.GetConfigString("sh_ci_entry_announcement");
+			SHPlugin.shAnnouncement = SHPlugin.instance.GetConfigString("sh_entry_announcement");
+			SHPlugin.ciAnnouncement = SHPlugin.instance.GetConfigString("sh_ci_entry_announcement");
 
-			SHPlugin.spawnChance = plugin.GetConfigInt("sh_spawn_chance");
-			SHPlugin.shMaxSquad = plugin.GetConfigInt("sh_max_squad");
-			SHPlugin.shHealth = plugin.GetConfigInt("sh_health");
+			SHPlugin.spawnChance = SHPlugin.instance.GetConfigInt("sh_spawn_chance");
+			SHPlugin.shMaxSquad = SHPlugin.instance.GetConfigInt("sh_max_squad");
+			SHPlugin.shHealth = SHPlugin.instance.GetConfigInt("sh_health");
 
-			SHPlugin.friendlyFire = plugin.GetConfigBool("sh_friendly_fire");
-			SHPlugin.ciWinWithSCP = plugin.GetConfigBool("sh_ci_win_with_scp");
-			SHPlugin.teleportTo106 = plugin.GetConfigBool("sh_teleport_to_106");
+			SHPlugin.friendlyFire = SHPlugin.instance.GetConfigBool("sh_friendly_fire");
+			SHPlugin.ciWinWithSCP = SHPlugin.instance.GetConfigBool("sh_ci_win_with_scp");
+			SHPlugin.teleportTo106 = SHPlugin.instance.GetConfigBool("sh_teleport_to_106");
 		}
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
@@ -106,7 +103,7 @@ namespace SerpentsHand
 			bool CiAlive = SHPlugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
 			bool ScpAlive = SHPlugin.CountRoles(Smod2.API.Team.SCP) > 0;
 			bool DClassAlive = SHPlugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
-			bool ScientistsAlive = SHPlugin.CountRoles(Smod2.API.Team.SCIENTIST) > 0;
+			bool ScientistsAlive = SHPlugin.CountRoles(Smod2.API.Team.SCIENTISTS) > 0;
 			bool SHAlive = SHPlugin.shPlayers.Count > 0;
 
 			if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))

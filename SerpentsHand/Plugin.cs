@@ -13,7 +13,7 @@ namespace SerpentsHand
 	name = "Serpents Hand",
 	description = "A new class for SCP:SL",
 	id = "cyan.serpents.hand",
-	version = "0.5.1",
+	version = "0.5.2",
 	SmodMajor = 3,
 	SmodMinor = 0,
 	SmodRevision = 0
@@ -41,7 +41,7 @@ namespace SerpentsHand
 		public static bool ciWinWithSCP;
 		public static bool teleportTo106;
 
-		public override void OnEnable() => this.Info(this.Details.name + " Activated!");
+		public override void OnEnable() => Info(Details.name + " Activated!");
 
 		public override void OnDisable() {}
 
@@ -49,7 +49,7 @@ namespace SerpentsHand
 		{
 			instance = this;
 
-			AddEventHandlers(new EventHandler(this));
+			AddEventHandlers(new EventHandler());
 
 			Timing.Init(this);
 
@@ -99,15 +99,6 @@ namespace SerpentsHand
 			player.SetAmmo(AmmoType.DROPPED_9, 250);
 			player.SetHealth(shHealth);
 			player.Teleport(shSpawnPos);
-
-			foreach (Smod2.API.Item item in player.GetInventory())
-				item.Remove();
-
-			player.GiveItem(ItemType.E11_STANDARD_RIFLE);
-			player.GiveItem(ItemType.CHAOS_INSURGENCY_DEVICE);
-			player.GiveItem(ItemType.RADIO);
-			player.GiveItem(ItemType.FLASHBANG);
-			player.GiveItem(ItemType.MEDKIT);
 		}
 
 		public static void SpawnSHSquad(List<Player> Playerlist)
