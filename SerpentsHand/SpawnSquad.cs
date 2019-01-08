@@ -22,7 +22,7 @@ namespace SerpentsHand
 			{
 				if (Int32.TryParse(args[0], out int a))
 				{
-					Plugin.SpawnSquad(a);
+					SHPlugin.SpawnSquad(a);
 				}
 				else
 				{
@@ -31,9 +31,9 @@ namespace SerpentsHand
 			}
 			else
 			{
-				Plugin.SpawnSquad(5);
+				SHPlugin.SpawnSquad(5);
 			}
-			PluginManager.Manager.Server.Map.AnnounceCustomMessage(Plugin.shAnnouncement);
+			PluginManager.Manager.Server.Map.AnnounceCustomMessage(SHPlugin.shAnnouncement);
 			return new string[] { "Spawned squad." };
 		}
 	}
