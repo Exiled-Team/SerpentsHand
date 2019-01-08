@@ -5,6 +5,7 @@ using Smod2.EventHandlers;
 using Smod2.API;
 using scp4aiur;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SerpentsHand
 {
@@ -12,19 +13,22 @@ namespace SerpentsHand
 		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers,
 		IEventHandlerSetRole
 	{
+		private readonly SHPlugin plugin;
+		public EventHandler(SHPlugin plugin) => plugin = this.plugin;
+
 		public void SetConfigs()
 		{
-			Plugin.shItemList = new List<int>(Plugin.instance.GetConfigIntList("sh_spawn_items"));
-			Plugin.shAnnouncement = Plugin.instance.GetConfigString("sh_entry_announcement");
-			Plugin.ciAnnouncement = Plugin.instance.GetConfigString("sh_ci_entry_announcement");
+			SHPlugin.shItemList = new List<int>(SHPlugin.instance.GetConfigIntList("sh_spawn_items"));
+			SHPlugin.shAnnouncement = plugin.GetConfigString("sh_entry_announcement");
+			SHPlugin.ciAnnouncement = plugin.GetConfigString("sh_ci_entry_announcement");
 
-			Plugin.spawnChance = Plugin.instance.GetConfigInt("sh_spawn_chance");
-			Plugin.shMaxSquad = Plugin.instance.GetConfigInt("sh_max_squad");
-			Plugin.shHealth = Plugin.instance.GetConfigInt("sh_health");
+			SHPlugin.spawnChance = plugin.GetConfigInt("sh_spawn_chance");
+			SHPlugin.shMaxSquad = plugin.GetConfigInt("sh_max_squad");
+			SHPlugin.shHealth = plugin.GetConfigInt("sh_health");
 
-			Plugin.friendlyFire = Plugin.instance.GetConfigBool("sh_friendly_fire");
-			Plugin.ciWinWithSCP = Plugin.instance.GetConfigBool("sh_ci_win_with_scp");
-			Plugin.teleportTo106 = Plugin.instance.GetConfigBool("sh_teleport_to_106");
+			SHPlugin.friendlyFire = plugin.GetConfigBool("sh_friendly_fire");
+			SHPlugin.ciWinWithSCP = plugin.GetConfigBool("sh_ci_win_with_scp");
+			SHPlugin.teleportTo106 = plugin.GetConfigBool("sh_teleport_to_106");
 		}
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
@@ -34,16 +38,19 @@ namespace SerpentsHand
 
 		public void OnRoundStart(RoundStartEvent ev)
 		{
-			Plugin.shPlayers.Clear();
-			Plugin.shPlayersInPocket.Clear();
+			SHPlugin.shPlayers.Clear();
+			SHPlugin.shPlayersInPocket.Clear();
 		}
 
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
-			if (Plugin.shPlayers.Contains(ev.Player.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL)
+			if (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
 				ev.Items.Clear();
-				foreach (int a in Plugin.shItemList) ev.Items.Add((ItemType)a);
+				int max = System.Enum.GetValues(typeof(ItemType)).Cast<int>().Max(), min = System.Enum.GetValues(typeof(ItemType)).Cast<int>().Min();
+				foreach (int a in SHPlugin.shItemList)
+					if (!(a > max || a < min))
+						ev.Items.Add((ItemType)a);
 			}
 		}
 
@@ -51,16 +58,16 @@ namespace SerpentsHand
 		{
 			if (ev.SpawnChaos)
 			{
-				if (Plugin.rand.Next(1, 101) <= Plugin.spawnChance && ev.PlayerList.Count > 0)
+				if (SHPlugin.rand.Next(1, 101) <= SHPlugin.spawnChance && ev.PlayerList.Count > 0)
 				{
 					Timing.InTicks(() =>
 					{
-						Plugin.SpawnSHSquad(ev.PlayerList);
+						SHPlugin.SpawnSHSquad(ev.PlayerList);
 					}, 4);
 				}
 				else
 				{
-					string ann = Plugin.ciAnnouncement;
+					string ann = SHPlugin.ciAnnouncement;
 					if (ann != "")
 						PluginManager.Manager.Server.Map.AnnounceCustomMessage(ann);
 				}
@@ -69,10 +76,10 @@ namespace SerpentsHand
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-			if (((Plugin.shPlayers.Contains(ev.Player.SteamId) && (ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP || ev.DamageType == DamageType.POCKET)) ||
-				(Plugin.shPlayers.Contains(ev.Attacker.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
-				(Plugin.shPlayers.Contains(ev.Player.SteamId) && Plugin.shPlayers.Contains(ev.Attacker.SteamId) &&
-				ev.Player.SteamId != ev.Attacker.SteamId)) && !Plugin.friendlyFire)
+			if (((SHPlugin.shPlayers.Contains(ev.Player.SteamId) && (ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP || ev.DamageType == DamageType.POCKET)) ||
+				(SHPlugin.shPlayers.Contains(ev.Attacker.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
+				(SHPlugin.shPlayers.Contains(ev.Player.SteamId) && SHPlugin.shPlayers.Contains(ev.Attacker.SteamId) &&
+				ev.Player.SteamId != ev.Attacker.SteamId)) && !SHPlugin.friendlyFire)
 			{
 				ev.Damage = 0;
 			}
@@ -80,26 +87,27 @@ namespace SerpentsHand
 
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
-			if (Plugin.shPlayers.Contains(ev.Player.SteamId))
-				Plugin.shPlayers.Remove(ev.Player.SteamId);
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
+				SHPlugin.shPlayers.Remove(ev.Player.SteamId);
 
-			if (ev.Player.TeamRole.Role == Role.SCP_106 && !Plugin.friendlyFire)
+			if (ev.Player.TeamRole.Role == Role.SCP_106 && !SHPlugin.friendlyFire)
 			{
-				foreach (string str in Plugin.shPlayersInPocket)
+				foreach (Player pl in PluginManager.Manager.Server.GetPlayers()
+					.Where(p => SHPlugin.shPlayersInPocket.Contains(p.SteamId)))
 				{
-					Plugin.FindPlayer(str).Kill();
+					pl.Kill();
 				}
 			}
 		}
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
-			bool MTFAlive = Plugin.CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
-			bool CiAlive = Plugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
-			bool ScpAlive = Plugin.CountRoles(Smod2.API.Team.SCP) > 0;
-			bool DClassAlive = Plugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
-			bool ScientistsAlive = Plugin.CountRoles(Smod2.API.Team.SCIENTIST) > 0;
-			bool SHAlive = Plugin.shPlayers.Count > 0;
+			bool MTFAlive = SHPlugin.CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
+			bool CiAlive = SHPlugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
+			bool ScpAlive = SHPlugin.CountRoles(Smod2.API.Team.SCP) > 0;
+			bool DClassAlive = SHPlugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
+			bool ScientistsAlive = SHPlugin.CountRoles(Smod2.API.Team.SCIENTIST) > 0;
+			bool SHAlive = SHPlugin.shPlayers.Count > 0;
 
 			if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
 				ev.Status = ROUND_END_STATUS.ON_GOING;
@@ -109,34 +117,34 @@ namespace SerpentsHand
 				ev.Status = ROUND_END_STATUS.ON_GOING;
 			else if (SHAlive && ScpAlive && !MTFAlive && !CiAlive && !DClassAlive && !ScientistsAlive)
 				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
-			else if (CiAlive && ScpAlive && !Plugin.ciWinWithSCP)
+			else if (CiAlive && ScpAlive && !SHPlugin.ciWinWithSCP)
 				ev.Status = ROUND_END_STATUS.ON_GOING;
 		}
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
 		{
-			if (Plugin.shPlayers.Contains(ev.Player.SteamId))
-				Plugin.shPlayersInPocket.Add(ev.Player.SteamId);
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
+				SHPlugin.shPlayersInPocket.Add(ev.Player.SteamId);
 		}
 
 		public void OnPocketDimensionDie(PlayerPocketDimensionDieEvent ev)
 		{
-			if (Plugin.shPlayers.Contains(ev.Player.SteamId))
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
-				if (!Plugin.friendlyFire)
+				if (!SHPlugin.friendlyFire)
 					ev.Die = false;
-				if (Plugin.teleportTo106)
-					Plugin.TeleportTo106(ev.Player);
+				if (SHPlugin.teleportTo106)
+					SHPlugin.TeleportTo106(ev.Player);
 			}
 		}
 
 		public void OnPocketDimensionExit(PlayerPocketDimensionExitEvent ev)
 		{
-			if (Plugin.shPlayers.Contains(ev.Player.SteamId))
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
-				if (Plugin.teleportTo106)
-					Plugin.TeleportTo106(ev.Player);
-				Plugin.shPlayersInPocket.Remove(ev.Player.SteamId);
+				if (SHPlugin.teleportTo106)
+					SHPlugin.TeleportTo106(ev.Player);
+				SHPlugin.shPlayersInPocket.Remove(ev.Player.SteamId);
 			}
 		}
 	}

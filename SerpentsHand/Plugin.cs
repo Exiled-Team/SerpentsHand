@@ -18,11 +18,11 @@ namespace SerpentsHand
 	SmodMinor = 0,
 	SmodRevision = 0
 	)]
-	public class Plugin : Smod2.Plugin
+	public class SHPlugin : Plugin
     {
-		public static Smod2.Plugin instance;
+		public static SHPlugin instance;
 
-		public static System.Random rand = new System.Random();
+		public static Random rand = new Random();
 
 		public static List<string> shPlayersInPocket = new List<string>();
 		public static List<string> shPlayers = new List<string>();
@@ -41,7 +41,7 @@ namespace SerpentsHand
 		public static bool ciWinWithSCP;
 		public static bool teleportTo106;
 
-		public override void OnEnable() {}
+		public override void OnEnable() => this.Info(this.Details.name + " Activated!");
 
 		public override void OnDisable() {}
 
@@ -49,7 +49,7 @@ namespace SerpentsHand
 		{
 			instance = this;
 
-			AddEventHandlers(new EventHandler());
+			AddEventHandlers(new EventHandler(this));
 
 			Timing.Init(this);
 
@@ -74,95 +74,19 @@ namespace SerpentsHand
 			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad());
 		}
 
-		public static int LevenshteinDistance(string s, string t)
+		public static Player FindPlayer(string identifier)
 		{
-			int n = s.Length;
-			int m = t.Length;
-			int[,] d = new int[n + 1, m + 1];
-
-			if (n == 0)
-			{
-				return m;
-			}
-
-			if (m == 0)
-			{
-				return n;
-			}
-
-			for (int i = 0; i <= n; d[i, 0] = i++)
-			{
-			}
-
-			for (int j = 0; j <= m; d[0, j] = j++)
-			{
-			}
-
-			for (int i = 1; i <= n; i++)
-			{
-				for (int j = 1; j <= m; j++)
-				{
-					int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
-
-					d[i, j] = Math.Min(
-						Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
-						d[i - 1, j - 1] + cost);
-				}
-			}
-			return d[n, m];
-		}
-
-		public static Player GetPlayer(string args, out Player playerOut)
-		{
-			int maxNameLength = 31, LastnameDifference = 31;
-			Player plyer = null;
-			string str1 = args.ToLower();
-			foreach (Player pl in PluginManager.Manager.Server.GetPlayers(str1))
-			{
-				if (!pl.Name.ToLower().Contains(args.ToLower())) { goto NoPlayer; }
-				if (str1.Length < maxNameLength)
-				{
-					int x = maxNameLength - str1.Length;
-					int y = maxNameLength - pl.Name.Length;
-					string str2 = pl.Name;
-					for (int i = 0; i < x; i++)
-					{
-						str1 += "z";
-					}
-					for (int i = 0; i < y; i++)
-					{
-						str2 += "z";
-					}
-					int nameDifference = LevenshteinDistance(str1, str2);
-					if (nameDifference < LastnameDifference)
-					{
-						LastnameDifference = nameDifference;
-						plyer = pl;
-					}
-				}
-				NoPlayer:;
-			}
-			playerOut = plyer;
-			return playerOut;
-		}
-
-		public static Player FindPlayer(string steamid)
-		{
-			foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-				if (player.SteamId == steamid)
-					return player;
-			return null;
+			return PluginManager.Manager.Server.GetPlayers(identifier).FirstOrDefault();
 		}
 
 		public static void TeleportTo106(Player Player)
 		{
-			foreach (Player player in PluginManager.Manager.Server.GetPlayers().Where(x => x.TeamRole.Role == Role.SCP_106))
-			{
+			Player player = PluginManager.Manager.Server.GetPlayers().Where(x => x.TeamRole.Role == Role.SCP_106).FirstOrDefault();
+			if (player != null) {
 				Timing.Next(() =>
 				{
 					Player.Teleport(player.GetPosition());
 				});
-				break;
 			}
 		}
 

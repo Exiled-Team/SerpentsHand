@@ -1,5 +1,6 @@
 ﻿using Smod2.Commands;
 using Smod2.API;
+using System.Linq;
 
 namespace SerpentsHand
 {
@@ -20,7 +21,7 @@ namespace SerpentsHand
 			if (args.Length > 0)
 			{
 				string id = "";
-				Player cPlayer = Plugin.GetPlayer(args[0], out cPlayer);
+				Player cPlayer = SHPlugin.FindPlayer(args[0]);
 				if (cPlayer != null)
 				{
 					id = cPlayer.SteamId;
@@ -34,10 +35,10 @@ namespace SerpentsHand
 					return new string[] { "Error: invalid player id." };
 				}
 
-				Player tPlayer = Plugin.FindPlayer(id);
+				Player tPlayer = SHPlugin.FindPlayer(id);
 				if (tPlayer != null)
 				{
-					Plugin.SpawnPlayer(tPlayer);
+					SHPlugin.SpawnPlayer(tPlayer);
 					return new string[] { "Spawned player \"" + tPlayer.Name + "\" as Serpent's Hand." };
 				}
 			}
