@@ -44,10 +44,7 @@ namespace SerpentsHand
 			if (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
 				ev.Items.Clear();
-				int max = System.Enum.GetValues(typeof(ItemType)).Cast<int>().Max(), min = System.Enum.GetValues(typeof(ItemType)).Cast<int>().Min();
-				foreach (int a in SHPlugin.shItemList)
-					if (!(a > max || a < min))
-						ev.Items.Add((ItemType)a);
+				foreach (int a in SHPlugin.shItemList) ev.Items.Add((ItemType)a);
 			}
 		}
 
