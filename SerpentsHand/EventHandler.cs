@@ -41,10 +41,17 @@ namespace SerpentsHand
 
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
-			if (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && SHPlugin.shPlayers.Contains(ev.Player.SteamId))
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
-				ev.Items.Clear();
-				foreach (int a in SHPlugin.shItemList) ev.Items.Add((ItemType)a);
+				if (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL)
+				{
+					ev.Items.Clear();
+					foreach (int a in SHPlugin.shItemList) ev.Items.Add((ItemType)a);
+				}
+				else
+				{
+					SHPlugin.shPlayers.Remove(ev.Player.SteamId);
+				}
 			}
 		}
 
