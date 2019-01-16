@@ -13,7 +13,7 @@ namespace SerpentsHand
 	name = "Serpents Hand",
 	description = "A new class for SCP:SL",
 	id = "cyan.serpents.hand",
-	version = "0.5.2",
+	version = "0.6",
 	SmodMajor = 3,
 	SmodMinor = 0,
 	SmodRevision = 0
