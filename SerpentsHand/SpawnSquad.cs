@@ -20,7 +20,7 @@ namespace SerpentsHand
 		{
 			if (args.Length > 0)
 			{
-				if (Int32.TryParse(args[0], out int a))
+				if (int.TryParse(args[0], out int a))
 				{
 					SHPlugin.SpawnSquad(a);
 				}

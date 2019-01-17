@@ -35,9 +35,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\References\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="ItemManager">
-      <HintPath>..\References\ItemManager.dll</HintPath>
-    </Reference>
     <Reference Include="Smod2">
       <HintPath>..\References\Smod2.dll</HintPath>
     </Reference>

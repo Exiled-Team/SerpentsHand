@@ -93,7 +93,7 @@ namespace SerpentsHand
 		public static void SpawnPlayer(Player player)
 		{
 			shPlayers.Add(player.SteamId);
-			player.ChangeRole(Role.TUTORIAL, false);
+			player.ChangeRole(Role.TUTORIAL);
 			player.SetAmmo(AmmoType.DROPPED_5, 250);
 			player.SetAmmo(AmmoType.DROPPED_7, 250);
 			player.SetAmmo(AmmoType.DROPPED_9, 250);
