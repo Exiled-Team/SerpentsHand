@@ -102,20 +102,9 @@ namespace SerpentsHand
 		}
 
 		public static void SpawnSHSquad(List<Player> Playerlist)
-		{
-			List<Player> SHPlayers = new List<Player>();
-			List<Player> CIPlayers = Playerlist;
-			for (int i = 0; i < shMaxSquad && CIPlayers.Count > 0; i++)
-			{
-				Player player = CIPlayers[rand.Next(CIPlayers.Count)];
-				SHPlayers.Add(player);
-				CIPlayers.Remove(player);
-			}
-
-			foreach (Player player in SHPlayers)
+		{ 
+			foreach (Player player in Playerlist)
 				SpawnPlayer(player);
-			foreach (Player player in CIPlayers)
-				player.ChangeRole(Role.SPECTATOR);
 
 			PluginManager.Manager.Server.Map.AnnounceCustomMessage(shAnnouncement);
 		}

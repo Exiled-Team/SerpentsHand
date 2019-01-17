@@ -63,6 +63,18 @@ namespace SerpentsHand
 			{
 				if (SHPlugin.rand.Next(1, 101) <= SHPlugin.spawnChance && ev.PlayerList.Count > 0)
 				{
+					List<Player> SHPlayers = new List<Player>();
+					List<Player> CIPlayers = ev.PlayerList;
+
+					for (int i = 0; i < SHPlugin.shMaxSquad && CIPlayers.Count > 0; i++)
+					{
+						Player player = CIPlayers[SHPlugin.rand.Next(CIPlayers.Count)];
+						SHPlayers.Add(player);
+						CIPlayers.Remove(player);
+					}
+
+					ev.PlayerList = SHPlayers;
+
 					Timing.InTicks(() =>
 					{
 						SHPlugin.SpawnSHSquad(ev.PlayerList);
