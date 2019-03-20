@@ -9,11 +9,12 @@ using System.Linq;
 
 namespace SerpentsHand
 {
-	class EventHandler : IEventHandlerRoundStart, IEventHandlerTeamRespawn, IEventHandlerPocketDimensionEnter, IEventHandlerPocketDimensionDie,
+	class EventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerTeamRespawn, IEventHandlerPocketDimensionEnter, IEventHandlerPocketDimensionDie,
 		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers,
 		IEventHandlerSetRole, IEventHandlerDisconnect
 	{
 	    private bool refreshPlayers;
+		private bool isRoundStarted = false;
 
 		public void SetConfigs()
 		{
@@ -39,6 +40,12 @@ namespace SerpentsHand
 		{
 			SHPlugin.shPlayers.Clear();
 			SHPlugin.shPlayersInPocket.Clear();
+			isRoundStarted = true;
+		}
+
+		public void OnRoundEnd(RoundEndEvent ev)
+		{
+			isRoundStarted = false;
 		}
 
 		public void OnSetRole(PlayerSetRoleEvent ev)
@@ -91,11 +98,8 @@ namespace SerpentsHand
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-            // Is attacker is server
-		    if (ev.Attacker.SteamId == "0")
-		    {
-		        return;
-		    }
+			// Is attacker is server
+			if (ev.Attacker.SteamId == "0" || !isRoundStarted) return;
 
 			if (((SHPlugin.shPlayers.Contains(ev.Player.SteamId) && (ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP || ev.DamageType == DamageType.POCKET)) ||
 				(SHPlugin.shPlayers.Contains(ev.Attacker.SteamId) && ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
