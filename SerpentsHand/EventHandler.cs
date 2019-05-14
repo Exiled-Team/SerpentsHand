@@ -11,7 +11,7 @@ namespace SerpentsHand
 {
 	class EventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerTeamRespawn, IEventHandlerPocketDimensionEnter, IEventHandlerPocketDimensionDie,
 		IEventHandlerPocketDimensionExit, IEventHandlerPlayerHurt, IEventHandlerPlayerDie, IEventHandlerCheckRoundEnd, IEventHandlerWaitingForPlayers,
-		IEventHandlerSetRole, IEventHandlerDisconnect
+		IEventHandlerSetRole, IEventHandlerDisconnect, IEventHandlerContain106
 	{
 	    private bool refreshPlayers;
 		private bool isRoundStarted = false;
@@ -186,5 +186,13 @@ namespace SerpentsHand
 	    {
 	        refreshPlayers = true;
 	    }
+
+		public void OnContain106(PlayerContain106Event ev)
+		{
+			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
+			{
+				ev.ActivateContainment = false;
+			}
+		}
 	}
 }
