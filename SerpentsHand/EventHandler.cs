@@ -165,10 +165,9 @@ namespace SerpentsHand
 		{
 			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
-				if (!SHPlugin.friendlyFire)
-					ev.Die = false;
-				if (SHPlugin.teleportTo106)
-					SHPlugin.TeleportTo106(ev.Player);
+				if (!SHPlugin.friendlyFire) ev.Die = false;
+				if (SHPlugin.teleportTo106) SHPlugin.TeleportTo106(ev.Player);
+				SHPlugin.shPlayersInPocket.Remove(ev.Player.SteamId);
 			}
 		}
 
@@ -176,8 +175,7 @@ namespace SerpentsHand
 		{
 			if (SHPlugin.shPlayers.Contains(ev.Player.SteamId))
 			{
-				if (SHPlugin.teleportTo106)
-					SHPlugin.TeleportTo106(ev.Player);
+				if (SHPlugin.teleportTo106) SHPlugin.TeleportTo106(ev.Player);
 				SHPlugin.shPlayersInPocket.Remove(ev.Player.SteamId);
 			}
 		}

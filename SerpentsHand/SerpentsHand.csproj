@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\SerpentsHand.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="SHPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
