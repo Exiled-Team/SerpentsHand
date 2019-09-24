@@ -13,7 +13,7 @@ namespace SerpentsHand
 	name = "Serpents Hand",
 	description = "A new class for SCP:SL",
 	id = "cyan.serpents.hand",
-	version = "0.7",
+	version = "0.8",
 	SmodMajor = 3,
 	SmodMinor = 0,
 	SmodRevision = 0
@@ -36,6 +36,7 @@ namespace SerpentsHand
 		public static int spawnChance;
 		public static int shMaxSquad;
 		public static int shHealth;
+		public static int teamRespawnDelay;
 
 		public static bool friendlyFire;
 		public static bool ciWinWithSCP;
@@ -69,6 +70,7 @@ namespace SerpentsHand
 			AddConfig(new Smod2.Config.ConfigSetting("sh_ci_win_with_scp", false, Smod2.Config.SettingType.BOOL, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_health", 120, Smod2.Config.SettingType.NUMERIC, true, ""));
 			AddConfig(new Smod2.Config.ConfigSetting("sh_max_squad", 8, Smod2.Config.SettingType.NUMERIC, true, ""));
+			AddConfig(new Smod2.Config.ConfigSetting("sh_team_respawn_delay", 1, Smod2.Config.SettingType.NUMERIC, true, ""));
 
 			AddCommands(new string[] { "spawnsh" }, new SpawnCommand());
 			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad());

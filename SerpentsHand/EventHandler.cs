@@ -16,6 +16,8 @@ namespace SerpentsHand
 	    private bool refreshPlayers;
 		private bool isRoundStarted = false;
 
+		private int respawnCount = 0;
+
 		public void SetConfigs()
 		{
 			SHPlugin.shItemList = new List<int>(SHPlugin.instance.GetConfigIntList("sh_spawn_items"));
@@ -25,6 +27,7 @@ namespace SerpentsHand
 			SHPlugin.spawnChance = SHPlugin.instance.GetConfigInt("sh_spawn_chance");
 			SHPlugin.shMaxSquad = SHPlugin.instance.GetConfigInt("sh_max_squad");
 			SHPlugin.shHealth = SHPlugin.instance.GetConfigInt("sh_health");
+			SHPlugin.teamRespawnDelay = SHPlugin.instance.GetConfigInt("sh_team_respawn_delay");
 
 			SHPlugin.friendlyFire = SHPlugin.instance.GetConfigBool("sh_friendly_fire");
 			SHPlugin.ciWinWithSCP = SHPlugin.instance.GetConfigBool("sh_ci_win_with_scp");
@@ -41,6 +44,7 @@ namespace SerpentsHand
 			SHPlugin.shPlayers.Clear();
 			SHPlugin.shPlayersInPocket.Clear();
 			isRoundStarted = true;
+			respawnCount = 0;
 		}
 
 		public void OnRoundEnd(RoundEndEvent ev)
@@ -66,7 +70,7 @@ namespace SerpentsHand
 
 		public void OnTeamRespawn(TeamRespawnEvent ev)
 		{
-			if (ev.SpawnChaos)
+			if (ev.SpawnChaos && respawnCount >= SHPlugin.teamRespawnDelay)
 			{
 				if (SHPlugin.rand.Next(1, 101) <= SHPlugin.spawnChance && ev.PlayerList.Count > 0)
 				{
@@ -94,6 +98,7 @@ namespace SerpentsHand
 						PluginManager.Manager.Server.Map.AnnounceCustomMessage(ann);
 				}
 			}
+			respawnCount++;
 		}
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
