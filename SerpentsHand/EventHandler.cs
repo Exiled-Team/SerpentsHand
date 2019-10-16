@@ -70,9 +70,9 @@ namespace SerpentsHand
 
 		public void OnTeamRespawn(TeamRespawnEvent ev)
 		{
-			if (ev.SpawnChaos && respawnCount >= SHPlugin.teamRespawnDelay)
+			if (ev.SpawnChaos)
 			{
-				if (SHPlugin.rand.Next(1, 101) <= SHPlugin.spawnChance && ev.PlayerList.Count > 0)
+				if (SHPlugin.rand.Next(1, 101) <= SHPlugin.spawnChance && ev.PlayerList.Count > 0 && respawnCount >= SHPlugin.teamRespawnDelay)
 				{
 					List<Player> SHPlayers = new List<Player>();
 					List<Player> CIPlayers = ev.PlayerList;
