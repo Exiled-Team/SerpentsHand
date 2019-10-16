@@ -30,6 +30,7 @@ Place the "SerpentsHand.dll" file in your sm_plugins folder.
 | sh_ci_win_with_scp | Boolean | False | Should the round end with SCPs and Chaos left. |
 | sh_health | Number | 120 | How much health Serpent's Hand members will have. |
 | sh_max_squad | Number | 8 | The maximum number of Serpent's Hand members allowed to spawn. |
+| sh_team_respawn_delay | Number | 1 | The amount of team respawns that must occur before Serpent's Hand can spawn. |
 
 # Commands
 |     Command    | Value Type | Description |
