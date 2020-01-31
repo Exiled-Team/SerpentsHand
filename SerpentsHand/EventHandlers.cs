@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SerpentsHand
 {
-    public class EventHandlers
+    partial class EventHandlers
     {
         private Plugin plugin;
         public EventHandlers(Plugin plugin) => this.plugin = plugin;
@@ -145,11 +145,11 @@ namespace SerpentsHand
                 shPlayers.RemoveAll(x => !curPlayers.Contains(x));
             }
 
-            bool MTFAlive = SHPlugin.CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
-            bool CiAlive = SHPlugin.CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
-            bool ScpAlive = SHPlugin.CountRoles(Smod2.API.Team.SCP) > 0;
-            bool DClassAlive = SHPlugin.CountRoles(Smod2.API.Team.CLASSD) > 0;
-            bool ScientistsAlive = SHPlugin.CountRoles(Smod2.API.Team.SCIENTIST) > 0;
+            bool MTFAlive = CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
+            bool CiAlive = CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
+            bool ScpAlive = CountRoles(Smod2.API.Team.SCP) > 0;
+            bool DClassAlive = CountRoles(Smod2.API.Team.CLASSD) > 0;
+            bool ScientistsAlive = CountRoles(Smod2.API.Team.SCIENTIST) > 0;
             bool SHAlive = shPlayers.Count > 0;
 
             if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
@@ -203,6 +203,52 @@ namespace SerpentsHand
             if (shPlayers.Contains(ev.Player.GetPlayerID()))
             {
                 ev.Allow = false;
+            }
+        }
+
+        public void OnRACommand(RACommandEvent ev)
+        {
+            string cmd = ev.Command.ToLower();
+            if (cmd.StartsWith("spawnsh"))
+            {
+                string[] args = cmd.Replace("spawnsh", "").Trim().Split(' ');
+
+                if (args.Length > 0)
+                {
+                    ReferenceHub cPlayer = Plugin.GetPlayer(args[0]);
+                    if (cPlayer != null)
+                    {
+                        SpawnPlayer(cPlayer);
+                        ev.Sender($"Spawned {cPlayer.GetName()}");
+                    }
+                    else
+                    {
+                        ev.Sender.RAReply("Invalid player.");
+                    }
+                }
+                ev.Sender("SPAWNSH [Player Name / Player ID]");
+            }
+            else if (cmd.StartsWith("spawnshsquad"))
+            {
+                string[] args = cmd.Replace("spawnshsquad", "").Trim().Split(' ');
+
+                if (args.Length > 0)
+                {
+                    if (int.TryParse(args[0], out int a))
+                    {
+                        SpawnSquad(a);
+                    }
+                    else
+                    {
+                        return new string[] { "Error: invalid size." };
+                    }
+                }
+                else
+                {
+                    SHPlugin.SpawnSquad(5);
+                }
+                PluginManager.Manager.Server.Map.AnnounceCustomMessage(SHPlugin.shAnnouncement);
+                return new string[] { "Spawned squad." };
             }
         }
     }

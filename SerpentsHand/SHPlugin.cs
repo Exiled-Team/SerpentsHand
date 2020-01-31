@@ -76,7 +76,7 @@ namespace SerpentsHand
 			AddCommands(new string[] { "spawnshsquad" }, new SpawnSquad());
 		}
 
-		public static Player FindPlayer(string identifier)
+		/*public static Player FindPlayer(string identifier)
 		{
 			return PluginManager.Manager.Server.GetPlayers(identifier).FirstOrDefault();
 		}
@@ -157,6 +157,6 @@ namespace SerpentsHand
 			foreach (Smod2.API.Item item in player.GetInventory())
 				count++;
 			return count;
-		}
+		}*/
 	}
 }

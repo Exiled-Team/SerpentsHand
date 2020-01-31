@@ -24,6 +24,7 @@ namespace SerpentsHand
             Events.SetClassEvent += EventHandlers.OnSetRole;
             Events.PlayerLeaveEvent += EventHandlers.OnDisconnect;
             Events.Scp106ContainEvent += EventHandlers.OnContain106;
+            Events.RemoteAdminCommandEvent += EventHandkers.OnRACommand;
         }
 
         public override void OnDisable()

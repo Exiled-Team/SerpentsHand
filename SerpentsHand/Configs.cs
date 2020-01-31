@@ -37,7 +37,6 @@ namespace SerpentsHand
 			friendlyFire = Plugin.Config.GetBool("sh_friendly_fire", false);
 			teleportTo106 = Plugin.Config.GetBool("sh_teleport_to_106", true);
 			ciWinWithScp = Plugin.Config.GetBool("sh_ci_win_with_scp", false);
-
         }
     }
 }

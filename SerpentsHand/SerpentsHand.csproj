@@ -67,6 +67,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Configs.cs" />
+    <Compile Include="Methods.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
