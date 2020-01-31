@@ -55,6 +55,11 @@ namespace SerpentsHand
 
                     ev.ToRespawn = SHPlayers;
 
+                    Timing.RunCoroutine(DelayAction(0.1f, () =>
+                    {
+                        // to dotiming
+                        //SpawnSquad()
+                    }))
                     Timing.InTicks(() =>
                     {
                         SHPlugin.SpawnSHSquad(ev.PlayerList);
@@ -88,7 +93,7 @@ namespace SerpentsHand
                 }
                 if (Configs.teleportTo106)
                 {
-                    SHPlugin.TeleportTo106(ev.Player);
+                    TeleportTo106(ev.Player);
                 }
                 shPocketPlayers.Remove(ev.Player.GetPlayerID());
             }
@@ -100,7 +105,7 @@ namespace SerpentsHand
             {
                 if (Configs.teleportTo106)
                 {
-                    SHPlugin.TeleportTo106(ev.Player);
+                    TeleportTo106(ev.Player);
                 }
                 shPocketPlayers.Remove(ev.Player.GetPlayerID());
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MEC;
 
 namespace SerpentsHand
 {
@@ -67,6 +68,24 @@ namespace SerpentsHand
                 if (pl.GetTeam() == team)
                     count++;
             return count;
+        }
+
+        private void TeleportTo106(ReferenceHub Player)
+        {
+            ReferenceHub player = Plugin.GetHubs().Where(x => x.GetRole() == Role.SCP_106).FirstOrDefault();
+            if (player != null)
+            {
+                Timing.Next(() =>
+                {
+                    Player.Teleport(player.GetPosition());
+                });
+            }
+        }
+
+        private IEnumerator<float> DelayAction(float delay, Action x)
+        {
+            Timing.WaitForSeconds(delay);
+            x();
         }
     }
 }
