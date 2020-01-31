@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,6 +49,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>..\References\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="EXILED">
+      <HintPath>..\..\..\References\EXILED.dll</HintPath>
+    </Reference>
+    <Reference Include="EXILED_Events">
+      <HintPath>..\..\..\References\EXILED_Events.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\SerpentsHand.cs" />
@@ -58,6 +64,9 @@
     <Compile Include="SpawnCommand.cs" />
     <Compile Include="SpawnSquad.cs" />
     <Compile Include="Timing.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="EventHandlers.cs" />
+    <Compile Include="Configs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

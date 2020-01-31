@@ -22,7 +22,7 @@ namespace SerpentsHand
     {
 		public static SHPlugin instance;
 
-		public static Random rand = new Random();
+		/*public static Random rand = new Random();
 
 		public static List<string> shPlayersInPocket = new List<string>();
 		public static List<string> shPlayers = new List<string>();
@@ -40,7 +40,7 @@ namespace SerpentsHand
 
 		public static bool friendlyFire;
 		public static bool ciWinWithSCP;
-		public static bool teleportTo106;
+		public static bool teleportTo106;*/
 
 		public override void OnEnable() => Info(Details.name + " Activated!");
 
