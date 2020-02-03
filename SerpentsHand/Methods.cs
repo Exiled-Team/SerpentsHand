@@ -56,7 +56,7 @@ namespace SerpentsHand
         {
             int count = 0;
             foreach (ReferenceHub pl in Plugin.GetHubs())
-                if (pl.TeamRole.Role == role)
+                if (pl.characterClassManager.curClass == role)
                     count++;
             return count;
         }
@@ -75,10 +75,10 @@ namespace SerpentsHand
             ReferenceHub player = Plugin.GetHubs().Where(x => x.GetRole() == Role.SCP_106).FirstOrDefault();
             if (player != null)
             {
-                Timing.Next(() =>
-                {
-                    Player.Teleport(player.GetPosition());
-                });
+                //Timing.Next(() =>
+                //{
+                    player.plySyncManager.OverridePosition(player.transform.position);
+                //});
             }
         }
 

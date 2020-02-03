@@ -55,6 +55,12 @@
     <Reference Include="EXILED_Events">
       <HintPath>..\..\..\References\EXILED_Events.dll</HintPath>
     </Reference>
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\References\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\References\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\SerpentsHand.cs" />

@@ -113,7 +113,7 @@ namespace SerpentsHand
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
         {
-            if (ev.Attacker.GetPlayerID == "0" || !isRoundStarted) return;
+            if (ev.Attacker.queryProcessor.SteamId == "0" || !isRoundStarted) return;
 
             if (((shPlayers.Contains(ev.Player.GetPlayerID()) && (ev.Attacker.GetTeam() == Team.SCP || ev.DamageType == DamageType.POCKET)) ||
                 (shPlayers.Contains(ev.Attacker.GetPlayerID()) && ev.Player.GetTeam() == Team.SCP) ||
@@ -126,12 +126,12 @@ namespace SerpentsHand
 
         public void OnPlayerDie(ref PlayerDeathEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.GetPlayerID()))
+            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
             {
-                shPlayers.Remove(ev.Player.GetPlayerID());
+                shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
             }
 
-            if (ev.Player.GetRole() == Role.SCP_106 && !Configs.friendlyFire)
+            if (ev.Player.characterClassManager.curClass == RoleType.SCP_106 && !Configs.friendlyFire)
             {
                 foreach (ReferenceHub player in Plugin.GetHubs().Where(x => shPockerPlayers.Contains(x.GetPlayerID())))
                 {
@@ -146,15 +146,15 @@ namespace SerpentsHand
             {
                 refreshPlayers = false;
 
-                string[] curPlayers = Plugin.GetHubs().GetPlayerID()).ToArray();
+                string[] curPlayers = Plugin.GetHubs().GetPlayerID().ToArray();
                 shPlayers.RemoveAll(x => !curPlayers.Contains(x));
             }
 
-            bool MTFAlive = CountRoles(Smod2.API.Team.NINETAILFOX) > 0;
-            bool CiAlive = CountRoles(Smod2.API.Team.CHAOS_INSURGENCY) > 0;
-            bool ScpAlive = CountRoles(Smod2.API.Team.SCP) > 0;
-            bool DClassAlive = CountRoles(Smod2.API.Team.CLASSD) > 0;
-            bool ScientistsAlive = CountRoles(Smod2.API.Team.SCIENTIST) > 0;
+            bool MTFAlive = CountRoles(Team.NINETAILFOX) > 0;
+            bool CiAlive = CountRoles(Team.CHAOS_INSURGENCY) > 0;
+            bool ScpAlive = CountRoles(Team.SCP) > 0;
+            bool DClassAlive = CountRoles(Team.CLASSD) > 0;
+            bool ScientistsAlive = CountRoles(Team.SCIENTIST) > 0;
             bool SHAlive = shPlayers.Count > 0;
 
             if (MTFAlive && (CiAlive || ScpAlive || DClassAlive || SHAlive))
@@ -184,7 +184,7 @@ namespace SerpentsHand
         {
             // Figure out how to set spawn position
 
-            if (shPlayers.Contains(ev.Player.GetPlayerID()))
+            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
             {
                 if (ev.Player.GetTeam() == Team.TUT)
                 {
@@ -205,13 +205,13 @@ namespace SerpentsHand
 
         public void OnContain106(Scp106ContainEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.GetPlayerID()))
+            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerID))
             {
                 ev.Allow = false;
             }
         }
 
-        public void OnRACommand(RACommandEvent ev)
+        public void OnRACommand(ref RACommandEvent ev)
         {
             string cmd = ev.Command.ToLower();
             if (cmd.StartsWith("spawnsh"))
