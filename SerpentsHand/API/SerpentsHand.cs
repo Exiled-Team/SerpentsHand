@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
-using Smod2.API;
 
 namespace SerpentsHand.API
 {
 	public static class SerpentsHand
 	{
-		public static void SpawnPlayer(Player player)
+		public static void SpawnPlayer(ReferenceHub player)
 		{
-			SHPlugin.SpawnPlayer(player);
+			EventHandlers.SpawnPlayer(player);
 		}
 
-		public static void SpawnSquad(List<Player> PlayerList)
+		public static void SpawnSquad(List<ReferenceHub> playerList)
 		{
-			SHPlugin.SpawnSHSquad(PlayerList);
+			EventHandlers.SpawnSquad(playerList);
 		}
 
 		public static void SpawnSquad(int size)
 		{
-			SHPlugin.SpawnSquad(size);
+			EventHandlers.CreateSquad(size);
 		}
 	}
 }

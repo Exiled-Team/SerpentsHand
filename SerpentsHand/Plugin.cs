@@ -1,5 +1,5 @@
-﻿using System;
-using EXILED;
+﻿using EXILED;
+using MEC;
 
 namespace SerpentsHand
 {
@@ -9,7 +9,7 @@ namespace SerpentsHand
 
         public override void OnEnable()
         {
-            EventHandlers = new EventHandlers(this);
+            EventHandlers = new EventHandlers();
 
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
             Events.RoundEndEvent += EventHandlers.OnRoundEnd;
@@ -25,6 +25,8 @@ namespace SerpentsHand
             Events.PlayerLeaveEvent += EventHandlers.OnDisconnect;
             Events.Scp106ContainEvent += EventHandlers.OnContain106;
             Events.RemoteAdminCommandEvent += EventHandlers.OnRACommand;
+            Events.GeneratorInsertedEvent += EventHandlers.OnGeneratorInsert;
+            Events
         }
 
         public override void OnDisable()
@@ -42,6 +44,8 @@ namespace SerpentsHand
             Events.SetClassEvent -= EventHandlers.OnSetRole;
             Events.PlayerLeaveEvent -= EventHandlers.OnDisconnect;
             Events.Scp106ContainEvent -= EventHandlers.OnContain106;
+            Events.RemoteAdminCommandEvent -= EventHandlers.OnRACommand;
+            Events.GeneratorInsertedEvent -= EventHandlers.OnGeneratorInsert;
 
             EventHandlers = null;
         }

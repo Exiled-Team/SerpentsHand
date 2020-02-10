@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SerpentsHand</RootNamespace>
     <AssemblyName>SerpentsHand</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -32,8 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\References\Assembly-CSharp.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Desktop\References\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\References\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="scp035">
+      <HintPath>..\..\scp035\scp035\bin\Release\scp035.dll</HintPath>
     </Reference>
     <Reference Include="Smod2">
       <HintPath>..\References\Smod2.dll</HintPath>
@@ -50,26 +57,21 @@
       <HintPath>..\References\UnityEngine.Networking.dll</HintPath>
     </Reference>
     <Reference Include="EXILED">
-      <HintPath>..\..\..\References\EXILED.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\EXILED.dll</HintPath>
     </Reference>
     <Reference Include="EXILED_Events">
-      <HintPath>..\..\..\References\EXILED_Events.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\Plugins\EXILED_Events.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
-      <HintPath>..\..\..\References\Mirror.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\References\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\References\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\References\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\SerpentsHand.cs" />
-    <Compile Include="EventHandler.cs" />
-    <Compile Include="SHPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpawnCommand.cs" />
-    <Compile Include="SpawnSquad.cs" />
-    <Compile Include="Timing.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Configs.cs" />
