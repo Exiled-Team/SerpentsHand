@@ -212,6 +212,8 @@ namespace SerpentsHand
             string cmd = ev.Command.ToLower();
             if (cmd.StartsWith("spawnsh"))
             {
+                ev.Allow = false;
+
                 string[] args = cmd.Replace("spawnsh", "").Trim().Split(' ');
 
                 if (args.Length > 0)
@@ -220,12 +222,12 @@ namespace SerpentsHand
                     if (cPlayer != null)
                     {
                         SpawnPlayer(cPlayer);
-                        ev.Sender.RaReply($"Spawned {cPlayer.nicknameSync.Network_myNickSync}", true, true, string.Empty);
+                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync}", true, "SerpentsHand");
                         return;
                     }
                     else
                     {
-                        ev.Sender.RaReply("Invalid player.", true, true, string.Empty);
+                        ev.Sender.RAMessage("Invalid player.", false, "SerpentsHand");
                         return;
                     }
                 }
@@ -233,6 +235,8 @@ namespace SerpentsHand
             }
             else if (cmd.StartsWith("spawnshsquad"))
             {
+                ev.Allow = false;
+
                 string[] args = cmd.Replace("spawnshsquad", "").Trim().Split(' ');
 
                 if (args.Length > 0)
@@ -243,7 +247,7 @@ namespace SerpentsHand
                     }
                     else
                     {
-                        ev.Sender.RaReply("Error: invalid size.", true, true, string.Empty);
+                        ev.Sender.RAMessage("Error: invalid size.", false, "SerpentsHand");
                         return;
                     }
                 }
@@ -251,8 +255,8 @@ namespace SerpentsHand
                 {
                     CreateSquad(5);
                 }
-                EXILED.Extensions.Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
-                ev.Sender.RaReply("Spawned squad.", true, true, string.Empty);
+                Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
+                ev.Sender.RAMessage("Spawned squad.", true, "SerpentsHand");
             }
         }
 

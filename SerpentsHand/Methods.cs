@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EXILED;
+using EXILED.Extensions;
 using MEC;
 using scp035.API;
 
@@ -27,11 +29,11 @@ namespace SerpentsHand
         internal static void CreateSquad(int size)
         {
             List<ReferenceHub> spec = new List<ReferenceHub>();
-            List<ReferenceHub> pList = Plugin.GetHubs();
+            List<ReferenceHub> pList = Player.GetHubs().ToList();
 
             foreach (ReferenceHub player in pList)
             {
-                if (Plugin.GetTeam(player.characterClassManager.CurClass) == Team.RIP)
+                if (player.GetTeam() == Team.RIP)
                 {
                     spec.Add(player);
                 }
@@ -57,7 +59,7 @@ namespace SerpentsHand
                 SpawnPlayer(player);
             }
 
-            EXILED.Extensions.Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
+            Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
         }
 
         private int CountRoles(Team team)
@@ -70,13 +72,13 @@ namespace SerpentsHand
             }
             catch (Exception x)
             {
-                Plugin.Warn("SCP-035 not installed, ignoring API call.");
+                Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
             int count = 0;
-            foreach (ReferenceHub pl in Plugin.GetHubs())
+            foreach (ReferenceHub pl in Player.GetHubs())
             {
-                if (Plugin.GetTeam(pl.characterClassManager.CurClass) == team)
+                if (pl.GetTeam() == team)
                 {
                     if (scp035 != null && pl.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId) continue;
                     count++;
@@ -87,7 +89,7 @@ namespace SerpentsHand
 
         private void TeleportTo106(ReferenceHub player)
         {
-            ReferenceHub scp106 = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Scp106).FirstOrDefault();
+            ReferenceHub scp106 = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Scp106).FirstOrDefault();
             if (scp106 != null)
             {
                 player.plyMovementSync.OverridePosition(scp106.transform.position, 0f);
