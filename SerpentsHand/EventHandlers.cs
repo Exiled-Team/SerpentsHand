@@ -5,6 +5,7 @@ using System.Linq;
 using MEC;
 using UnityEngine;
 using scp035.API;
+using EXILED.Extensions;
 
 namespace SerpentsHand
 {
@@ -45,10 +46,11 @@ namespace SerpentsHand
         {
             if (ev.IsChaos)
             {
-                if (rand.Next(1, 101) <= Configs.spawnChance && Plugin.GetHubs().Count > 0 && respawnCount >= Configs.respawnDelay)
+                if (rand.Next(1, 101) <= Configs.spawnChance && Player.GetHubs().Count() > 0 && respawnCount >= Configs.respawnDelay)
                 {
                     List<ReferenceHub> SHPlayers = new List<ReferenceHub>();
                     List<ReferenceHub> CIPlayers = ev.ToRespawn;
+                    ev.ToRespawn.Clear();
 
                     for (int i = 0; i < Configs.maxSquad && CIPlayers.Count > 0; i++)
                     {
@@ -64,7 +66,7 @@ namespace SerpentsHand
                     string ann = Configs.ciEntryAnnouncement;
                     if (ann != string.Empty)
                     {
-                        EXILED.Extensions.Cassie.CassieMessage(ann, true, true);
+                        Cassie.CassieMessage(ann, true, true);
                     }
                 }
             }
@@ -118,11 +120,11 @@ namespace SerpentsHand
                 scp035 = Scp035Data.GetScp035();
             } catch (Exception x)
             {
-                Plugin.Warn("SCP-035 not installed, ignoring API call.");
+                Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
-            if (((shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && (Plugin.GetTeam(ev.Attacker.characterClassManager.CurClass) == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
-                (shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) && (Plugin.GetTeam(ev.Player.characterClassManager.CurClass) == Team.SCP || (scp035 != null && ev.Attacker.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId))) ||
+            if (((shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
+                (shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Attacker.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId))) ||
                 (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) &&
                 ev.Player.queryProcessor.PlayerId != ev.Attacker.queryProcessor.PlayerId)) && !Configs.friendlyFire)
             {
@@ -139,7 +141,7 @@ namespace SerpentsHand
 
             if (ev.Player.characterClassManager.CurClass == RoleType.Scp106 && !Configs.friendlyFire)
             {
-                foreach (ReferenceHub player in Plugin.GetHubs().Where(x => shPocketPlayers.Contains(x.queryProcessor.PlayerId)))
+                foreach (ReferenceHub player in Player.GetHubs().Where(x => shPocketPlayers.Contains(x.queryProcessor.PlayerId)))
                 {
                     player.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.Info.GetDamageType(), player.queryProcessor.PlayerId), player.gameObject);
                 }
@@ -181,7 +183,7 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
             {
-                if (Plugin.GetTeam(ev.Player.characterClassManager.CurClass) != Team.TUT)
+                if (ev.Player.GetTeam() != Team.TUT)
                 { 
                     shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
                 }
@@ -192,7 +194,7 @@ namespace SerpentsHand
         {
             Timing.CallDelayed(1f, () =>
             {
-                int[] curPlayers = Plugin.GetHubs().Select(x => x.queryProcessor.PlayerId).ToArray();
+                int[] curPlayers = Player.GetHubs().Select(x => x.queryProcessor.PlayerId).ToArray();
                 shPlayers.RemoveAll(x => !curPlayers.Contains(x));
             });
         }
@@ -210,29 +212,23 @@ namespace SerpentsHand
             string cmd = ev.Command.ToLower();
             if (cmd.StartsWith("spawnsh"))
             {
-                Plugin.Info("1");
                 string[] args = cmd.Replace("spawnsh", "").Trim().Split(' ');
-                Plugin.Info(args.Length.ToString());
 
                 if (args.Length > 0)
                 {
-                    Plugin.Info("2");
-                    ReferenceHub cPlayer = Plugin.GetPlayer(args[0]);
+                    ReferenceHub cPlayer = Player.GetPlayer(args[0]);
                     if (cPlayer != null)
                     {
-                        Plugin.Info("3");
                         SpawnPlayer(cPlayer);
                         ev.Sender.RaReply($"Spawned {cPlayer.nicknameSync.Network_myNickSync}", true, true, string.Empty);
                         return;
                     }
                     else
                     {
-                        Plugin.Info("4");
                         ev.Sender.RaReply("Invalid player.", true, true, string.Empty);
                         return;
                     }
                 }
-                Plugin.Info("5");
                 ev.Sender.RaReply("SPAWNSH [Player Name / Player ID]", true, true, string.Empty);
             }
             else if (cmd.StartsWith("spawnshsquad"))

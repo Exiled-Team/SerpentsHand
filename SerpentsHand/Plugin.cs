@@ -26,7 +26,6 @@ namespace SerpentsHand
             Events.Scp106ContainEvent += EventHandlers.OnContain106;
             Events.RemoteAdminCommandEvent += EventHandlers.OnRACommand;
             Events.GeneratorInsertedEvent += EventHandlers.OnGeneratorInsert;
-            Events
         }
 
         public override void OnDisable()
