@@ -44,12 +44,16 @@ namespace SerpentsHand
 
         public void OnTeamRespawn(ref TeamRespawnEvent ev)
         {
+            Log.Info("team respawn");
             if (ev.IsChaos)
             {
+                Log.Info((rand.Next(1, 101) <= Configs.spawnChance).ToString());
+                Log.Info((Player.GetHubs().Count() > 0).ToString());
+                Log.Info((respawnCount >= Configs.respawnDelay).ToString());
                 if (rand.Next(1, 101) <= Configs.spawnChance && Player.GetHubs().Count() > 0 && respawnCount >= Configs.respawnDelay)
                 {
                     List<ReferenceHub> SHPlayers = new List<ReferenceHub>();
-                    List<ReferenceHub> CIPlayers = ev.ToRespawn;
+                    List<ReferenceHub> CIPlayers = new List<ReferenceHub>(ev.ToRespawn);
                     ev.ToRespawn.Clear();
 
                     for (int i = 0; i < Configs.maxSquad && CIPlayers.Count > 0; i++)
@@ -58,7 +62,6 @@ namespace SerpentsHand
                         SHPlayers.Add(player);
                         CIPlayers.Remove(player);
                     }
-
                     Timing.CallDelayed(0.1f, () => SpawnSquad(SHPlayers));
                 }
                 else
@@ -101,6 +104,7 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
             {
+                ev.Allow = false;
                 if (Configs.teleportTo106)
                 {
                     TeleportTo106(ev.Player);
@@ -210,7 +214,7 @@ namespace SerpentsHand
         public void OnRACommand(ref RACommandEvent ev)
         {
             string cmd = ev.Command.ToLower();
-            if (cmd.StartsWith("spawnsh"))
+            if (cmd.StartsWith("spawnsh") && !cmd.StartsWith("spawnshsquad"))
             {
                 ev.Allow = false;
 
@@ -222,7 +226,7 @@ namespace SerpentsHand
                     if (cPlayer != null)
                     {
                         SpawnPlayer(cPlayer);
-                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync}", true, "SerpentsHand");
+                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as SerpentsHand", true, "SerpentsHand");
                         return;
                     }
                     else
@@ -261,6 +265,14 @@ namespace SerpentsHand
         }
 
         public void OnGeneratorInsert(ref GeneratorInsertTabletEvent ev)
+        {
+            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && !Configs.friendlyFire)
+            {
+                ev.Allow = false;
+            }
+        }
+
+        public void OnFemurEnter(FemurEnterEvent ev)
         {
             if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && !Configs.friendlyFire)
             {

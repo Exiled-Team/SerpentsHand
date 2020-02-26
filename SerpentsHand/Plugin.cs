@@ -1,5 +1,4 @@
 ﻿using EXILED;
-using MEC;
 
 namespace SerpentsHand
 {
@@ -26,6 +25,7 @@ namespace SerpentsHand
             Events.Scp106ContainEvent += EventHandlers.OnContain106;
             Events.RemoteAdminCommandEvent += EventHandlers.OnRACommand;
             Events.GeneratorInsertedEvent += EventHandlers.OnGeneratorInsert;
+            Events.FemurEnterEvent += EventHandlers.OnFemurEnter;
         }
 
         public override void OnDisable()
@@ -51,6 +51,6 @@ namespace SerpentsHand
 
         public override void OnReload() { }
 
-        public override string getName { get; } = "Serpents Hand";
+        public override string getName { get; } = "SerpentsHand";
     }
 }

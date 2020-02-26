@@ -23,7 +23,7 @@ namespace SerpentsHand
             }
             player.playerStats.health = Configs.health;
 
-            Timing.CallDelayed(0.5f, () => player.plyMovementSync.OverridePosition(shSpawnPos, 180f));
+            Timing.CallDelayed(0.3f, () => player.plyMovementSync.OverridePosition(shSpawnPos, 0f));
         }
 
         internal static void CreateSquad(int size)
