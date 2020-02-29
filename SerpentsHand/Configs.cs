@@ -16,6 +16,7 @@ namespace SerpentsHand
 
 		internal static bool friendlyFire;
 		internal static bool teleportTo106;
+		internal static bool scpsWinWithChaos;
 
         internal static void ReloadConfigs()
         {
@@ -35,6 +36,7 @@ namespace SerpentsHand
 
 			friendlyFire = Plugin.Config.GetBool("sh_friendly_fire", false);
 			teleportTo106 = Plugin.Config.GetBool("sh_teleport_to_106", true);
+			scpsWinWithChaos = Plugin.Config.GetBool("sh_scps_win_with_chaos", true);
         }
     }
 }

@@ -44,12 +44,8 @@ namespace SerpentsHand
 
         public void OnTeamRespawn(ref TeamRespawnEvent ev)
         {
-            Log.Info("team respawn");
             if (ev.IsChaos)
             {
-                Log.Info((rand.Next(1, 101) <= Configs.spawnChance).ToString());
-                Log.Info((Player.GetHubs().Count() > 0).ToString());
-                Log.Info((respawnCount >= Configs.respawnDelay).ToString());
                 if (rand.Next(1, 101) <= Configs.spawnChance && Player.GetHubs().Count() > 0 && respawnCount >= Configs.respawnDelay)
                 {
                     List<ReferenceHub> SHPlayers = new List<ReferenceHub>();
@@ -122,10 +118,13 @@ namespace SerpentsHand
             try
             {
                 scp035 = Scp035Data.GetScp035();
-            } catch (Exception x)
+            } 
+            catch (Exception x)
             {
                 Log.Warn("SCP-035 not installed, ignoring API call.");
             }
+
+            Log.Warn((scp035 != null).ToString());
 
             if (((shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
                 (shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Attacker.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId))) ||
@@ -162,7 +161,7 @@ namespace SerpentsHand
             }
             catch (Exception x)
             {
-                Plugin.Warn("SCP-035 not installed, ignoring API call.");
+                Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
             bool MTFAlive = CountRoles(Team.MTF) > 0;
@@ -172,14 +171,27 @@ namespace SerpentsHand
             bool ScientistsAlive = CountRoles(Team.RSC) > 0;
             bool SHAlive = shPlayers.Count > 0;
 
-            if (SHAlive && (CiAlive || DClassAlive || MTFAlive || ScientistsAlive))
+            if (SHAlive && ((CiAlive && !Configs.scpsWinWithChaos) || DClassAlive || MTFAlive || ScientistsAlive))
             {
                 ev.Allow = false;
             }
-            else if (SHAlive && ScpAlive && !MTFAlive && !CiAlive && !DClassAlive && !ScientistsAlive)
+            else if (SHAlive && ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
             {
-                ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
-                ev.ForceEnd = true;
+                if (!Configs.scpsWinWithChaos)
+                {
+                    if (!CiAlive)
+                    {
+                        ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+                        ev.Allow = true;
+                        ev.ForceEnd = true;
+                    }
+                }
+                else
+                {
+                    ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+                    ev.Allow = true;
+                    ev.ForceEnd = true;
+                }
             }
         }
 
