@@ -10,18 +10,21 @@ namespace SerpentsHand
 {
     partial class EventHandlers
     {
-        internal static void SpawnPlayer(ReferenceHub player)
+        internal static void SpawnPlayer(ReferenceHub player, bool full = true)
         {
             shPlayers.Add(player.queryProcessor.PlayerId);
             player.characterClassManager.SetClassID(RoleType.Tutorial);
-            player.ammoBox.Networkamount = "250:250:250";
-
-            player.inventory.items.ToList().Clear();
-            for (int i = 0; i < Configs.spawnItems.Count; i++)
+            if (full)
             {
-                player.inventory.AddNewItem((ItemType)Configs.spawnItems[i]);
+                player.ammoBox.Networkamount = "250:250:250";
+
+                player.inventory.items.ToList().Clear();
+                for (int i = 0; i < Configs.spawnItems.Count; i++)
+                {
+                    player.inventory.AddNewItem((ItemType)Configs.spawnItems[i]);
+                }
+                player.playerStats.health = Configs.health;
             }
-            player.playerStats.health = Configs.health;
 
             Timing.CallDelayed(0.3f, () => player.plyMovementSync.OverridePosition(shSpawnPos, 0f));
         }
