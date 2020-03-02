@@ -238,16 +238,16 @@ namespace SerpentsHand
                     if (cPlayer != null)
                     {
                         SpawnPlayer(cPlayer);
-                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as SerpentsHand", true, "SerpentsHand");
+                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as Serpents Hand", true);
                         return;
                     }
                     else
                     {
-                        ev.Sender.RAMessage("Invalid player.", false, "SerpentsHand");
+                        ev.Sender.RAMessage("Invalid player.", false);
                         return;
                     }
                 }
-                ev.Sender.RaReply("SPAWNSH [Player Name / Player ID]", true, true, string.Empty);
+                ev.Sender.RAMessage("SPAWNSH [Player Name / Player ID]", false);
             }
             else if (cmd.StartsWith("spawnshsquad"))
             {
@@ -263,7 +263,7 @@ namespace SerpentsHand
                     }
                     else
                     {
-                        ev.Sender.RAMessage("Error: invalid size.", false, "SerpentsHand");
+                        ev.Sender.RAMessage("Error: invalid size.", false);
                         return;
                     }
                 }
@@ -272,7 +272,7 @@ namespace SerpentsHand
                     CreateSquad(5);
                 }
                 Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
-                ev.Sender.RAMessage("Spawned squad.", true, "SerpentsHand");
+                ev.Sender.RAMessage("Spawned squad.", true);
             }
         }
 
