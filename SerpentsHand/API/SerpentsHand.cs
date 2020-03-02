@@ -18,5 +18,10 @@ namespace SerpentsHand.API
 		{
 			EventHandlers.CreateSquad(size);
 		}
+
+		public static List<int> GetSHPlayers()
+		{
+			return EventHandlers.shPlayers;
+		}
 	}
 }

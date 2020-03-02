@@ -11,7 +11,7 @@ namespace SerpentsHand
 {
     public partial class EventHandlers
     {
-        private static List<int> shPlayers = new List<int>();
+        public static List<int> shPlayers = new List<int>();
         private List<int> shPocketPlayers = new List<int>();
 
         private bool isRoundStarted = false;
