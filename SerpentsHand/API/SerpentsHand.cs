@@ -4,9 +4,9 @@ namespace SerpentsHand.API
 {
 	public static class SerpentsHand
 	{
-		public static void SpawnPlayer(ReferenceHub player)
+		public static void SpawnPlayer(ReferenceHub player, bool full = true)
 		{
-			EventHandlers.SpawnPlayer(player);
+			EventHandlers.SpawnPlayer(player, full);
 		}
 
 		public static void SpawnSquad(List<ReferenceHub> playerList)
