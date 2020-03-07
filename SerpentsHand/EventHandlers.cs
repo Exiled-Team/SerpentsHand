@@ -129,8 +129,6 @@ namespace SerpentsHand
                 Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
-            Log.Warn((scp035 == null).ToString());
-
             if (((shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
                 (shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Attacker.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId))) ||
                 (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) &&
