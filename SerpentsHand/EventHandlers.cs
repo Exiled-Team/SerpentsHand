@@ -243,7 +243,7 @@ namespace SerpentsHand
                     if (cPlayer != null)
                     {
                         SpawnPlayer(cPlayer);
-                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as Serpents Hand", true);
+                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as Serpents Hand.", true);
                         return;
                     }
                     else
@@ -252,7 +252,10 @@ namespace SerpentsHand
                         return;
                     }
                 }
-                ev.Sender.RAMessage("SPAWNSH [Player Name / Player ID]", false);
+                else
+                {
+                    ev.Sender.RAMessage("SPAWNSH [Player Name / Player ID]", false);
+                }
             }
             else if (cmd.StartsWith("spawnshsquad"))
             {
