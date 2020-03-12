@@ -6,7 +6,7 @@ A plugin that adds a new class to your server named "Serpent's Hand". This class
 
 **[EXILED](https://github.com/galaxy119/EXILED) must be installed for this to work.**
 
-**If you have [AdminTools](https://github.com/galaxy119/AdminTools/tree/master/AdminTools) installed, make sure you set `admin_god_tuts: false` in your EXILED config.
+**If you have [AdminTools](https://github.com/galaxy119/AdminTools/tree/master/AdminTools) installed, make sure you set `admin_god_tuts: false` in your EXILED config.**
 
 Place the "SerpentsHand.dll" file in your sm_plugins folder.
 
