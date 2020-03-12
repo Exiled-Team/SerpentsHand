@@ -27,9 +27,9 @@ Place the "SerpentsHand.dll" file in your sm_plugins folder.
 | sh_friendly_fire | Boolean | False | Should SCPs and Serpent's Hand be able to hurt eachother. This includes 106's pocket dimension, with this disabled, Serpent's Hand members will never die no matter which exit they take in the Pocket Dimension. |
 | sh_teleport_to_106 | Boolean | True | When a Serpent's hand member escapes the Pocket Dimension, should they teleport to 106 instead of spawning at his chamber. |
 | sh_scps_win_with_chaos | Boolean | True | Set this to false if Chaos do not win with SCPs on your server. |
-| sh_health | Number | 120 | How much health Serpent's Hand members will have. |
-| sh_max_squad | Number | 8 | The maximum number of Serpent's Hand members allowed to spawn. |
-| sh_team_respawn_delay | Number | 1 | The amount of team respawns that must occur before Serpent's Hand can spawn. |
+| sh_health | Integer | 120 | How much health Serpent's Hand members will have. |
+| sh_max_squad | Integer | 8 | The maximum number of Serpent's Hand members allowed to spawn. |
+| sh_team_respawn_delay | Integer | 1 | The amount of team respawns that must occur before Serpent's Hand can spawn. |
 
 # Commands
 |     Command    | Value Type | Description |
