@@ -109,11 +109,6 @@ namespace SerpentsHand
             }
         }
 
-        private ReferenceHub TryGet035()
-        {
-            return Scp035Data.GetScp035();
-        }
-
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
         {
             if (ev.Attacker.queryProcessor.PlayerId == 0 || !isRoundStarted) return;
@@ -211,11 +206,10 @@ namespace SerpentsHand
 
         public void OnDisconnect(PlayerLeaveEvent ev)
         {
-            Timing.CallDelayed(1f, () =>
+            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
             {
-                int[] curPlayers = Player.GetHubs().Select(x => x.queryProcessor.PlayerId).ToArray();
-                shPlayers.RemoveAll(x => !curPlayers.Contains(x));
-            });
+                shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+            }
         }
 
         public void OnContain106(Scp106ContainEvent ev)

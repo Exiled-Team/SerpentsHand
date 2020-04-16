@@ -65,13 +65,18 @@ namespace SerpentsHand
             Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
         }
 
+        private ReferenceHub TryGet035()
+        {
+            return Scp035Data.GetScp035();
+        }
+
         private int CountRoles(Team team)
         {
             ReferenceHub scp035 = null;
 
             try
             {
-                scp035 = Scp035Data.GetScp035();
+                scp035 = TryGet035();
             }
             catch (Exception x)
             {
