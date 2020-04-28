@@ -171,7 +171,7 @@ namespace SerpentsHand
 
             if (SHAlive && ((CiAlive && !Configs.scpsWinWithChaos) || DClassAlive || MTFAlive || ScientistsAlive))
             {
-                ev.Allow = false;
+               ev.Allow = false;
             }
             else if (SHAlive && ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
             {
