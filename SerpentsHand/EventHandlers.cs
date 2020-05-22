@@ -4,23 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using MEC;
 using UnityEngine;
-using scp035.API;
 using EXILED.Extensions;
+using System.IO;
 
 namespace SerpentsHand
 {
     public partial class EventHandlers
     {
-        public static List<int> shPlayers = new List<int>();
-        private List<int> shPocketPlayers = new List<int>();
-
-        private bool isRoundStarted = false;
+        public static List<ReferenceHub> shPlayers = new List<ReferenceHub>();
+        private List<ReferenceHub> shPocketPlayers = new List<ReferenceHub>();
 
         private int respawnCount = 0;
 
         private static System.Random rand = new System.Random();
-
-        private PlayerStats.HitInfo noDamage = new PlayerStats.HitInfo(0, "WORLD", DamageTypes.Nuke, 0);
 
         private static Vector3 shSpawnPos = new Vector3(0, 1001, 8);
 
@@ -33,13 +29,7 @@ namespace SerpentsHand
         {
             shPlayers.Clear();
             shPocketPlayers.Clear();
-            isRoundStarted = true;
             respawnCount = 0;
-        }
-
-        public void OnRoundEnd()
-        {
-            isRoundStarted = false;
         }
 
         public void OnTeamRespawn(ref TeamRespawnEvent ev)
@@ -74,15 +64,15 @@ namespace SerpentsHand
 
         public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
-                shPocketPlayers.Add(ev.Player.queryProcessor.PlayerId);
+                shPocketPlayers.Add(ev.Player);
             }
         }
 
         public void OnPocketDimensionDie(PocketDimDeathEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
                 if (!Configs.friendlyFire)
                 {
@@ -92,57 +82,50 @@ namespace SerpentsHand
                 {
                     TeleportTo106(ev.Player);
                 }
-                shPocketPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+                shPocketPlayers.Remove(ev.Player);
             }
         }
 
         public void OnPocketDimensionExit(PocketDimEscapedEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
                 ev.Allow = false;
                 if (Configs.teleportTo106)
                 {
                     TeleportTo106(ev.Player);
                 }
-                shPocketPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+                shPocketPlayers.Remove(ev.Player);
             }
         }
 
         public void OnPlayerHurt(ref PlayerHurtEvent ev)
         {
-            if (ev.Attacker.queryProcessor.PlayerId == 0 || !isRoundStarted) return;
-
             ReferenceHub scp035 = null;
 
-            try
+            if (Plugin.isScp035)
             {
                 scp035 = TryGet035();
-            } 
-            catch (Exception x)
-            {
-                Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
-            if (((shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
-                (shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Attacker.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId))) ||
-                (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && shPlayers.Contains(ev.Attacker.queryProcessor.PlayerId) &&
-                ev.Player.queryProcessor.PlayerId != ev.Attacker.queryProcessor.PlayerId)) && !Configs.friendlyFire)
+            if (((shPlayers.Contains(ev.Player) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
+                (shPlayers.Contains(ev.Attacker) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Player == scp035))) ||
+                (shPlayers.Contains(ev.Player) && shPlayers.Contains(ev.Attacker) && ev.Player != ev.Attacker)) && !Configs.friendlyFire)
             {
-                ev.Info = noDamage;
+                ev.Amount = 0f;
             }
         }
 
         public void OnPlayerDie(ref PlayerDeathEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
-                shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+                shPlayers.Remove(ev.Player);
             }
 
             if (ev.Player.characterClassManager.CurClass == RoleType.Scp106 && !Configs.friendlyFire)
             {
-                foreach (ReferenceHub player in Player.GetHubs().Where(x => shPocketPlayers.Contains(x.queryProcessor.PlayerId)))
+                foreach (ReferenceHub player in Player.GetHubs().Where(x => shPocketPlayers.Contains(x)))
                 {
                     player.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.Info.GetDamageType(), player.queryProcessor.PlayerId), player.gameObject);
                 }
@@ -153,13 +136,9 @@ namespace SerpentsHand
         {
             ReferenceHub scp035 = null;
 
-            try
+            if (Plugin.isScp035)
             {
                 scp035 = TryGet035();
-            }
-            catch (Exception x)
-            {
-                Log.Debug("SCP-035 not installed, ignoring API call.");
             }
 
             bool MTFAlive = CountRoles(Team.MTF) > 0;
@@ -171,7 +150,7 @@ namespace SerpentsHand
 
             if (SHAlive && ((CiAlive && !Configs.scpsWinWithChaos) || DClassAlive || MTFAlive || ScientistsAlive))
             {
-               ev.Allow = false;
+                ev.Allow = false;
             }
             else if (SHAlive && ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
             {
@@ -195,26 +174,26 @@ namespace SerpentsHand
 
         public void OnSetRole(SetClassEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
-                if (ev.Player.GetTeam() != Team.TUT)
+                if (ev.Role.GetTeam() != Team.TUT)
                 { 
-                    shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+                    shPlayers.Remove(ev.Player);
                 }
             }
         }
 
         public void OnDisconnect(PlayerLeaveEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId))
+            if (shPlayers.Contains(ev.Player))
             {
-                shPlayers.Remove(ev.Player.queryProcessor.PlayerId);
+                shPlayers.Remove(ev.Player);
             }
         }
 
         public void OnContain106(Scp106ContainEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
             {
                 ev.Allow = false;
             }
@@ -278,7 +257,7 @@ namespace SerpentsHand
 
         public void OnGeneratorInsert(ref GeneratorInsertTabletEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
             {
                 ev.Allow = false;
             }
@@ -286,7 +265,7 @@ namespace SerpentsHand
 
         public void OnFemurEnter(FemurEnterEvent ev)
         {
-            if (shPlayers.Contains(ev.Player.queryProcessor.PlayerId) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
             {
                 ev.Allow = false;
             }

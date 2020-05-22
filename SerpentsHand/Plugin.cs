@@ -6,12 +6,15 @@ namespace SerpentsHand
     {
         public EventHandlers EventHandlers;
 
+        public static bool isScp035 = false;
+
         public override void OnEnable()
         {
             EventHandlers = new EventHandlers();
 
+            Check035();
+
             Events.RoundStartEvent += EventHandlers.OnRoundStart;
-            Events.RoundEndEvent += EventHandlers.OnRoundEnd;
             Events.TeamRespawnEvent += EventHandlers.OnTeamRespawn;
             Events.PocketDimEnterEvent += EventHandlers.OnPocketDimensionEnter;
             Events.PocketDimDeathEvent += EventHandlers.OnPocketDimensionDie;
@@ -31,7 +34,6 @@ namespace SerpentsHand
         public override void OnDisable()
         {
             Events.RoundStartEvent -= EventHandlers.OnRoundStart;
-            Events.RoundEndEvent -= EventHandlers.OnRoundEnd;
             Events.TeamRespawnEvent -= EventHandlers.OnTeamRespawn;
             Events.PocketDimEnterEvent -= EventHandlers.OnPocketDimensionEnter;
             Events.PocketDimDeathEvent -= EventHandlers.OnPocketDimensionDie;
@@ -52,5 +54,17 @@ namespace SerpentsHand
         public override void OnReload() { }
 
         public override string getName { get; } = "SerpentsHand";
+
+        internal void Check035()
+        {
+            foreach (EXILED.Plugin plugin in PluginManager._plugins)
+            {
+                if (plugin.getName == "SCP-035")
+                {
+                    isScp035 = true;
+                    return;
+                }
+            }
+        }
     }
 }

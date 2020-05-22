@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using EXILED;
 using EXILED.Extensions;
 using MEC;
 using scp035.API;
@@ -12,8 +10,9 @@ namespace SerpentsHand
     {
         internal static void SpawnPlayer(ReferenceHub player, bool full = true)
         {
-            shPlayers.Add(player.queryProcessor.PlayerId);
+            shPlayers.Add(player);
             player.characterClassManager.SetClassID(RoleType.Tutorial);
+            player.Broadcast(10, "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>", false);
             if (full)
             {
                 player.ammoBox.Networkamount = "250:250:250";
@@ -74,13 +73,9 @@ namespace SerpentsHand
         {
             ReferenceHub scp035 = null;
 
-            try
+            if (Plugin.isScp035)
             {
                 scp035 = TryGet035();
-            }
-            catch (Exception x)
-            {
-                Log.Warn("SCP-035 not installed, ignoring API call.");
             }
 
             int count = 0;
