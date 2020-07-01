@@ -92,10 +92,14 @@ namespace SerpentsHand
 
         private void TeleportTo106(ReferenceHub player)
         {
-            ReferenceHub scp106 = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Scp106).FirstOrDefault();
+            ReferenceHub scp106 = Player.GetHubs().Where(x => x.GetRole() == RoleType.Scp106).FirstOrDefault();
             if (scp106 != null)
             {
-                player.plyMovementSync.OverridePosition(scp106.transform.position, 0f);
+                player.SetPosition(scp106.transform.position);
+            }
+            else
+            {
+                player.SetPosition(Map.GetRandomSpawnPoint(RoleType.Scp096));
             }
         }
     }
