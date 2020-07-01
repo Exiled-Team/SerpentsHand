@@ -208,7 +208,7 @@ namespace SerpentsHand
 
                 string[] args = cmd.Replace("spawnsh", "").Trim().Split(' ');
 
-                if (args.Length > 0)
+                if (args.Length > 0 && args[0].Length > 0)
                 {
                     ReferenceHub cPlayer = Player.GetPlayer(args[0]);
                     if (cPlayer != null)
