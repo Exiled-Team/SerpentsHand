@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Exiled.API.Features;
+using System.Collections.Generic;
 
 namespace SerpentsHand.API
 {
 	public static class SerpentsHand
 	{
-		public static void SpawnPlayer(ReferenceHub player, bool full = true)
+		public static void SpawnPlayer(Player player, bool full = true)
 		{
 			EventHandlers.SpawnPlayer(player, full);
 		}
 
-		public static void SpawnSquad(List<ReferenceHub> playerList)
+		public static void SpawnSquad(List<Player> playerList)
 		{
 			EventHandlers.SpawnSquad(playerList);
 		}
@@ -19,7 +20,7 @@ namespace SerpentsHand.API
 			EventHandlers.CreateSquad(size);
 		}
 
-		public static List<ReferenceHub> GetSHPlayers()
+		public static List<Player> GetSHPlayers()
 		{
 			return EventHandlers.shPlayers;
 		}

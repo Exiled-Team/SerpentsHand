@@ -1,29 +1,22 @@
-﻿using System;
-using EXILED;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MEC;
 using UnityEngine;
-using EXILED.Extensions;
-using System.IO;
+using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 
 namespace SerpentsHand
 {
     public partial class EventHandlers
     {
-        public static List<ReferenceHub> shPlayers = new List<ReferenceHub>();
-        private List<ReferenceHub> shPocketPlayers = new List<ReferenceHub>();
+        public static List<Player> shPlayers = new List<Player>();
+        private List<Player> shPocketPlayers = new List<Player>();
 
         private int respawnCount = 0;
 
         private static System.Random rand = new System.Random();
 
         private static Vector3 shSpawnPos = new Vector3(0, 1001, 8);
-
-        public void OnWaitingForPlayers()
-        {
-            Configs.ReloadConfigs();
-        }
 
         public void OnRoundStart()
         {
@@ -32,19 +25,19 @@ namespace SerpentsHand
             respawnCount = 0;
         }
 
-        public void OnTeamRespawn(ref TeamRespawnEvent ev)
+        public void OnTeamRespawn(RespawningTeamEventArgs ev)
         {
-            if (ev.IsChaos)
+            if (ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
             {
-                if (rand.Next(1, 101) <= Configs.spawnChance && Player.GetHubs().Count() > 0 && respawnCount >= Configs.respawnDelay)
+                if (rand.Next(1, 101) <= SerpentsHand.instance.Config.SpawnChance && Player.List.Count() > 0 && respawnCount >= SerpentsHand.instance.Config.RespawnDelay)
                 {
-                    List<ReferenceHub> SHPlayers = new List<ReferenceHub>();
-                    List<ReferenceHub> CIPlayers = new List<ReferenceHub>(ev.ToRespawn);
-                    ev.ToRespawn.Clear();
+                    List<Player> SHPlayers = new List<Player>();
+                    List<Player> CIPlayers = new List<Player>(ev.Players);
+                    ev.Players.Clear();
 
-                    for (int i = 0; i < Configs.maxSquad && CIPlayers.Count > 0; i++)
+                    for (int i = 0; i < SerpentsHand.instance.Config.MaxSquad && CIPlayers.Count > 0; i++)
                     {
-                        ReferenceHub player = CIPlayers[rand.Next(CIPlayers.Count)];
+                        Player player = CIPlayers[rand.Next(CIPlayers.Count)];
                         SHPlayers.Add(player);
                         CIPlayers.Remove(player);
                     }
@@ -52,17 +45,17 @@ namespace SerpentsHand
                 }
                 else
                 {
-                    string ann = Configs.ciEntryAnnouncement;
+                    string ann = SerpentsHand.instance.Config.CiEntryAnnouncement;
                     if (ann != string.Empty)
                     {
-                        Cassie.CassieMessage(ann, true, true);
+                        Cassie.Message(ann, true, true);
                     }
                 }
             }
             respawnCount++;
         }
 
-        public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
+        public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player))
             {
@@ -70,15 +63,15 @@ namespace SerpentsHand
             }
         }
 
-        public void OnPocketDimensionDie(PocketDimDeathEvent ev)
+        public void OnPocketDimensionDie(FailingEscapePocketDimensionEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player))
             {
-                if (!Configs.friendlyFire)
+                if (!SerpentsHand.instance.Config.FriendlyFire)
                 {
-                    ev.Allow = false;
+                    ev.IsAllowed = false;
                 }
-                if (Configs.teleportTo106)
+                if (SerpentsHand.instance.Config.TeleportTo106)
                 {
                     TeleportTo106(ev.Player);
                 }
@@ -86,12 +79,12 @@ namespace SerpentsHand
             }
         }
 
-        public void OnPocketDimensionExit(PocketDimEscapedEvent ev)
+        public void OnPocketDimensionExit(EscapingPocketDimensionEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player))
             {
-                ev.Allow = false;
-                if (Configs.teleportTo106)
+                ev.IsAllowed = false;
+                if (SerpentsHand.instance.Config.TeleportTo106)
                 {
                     TeleportTo106(ev.Player);
                 }
@@ -99,91 +92,91 @@ namespace SerpentsHand
             }
         }
 
-        public void OnPlayerHurt(ref PlayerHurtEvent ev)
+        public void OnPlayerHurt(HurtingEventArgs ev)
         {
-            ReferenceHub scp035 = null;
+            Player scp035 = null;
 
-            if (Plugin.isScp035)
+            if (SerpentsHand.isScp035)
             {
                 scp035 = TryGet035();
             }
 
-            if (((shPlayers.Contains(ev.Player) && (ev.Attacker.GetTeam() == Team.SCP || ev.Info.GetDamageType() == DamageTypes.Pocket)) ||
-                (shPlayers.Contains(ev.Attacker) && (ev.Player.GetTeam() == Team.SCP || (scp035 != null && ev.Player == scp035))) ||
-                (shPlayers.Contains(ev.Player) && shPlayers.Contains(ev.Attacker) && ev.Player != ev.Attacker)) && !Configs.friendlyFire)
+            if (((shPlayers.Contains(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.HitInformations.GetDamageType() == DamageTypes.Pocket)) ||
+                (shPlayers.Contains(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035 != null && ev.Target == scp035))) ||
+                (shPlayers.Contains(ev.Target) && shPlayers.Contains(ev.Attacker) && ev.Target != ev.Attacker)) && !SerpentsHand.instance.Config.FriendlyFire)
             {
                 ev.Amount = 0f;
             }
         }
 
-        public void OnPlayerDie(ref PlayerDeathEvent ev)
+        public void OnPlayerDie(DiedEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Player))
+            if (shPlayers.Contains(ev.Target))
             {
-                shPlayers.Remove(ev.Player);
+                shPlayers.Remove(ev.Target);
             }
 
-            if (ev.Player.characterClassManager.CurClass == RoleType.Scp106 && !Configs.friendlyFire)
+            if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
             {
-                foreach (ReferenceHub player in Player.GetHubs().Where(x => shPocketPlayers.Contains(x)))
+                foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x)))
                 {
-                    player.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.Info.GetDamageType(), player.queryProcessor.PlayerId), player.gameObject);
+                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformations.GetDamageType(), player.Id), player.GameObject);
                 }
             }
         }
 
-        public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
+        public void OnCheckRoundEnd(EndingRoundEventArgs ev)
         {
-            ReferenceHub scp035 = null;
+            Player scp035 = null;
 
-            if (Plugin.isScp035)
+            if (SerpentsHand.isScp035)
             {
                 scp035 = TryGet035();
             }
 
             bool MTFAlive = CountRoles(Team.MTF) > 0;
             bool CiAlive = CountRoles(Team.CHI) > 0;
-            bool ScpAlive = CountRoles(Team.SCP) + (scp035 != null && scp035.characterClassManager.CurClass != RoleType.Spectator ? 1 : 0) > 0;
+            bool ScpAlive = CountRoles(Team.SCP) + (scp035 != null && scp035.Role != RoleType.Spectator ? 1 : 0) > 0;
             bool DClassAlive = CountRoles(Team.CDP) > 0;
             bool ScientistsAlive = CountRoles(Team.RSC) > 0;
             bool SHAlive = shPlayers.Count > 0;
 
-            if (SHAlive && ((CiAlive && !Configs.scpsWinWithChaos) || DClassAlive || MTFAlive || ScientistsAlive))
+            if (SHAlive && ((CiAlive && !SerpentsHand.instance.Config.ScpsWinWithChaos) || DClassAlive || MTFAlive || ScientistsAlive))
             {
-                ev.Allow = false;
+                ev.IsAllowed = false;
             }
             else if (SHAlive && ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
             {
-                if (!Configs.scpsWinWithChaos)
+                if (!SerpentsHand.instance.Config.ScpsWinWithChaos)
                 {
                     if (!CiAlive)
                     {
                         ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
-                        ev.Allow = true;
-                        ev.ForceEnd = true;
+                        ev.IsAllowed = true;
+                        ev.IsRoundEnded = true;
                     }
                 }
                 else
                 {
                     ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
-                    ev.Allow = true;
-                    ev.ForceEnd = true;
+                    ev.IsAllowed = true;
+                    ev.IsRoundEnded = true;
                 }
             }
         }
 
-        public void OnSetRole(SetClassEvent ev)
+        public void OnSetRole(ChangingRoleEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player))
             {
-                if (ev.Role.GetTeam() != Team.TUT)
+                if (GetTeam(ev.NewRole) != Team.TUT)
                 { 
                     shPlayers.Remove(ev.Player);
                 }
             }
         }
 
-        public void OnDisconnect(PlayerLeaveEvent ev)
+        public void OnDisconnect(LeftEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player))
             {
@@ -191,83 +184,82 @@ namespace SerpentsHand
             }
         }
 
-        public void OnContain106(Scp106ContainEvent ev)
+        public void OnContain106(ContainingEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !SerpentsHand.instance.Config.FriendlyFire)
             {
-                ev.Allow = false;
+                ev.IsAllowed = false;
             }
         }
 
-        public void OnRACommand(ref RACommandEvent ev)
+        public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
         {
-            string cmd = ev.Command.ToLower();
-            if (cmd.StartsWith("spawnsh") && !cmd.StartsWith("spawnshsquad"))
+            if (ev.Arguments.Count > 0)
             {
-                ev.Allow = false;
-
-                string[] args = cmd.Replace("spawnsh", "").Trim().Split(' ');
-
-                if (args.Length > 0 && args[0].Length > 0)
+                string cmd = ev.Arguments[0].ToLower();
+                if (cmd == "spawnsh")
                 {
-                    ReferenceHub cPlayer = Player.GetPlayer(args[0]);
-                    if (cPlayer != null)
+                    ev.IsAllowed = false;
+
+                    if (ev.Arguments.Count > 1 && ev.Arguments[1].Length > 0)
                     {
-                        SpawnPlayer(cPlayer);
-                        ev.Sender.RAMessage($"Spawned {cPlayer.nicknameSync.Network_myNickSync} as Serpents Hand.", true);
-                        return;
+                        Player cPlayer = Player.Get(ev.Arguments[1]);
+                        if (cPlayer != null)
+                        {
+                            SpawnPlayer(cPlayer);
+                            ev.Sender.RemoteAdminMessage($"Spawned {cPlayer.Nickname} as Serpents Hand.", true);
+                            return;
+                        }
+                        else
+                        {
+                            ev.Sender.RemoteAdminMessage("Invalid player.", false);
+                            return;
+                        }
                     }
                     else
                     {
-                        ev.Sender.RAMessage("Invalid player.", false);
-                        return;
+                        ev.Sender.RemoteAdminMessage("SPAWNSH [Player Name / Player ID]", false);
                     }
                 }
-                else
+                else if (cmd == "spawnshsquad")
                 {
-                    ev.Sender.RAMessage("SPAWNSH [Player Name / Player ID]", false);
-                }
-            }
-            else if (cmd.StartsWith("spawnshsquad"))
-            {
-                ev.Allow = false;
+                    ev.IsAllowed = false;
 
-                string[] args = cmd.Replace("spawnshsquad", "").Trim().Split(' ');
-
-                if (args.Length > 0)
-                {
-                    if (int.TryParse(args[0], out int a))
+                    if (ev.Arguments.Count > 1)
                     {
-                        CreateSquad(a);
+                        if (int.TryParse(ev.Arguments[1], out int a))
+                        {
+                            CreateSquad(a);
+                        }
+                        else
+                        {
+                            ev.Sender.RemoteAdminMessage("Error: invalid size.", false);
+                            return;
+                        }
                     }
                     else
                     {
-                        ev.Sender.RAMessage("Error: invalid size.", false);
-                        return;
+                        CreateSquad(5);
                     }
+                    Cassie.Message(SerpentsHand.instance.Config.EntryAnnouncement, true, true);
+                    ev.Sender.RemoteAdminMessage("Spawned squad.", true);
                 }
-                else
-                {
-                    CreateSquad(5);
-                }
-                Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
-                ev.Sender.RAMessage("Spawned squad.", true);
             }
         }
 
-        public void OnGeneratorInsert(ref GeneratorInsertTabletEvent ev)
+        public void OnGeneratorInsert(InsertingGeneratorTabletEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !SerpentsHand.instance.Config.FriendlyFire)
             {
-                ev.Allow = false;
+                ev.IsAllowed = false;
             }
         }
 
-        public void OnFemurEnter(FemurEnterEvent ev)
+        public void OnFemurEnter(EnteringFemurBreakerEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Player) && !Configs.friendlyFire)
+            if (shPlayers.Contains(ev.Player) && !SerpentsHand.instance.Config.FriendlyFire)
             {
-                ev.Allow = false;
+                ev.IsAllowed = false;
             }
         }
     }

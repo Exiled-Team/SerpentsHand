@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EXILED.Extensions;
+using Exiled.API.Enums;
+using Exiled.API.Features;
 using MEC;
 using scp035.API;
 
@@ -8,34 +9,36 @@ namespace SerpentsHand
 {
     partial class EventHandlers
     {
-        internal static void SpawnPlayer(ReferenceHub player, bool full = true)
+        internal static void SpawnPlayer(Player player, bool full = true)
         {
             shPlayers.Add(player);
-            player.characterClassManager.SetClassID(RoleType.Tutorial);
-            player.Broadcast(10, "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>", false);
+            player.SetRole(RoleType.Tutorial);
+            player.Broadcast(10, "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>");
             if (full)
             {
-                player.ammoBox.Networkamount = "250:250:250";
+                player.SetAmmo(AmmoType.Nato556, 250);
+                player.SetAmmo(AmmoType.Nato762, 250);
+                player.SetAmmo(AmmoType.Nato9, 250);
 
-                player.inventory.items.ToList().Clear();
-                for (int i = 0; i < Configs.spawnItems.Count; i++)
+                player.Inventory.items.ToList().Clear();
+                for (int i = 0; i < SerpentsHand.instance.Config.SpawnItems.Count; i++)
                 {
-                    player.inventory.AddNewItem((ItemType)Configs.spawnItems[i]);
+                    player.Inventory.AddNewItem((ItemType)SerpentsHand.instance.Config.SpawnItems[i]);
                 }
-                player.playerStats.health = Configs.health;
+                player.Health = SerpentsHand.instance.Config.Health;
             }
 
-            Timing.CallDelayed(0.3f, () => player.plyMovementSync.OverridePosition(shSpawnPos, 0f));
+            Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
         }
 
         internal static void CreateSquad(int size)
         {
-            List<ReferenceHub> spec = new List<ReferenceHub>();
-            List<ReferenceHub> pList = Player.GetHubs().ToList();
+            List<Player> spec = new List<Player>();
+            List<Player> pList = Player.List.ToList();
 
-            foreach (ReferenceHub player in pList)
+            foreach (Player player in pList)
             {
-                if (player.GetTeam() == Team.RIP)
+                if (player.Team == Team.RIP)
                 {
                     spec.Add(player);
                 }
@@ -54,52 +57,86 @@ namespace SerpentsHand
             }
         }
 
-        internal static void SpawnSquad(List<ReferenceHub> players)
+        internal static void SpawnSquad(List<Player> players)
         {
-            foreach (ReferenceHub player in players)
+            foreach (Player player in players)
             {
                 SpawnPlayer(player);
             }
 
-            Cassie.CassieMessage(Configs.entryAnnouncement, true, true);
+            Cassie.Message(SerpentsHand.instance.Config.EntryAnnouncement, true, true);
         }
 
-        private ReferenceHub TryGet035()
+        private Player TryGet035()
         {
             return Scp035Data.GetScp035();
         }
 
         private int CountRoles(Team team)
         {
-            ReferenceHub scp035 = null;
+            Player scp035 = null;
 
-            if (Plugin.isScp035)
+            if (SerpentsHand.isScp035)
             {
                 scp035 = TryGet035();
             }
 
             int count = 0;
-            foreach (ReferenceHub pl in Player.GetHubs())
+            foreach (Player pl in Player.List)
             {
-                if (pl.GetTeam() == team)
+                if (pl.Team == team)
                 {
-                    if (scp035 != null && pl.queryProcessor.PlayerId == scp035.queryProcessor.PlayerId) continue;
+                    if (scp035 != null && pl.Id == scp035.Id) continue;
                     count++;
                 }
             }
             return count;
         }
 
-        private void TeleportTo106(ReferenceHub player)
+        private void TeleportTo106(Player player)
         {
-            ReferenceHub scp106 = Player.GetHubs().Where(x => x.GetRole() == RoleType.Scp106).FirstOrDefault();
+            Player scp106 = Player.List.Where(x => x.Role == RoleType.Scp106).FirstOrDefault();
             if (scp106 != null)
             {
-                player.SetPosition(scp106.transform.position);
+                player.Position = scp106.Position;
             }
             else
             {
-                player.SetPosition(Map.GetRandomSpawnPoint(RoleType.Scp096));
+                player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
+            }
+        }
+
+        private Team GetTeam(RoleType roleType)
+        {
+            switch (roleType)
+            {
+                case RoleType.ChaosInsurgency:
+                    return Team.CHI;
+                case RoleType.Scientist:
+                    return Team.RSC;
+                case RoleType.ClassD:
+                    return Team.CDP;
+                case RoleType.Scp049:
+                case RoleType.Scp93953:
+                case RoleType.Scp93989:
+                case RoleType.Scp0492:
+                case RoleType.Scp079:
+                case RoleType.Scp096:
+                case RoleType.Scp106:
+                case RoleType.Scp173:
+                    return Team.SCP;
+                case RoleType.Spectator:
+                    return Team.RIP;
+                case RoleType.FacilityGuard:
+                case RoleType.NtfCadet:
+                case RoleType.NtfLieutenant:
+                case RoleType.NtfCommander:
+                case RoleType.NtfScientist:
+                    return Team.MTF;
+                case RoleType.Tutorial:
+                    return Team.TUT;
+                default:
+                    return Team.RIP;
             }
         }
     }
