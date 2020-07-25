@@ -194,56 +194,53 @@ namespace SerpentsHand
 
         public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
         {
-            if (ev.Arguments.Count > 0)
+            string cmd = ev.Name.ToLower();
+            if (cmd == "spawnsh")
             {
-                string cmd = ev.Arguments[0].ToLower();
-                if (cmd == "spawnsh")
-                {
-                    ev.IsAllowed = false;
+                ev.IsAllowed = false;
 
-                    if (ev.Arguments.Count > 1 && ev.Arguments[1].Length > 0)
+                if (ev.Arguments.Count > 0 && ev.Arguments[0].Length > 0)
+                {
+                    Player cPlayer = Player.Get(ev.Arguments[0]);
+                    if (cPlayer != null)
                     {
-                        Player cPlayer = Player.Get(ev.Arguments[1]);
-                        if (cPlayer != null)
-                        {
-                            SpawnPlayer(cPlayer);
-                            ev.Sender.RemoteAdminMessage($"Spawned {cPlayer.Nickname} as Serpents Hand.", true);
-                            return;
-                        }
-                        else
-                        {
-                            ev.Sender.RemoteAdminMessage("Invalid player.", false);
-                            return;
-                        }
+                        SpawnPlayer(cPlayer);
+                        ev.Sender.RemoteAdminMessage($"Spawned {cPlayer.Nickname} as Serpents Hand.", true);
+                        return;
                     }
                     else
                     {
-                        ev.Sender.RemoteAdminMessage("SPAWNSH [Player Name / Player ID]", false);
+                        ev.Sender.RemoteAdminMessage("Invalid player.", false);
+                        return;
                     }
                 }
-                else if (cmd == "spawnshsquad")
+                else
                 {
-                    ev.IsAllowed = false;
+                    ev.Sender.RemoteAdminMessage("SPAWNSH [Player Name / Player ID]", false);
+                }
+            }
+            else if (cmd == "spawnshsquad")
+            {
+                ev.IsAllowed = false;
 
-                    if (ev.Arguments.Count > 1)
+                if (ev.Arguments.Count > 0)
+                {
+                    if (int.TryParse(ev.Arguments[0], out int a))
                     {
-                        if (int.TryParse(ev.Arguments[1], out int a))
-                        {
-                            CreateSquad(a);
-                        }
-                        else
-                        {
-                            ev.Sender.RemoteAdminMessage("Error: invalid size.", false);
-                            return;
-                        }
+                        CreateSquad(a);
                     }
                     else
                     {
-                        CreateSquad(5);
+                        ev.Sender.RemoteAdminMessage("Error: invalid size.", false);
+                        return;
                     }
-                    Cassie.Message(SerpentsHand.instance.Config.EntryAnnouncement, true, true);
-                    ev.Sender.RemoteAdminMessage("Spawned squad.", true);
                 }
+                else
+                {
+                    CreateSquad(5);
+                }
+                Cassie.Message(SerpentsHand.instance.Config.EntryAnnouncement, true, true);
+                ev.Sender.RemoteAdminMessage("Spawned squad.", true);
             }
         }
 
