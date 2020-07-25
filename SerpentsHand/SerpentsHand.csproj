@@ -52,7 +52,8 @@
     <Reference Include="Exiled.Loader">
       <HintPath>..\..\..\..\AppData\Roaming\EXILED\Exiled.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="scp035">
+    <Reference Include="scp035, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\scp035\scp035\bin\Release\scp035.dll</HintPath>
     </Reference>
     <Reference Include="Smod2">
