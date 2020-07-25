@@ -109,7 +109,7 @@ namespace SerpentsHand
             }
         }
 
-        public void OnPlayerDie(DiedEventArgs ev)
+        public void OnPlayerDying(DyingEventArgs ev)
         {
             if (shPlayers.Contains(ev.Target))
             {
@@ -120,7 +120,7 @@ namespace SerpentsHand
             {
                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x)))
                 {
-                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformations.GetDamageType(), player.Id), player.GameObject);
+                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformation.GetDamageType(), player.Id), player.GameObject);
                 }
             }
         }
