@@ -13,10 +13,10 @@ namespace SerpentsHand
 
         public override void OnEnabled()
         {
+            if (!Config.IsEnabled) return;
+
             instance = this;
-
             EventHandlers = new EventHandlers();
-
             Check035();
 
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
