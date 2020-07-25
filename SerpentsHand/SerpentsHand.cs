@@ -13,6 +13,8 @@ namespace SerpentsHand
 
         public override void OnEnabled()
         {
+            base.OnEnabled();
+
             if (!Config.IsEnabled) return;
 
             instance = this;
@@ -37,6 +39,8 @@ namespace SerpentsHand
 
         public override void OnDisabled()
         {
+            base.OnDisabled();
+
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
             Exiled.Events.Handlers.Server.RespawningTeam -= EventHandlers.OnTeamRespawn;
             Exiled.Events.Handlers.Player.EnteringPocketDimension -= EventHandlers.OnPocketDimensionEnter;
