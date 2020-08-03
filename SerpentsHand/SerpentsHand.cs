@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using Exiled.Loader;
+using HarmonyLib;
 
 namespace SerpentsHand
 {
@@ -8,6 +9,7 @@ namespace SerpentsHand
         public EventHandlers EventHandlers;
 
         public static SerpentsHand instance;
+        private Harmony hInstance;
 
         public static bool isScp035 = false;
 
@@ -16,6 +18,9 @@ namespace SerpentsHand
             base.OnEnabled();
 
             if (!Config.IsEnabled) return;
+
+            hInstance = new Harmony("cyanox.serpentshand");
+            hInstance.PatchAll();
 
             instance = this;
             EventHandlers = new EventHandlers();
@@ -35,6 +40,8 @@ namespace SerpentsHand
             Exiled.Events.Handlers.Server.SendingRemoteAdminCommand += EventHandlers.OnRACommand;
             Exiled.Events.Handlers.Player.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
             Exiled.Events.Handlers.Player.EnteringFemurBreaker += EventHandlers.OnFemurEnter;
+            Exiled.Events.Handlers.Player.Died += EventHandlers.OnPlayerDeath;
+            Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.a;
         }
 
         public override void OnDisabled()
@@ -55,7 +62,9 @@ namespace SerpentsHand
             Exiled.Events.Handlers.Server.SendingRemoteAdminCommand -= EventHandlers.OnRACommand;
             Exiled.Events.Handlers.Player.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
             Exiled.Events.Handlers.Player.EnteringFemurBreaker -= EventHandlers.OnFemurEnter;
+            Exiled.Events.Handlers.Player.Died -= EventHandlers.OnPlayerDeath;
 
+            hInstance.UnpatchAll();
             EventHandlers = null;
         }
 

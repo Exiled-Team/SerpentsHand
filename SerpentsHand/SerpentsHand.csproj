@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\SerpentsHand.cs" />
+    <Compile Include="Patches\Scp939Attack.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerpentsHand.cs" />
     <Compile Include="EventHandlers.cs" />

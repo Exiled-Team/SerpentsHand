@@ -1,5 +1,6 @@
 ﻿using Exiled.API.Features;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SerpentsHand.API
 {
@@ -22,7 +23,7 @@ namespace SerpentsHand.API
 
 		public static List<Player> GetSHPlayers()
 		{
-			return EventHandlers.shPlayers;
+			return EventHandlers.shPlayers.Select(x => Player.Get(x)).ToList();
 		}
 	}
 }

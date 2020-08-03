@@ -11,7 +11,7 @@ namespace SerpentsHand
     {
         internal static void SpawnPlayer(Player player, bool full = true)
         {
-            shPlayers.Add(player);
+            shPlayers.Add(player.Id);
             player.SetRole(RoleType.Tutorial);
             player.Broadcast(10, "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>");
             if (full)
