@@ -13,7 +13,7 @@ namespace SerpentsHand
         {
             shPlayers.Add(player.Id);
             player.SetRole(RoleType.Tutorial);
-            player.Broadcast(10, "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>");
+            player.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
             if (full)
             {
                 player.SetAmmo(AmmoType.Nato556, 250);
@@ -26,6 +26,7 @@ namespace SerpentsHand
                     player.Inventory.AddNewItem((ItemType)SerpentsHand.instance.Config.SpawnItems[i]);
                 }
                 player.Health = SerpentsHand.instance.Config.Health;
+                // Prevent Serpents Hand from taking up Chaos spawn tickets
                 Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
             }
 
