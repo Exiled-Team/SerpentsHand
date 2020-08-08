@@ -26,6 +26,7 @@ namespace SerpentsHand
                     player.Inventory.AddNewItem((ItemType)SerpentsHand.instance.Config.SpawnItems[i]);
                 }
                 player.Health = SerpentsHand.instance.Config.Health;
+                Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
             }
 
             Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
