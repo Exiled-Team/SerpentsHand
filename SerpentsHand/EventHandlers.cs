@@ -114,7 +114,7 @@ namespace SerpentsHand
 
         public void OnPlayerDying(DyingEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Target.Id))
+           /* if (shPlayers.Contains(ev.Target.Id))
             {
                 shPlayers.Remove(ev.Target.Id);
             }
@@ -125,18 +125,31 @@ namespace SerpentsHand
                 {
                     player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformation.GetDamageType(), player.Id), player.GameObject);
                 }
-            }
+            }*/
         }
 
         public void OnPlayerDeath(DiedEventArgs ev)
         {
-            for (int i = shPlayers.Count - 1; i >= 0; i--)
+            if (shPlayers.Contains(ev.Target.Id))
             {
-                if (Player.Get(shPlayers[i]).Role == RoleType.Spectator)
+                shPlayers.Remove(ev.Target.Id);
+            }
+
+            if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
+            {
+                foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
                 {
-                    shPlayers.RemoveAt(i);
+                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformations.GetDamageType(), player.Id), player.GameObject);
                 }
             }
+
+            /* for (int i = shPlayers.Count - 1; i >= 0; i--)
+             {
+                 if (Player.Get(shPlayers[i]).Role == RoleType.Spectator)
+                 {
+                     shPlayers.RemoveAt(i);
+                 }
+             }*/
         }
 
         public void OnCheckRoundEnd(EndingRoundEventArgs ev)
@@ -192,6 +205,15 @@ namespace SerpentsHand
                 { 
                     shPlayers.Remove(ev.Player.Id);
                 }
+            }
+        }
+
+        public void OnShoot(ShootingEventArgs ev)
+        {
+            Player target = Player.Get(ev.Target);
+            if (target != null && target.Role == RoleType.Scp096 && shPlayers.Contains(ev.Shooter.Id))
+            {
+                ev.IsAllowed = false;
             }
         }
 

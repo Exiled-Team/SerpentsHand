@@ -41,6 +41,7 @@ namespace SerpentsHand
             Exiled.Events.Handlers.Player.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
             Exiled.Events.Handlers.Player.EnteringFemurBreaker += EventHandlers.OnFemurEnter;
             Exiled.Events.Handlers.Player.Died += EventHandlers.OnPlayerDeath;
+            Exiled.Events.Handlers.Player.Shooting += EventHandlers.OnShoot;
             Exiled.Events.Handlers.Server.SendingConsoleCommand += EventHandlers.a;
         }
 
@@ -63,6 +64,7 @@ namespace SerpentsHand
             Exiled.Events.Handlers.Player.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
             Exiled.Events.Handlers.Player.EnteringFemurBreaker -= EventHandlers.OnFemurEnter;
             Exiled.Events.Handlers.Player.Died -= EventHandlers.OnPlayerDeath;
+            Exiled.Events.Handlers.Player.Shooting -= EventHandlers.OnShoot;
 
             hInstance.UnpatchAll();
             EventHandlers = null;
