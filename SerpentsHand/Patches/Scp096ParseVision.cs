@@ -15,11 +15,14 @@ namespace SerpentsHand.Patches
 			{
 				return false;
 			}
-			CharacterClassManager ccm = info.Source.GetComponent<CharacterClassManager>();
-			QueryProcessor qp = info.Source.GetComponent<QueryProcessor>();
-			if (ccm == null || qp == null || EventHandlers.shPlayers.Contains(qp.PlayerId))
+			if (!SerpentsHand.instance.Config.CanTrigger096)
 			{
-				return false;
+				CharacterClassManager ccm = info.Source.GetComponent<CharacterClassManager>();
+				QueryProcessor qp = info.Source.GetComponent<QueryProcessor>();
+				if (ccm == null || qp == null || EventHandlers.shPlayers.Contains(qp.PlayerId))
+				{
+					return false;
+				}
 			}
 			float delay = (1f - info.DotProduct) / 0.25f * (Vector3.Distance(info.Source.transform.position, info.Target.transform.position) * 0.1f);
 			if (!__instance.Calming)
