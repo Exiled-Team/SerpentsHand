@@ -71,6 +71,7 @@ namespace SerpentsHand
         }
 
         public override string Name => "SerpentsHand";
+        public override string Author => "Cyanox";
 
         internal void Check035()
         {
