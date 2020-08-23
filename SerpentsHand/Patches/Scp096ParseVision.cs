@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SerpentsHand.Patches
 {
-	[HarmonyPatch(typeof(Scp096), nameof(Scp096.ParseVisionInformation))]
+	/*[HarmonyPatch(typeof(Scp096), nameof(Scp096.ParseVisionInformation))]
 	class Scp096ParseVision
 	{
 		public static bool Prefix(Scp096 __instance, VisionInformation info)
@@ -36,5 +36,5 @@ namespace SerpentsHand.Patches
 
 			return false;
 		}
-	}
+	}*/
 }

@@ -130,10 +130,7 @@ namespace SerpentsHand
 
         public void OnPlayerDeath(DiedEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Target.Id))
-            {
-                shPlayers.Remove(ev.Target.Id);
-            }
+            KillPlayer(ev.Target);
 
             if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
             {
@@ -202,8 +199,8 @@ namespace SerpentsHand
             if (shPlayers.Contains(ev.Player.Id))
             {
                 if (GetTeam(ev.NewRole) != Team.TUT)
-                { 
-                    shPlayers.Remove(ev.Player.Id);
+                {
+                    KillPlayer(ev.Player);
                 }
             }
         }
@@ -219,10 +216,7 @@ namespace SerpentsHand
 
         public void OnDisconnect(LeftEventArgs ev)
         {
-            if (shPlayers.Contains(ev.Player.Id))
-            {
-                shPlayers.Remove(ev.Player.Id);
-            }
+            KillPlayer(ev.Player);
         }
 
         public void OnContain106(ContainingEventArgs ev)
