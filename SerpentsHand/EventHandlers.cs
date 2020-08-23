@@ -179,14 +179,14 @@ namespace SerpentsHand
                 {
                     if (!CiAlive)
                     {
-                        ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+                        ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                         ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
                     }
                 }
                 else
                 {
-                    ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+                    ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                     ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
                 }
