@@ -14,7 +14,6 @@ namespace SerpentsHand
             shPlayers.Add(player.Id);
             player.SetRole(RoleType.Tutorial);
             player.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
-            Scp096.TurnedPlayers.Add(player.Id);
             if (full)
             {
                 player.Ammo[(int)AmmoType.Nato556] = 250;
@@ -106,18 +105,6 @@ namespace SerpentsHand
             else
             {
                 player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
-            }
-        }
-
-        private void KillPlayer(Player player)
-        {
-            if (shPlayers.Contains(player.Id))
-            {
-                shPlayers.Remove(player.Id);
-            }
-            if (Scp096.TurnedPlayers.Contains(player.Id))
-            {
-                Scp096.TurnedPlayers.Remove(player.Id);
             }
         }
 

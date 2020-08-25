@@ -114,23 +114,26 @@ namespace SerpentsHand
 
         public void OnPlayerDying(DyingEventArgs ev)
         {
-           /* if (shPlayers.Contains(ev.Target.Id))
-            {
-                shPlayers.Remove(ev.Target.Id);
-            }
+            /* if (shPlayers.Contains(ev.Target.Id))
+             {
+                 shPlayers.Remove(ev.Target.Id);
+             }
 
-            if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
-            {
-                foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
-                {
-                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformation.GetDamageType(), player.Id), player.GameObject);
-                }
-            }*/
+             if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
+             {
+                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
+                 {
+                     player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformation.GetDamageType(), player.Id), player.GameObject);
+                 }
+             }*/
         }
 
         public void OnPlayerDeath(DiedEventArgs ev)
         {
-            KillPlayer(ev.Target);
+            if (shPlayers.Contains(ev.Target.Id))
+            {
+                shPlayers.Remove(ev.Target.Id);
+            }
 
             if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
             {
@@ -200,7 +203,7 @@ namespace SerpentsHand
             {
                 if (GetTeam(ev.NewRole) != Team.TUT)
                 {
-                    KillPlayer(ev.Player);
+                    shPlayers.Remove(ev.Player.Id);
                 }
             }
         }
@@ -216,7 +219,10 @@ namespace SerpentsHand
 
         public void OnDisconnect(LeftEventArgs ev)
         {
-            KillPlayer(ev.Player);
+            if (shPlayers.Contains(ev.Player.Id))
+            {
+                shPlayers.Remove(ev.Player.Id);
+            }
         }
 
         public void OnContain106(ContainingEventArgs ev)

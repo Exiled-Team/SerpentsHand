@@ -1,25 +1,25 @@
-﻿using HarmonyLib;
+﻿using Exiled.API.Features;
+using HarmonyLib;
 using PlayableScps;
 using RemoteAdmin;
 using UnityEngine;
 
 namespace SerpentsHand.Patches
 {
-	/*[HarmonyPatch(typeof(Scp096), nameof(Scp096.ParseVisionInformation))]
+	[HarmonyPatch(typeof(PlayableScps.Scp096), nameof(PlayableScps.Scp096.ParseVisionInformation))]
 	class Scp096ParseVision
 	{
-		public static bool Prefix(Scp096 __instance, VisionInformation info)
+		public static bool Prefix(PlayableScps.Scp096 __instance, VisionInformation info)
 		{
 			PlayableScpsController playableScpsController = info.RaycastResult.transform.gameObject.GetComponent<PlayableScpsController>();
-			if (!info.Looking || !info.RaycastHit || playableScpsController == null || playableScpsController.CurrentScp == null || playableScpsController.CurrentScp != __instance)
+			if (__instance == null || !info.Looking || !info.RaycastHit || playableScpsController == null || playableScpsController.CurrentScp == null || playableScpsController.CurrentScp != __instance)
 			{
 				return false;
 			}
 			if (!SerpentsHand.instance.Config.CanTrigger096)
 			{
-				CharacterClassManager ccm = info.Source.GetComponent<CharacterClassManager>();
-				QueryProcessor qp = info.Source.GetComponent<QueryProcessor>();
-				if (ccm == null || qp == null || EventHandlers.shPlayers.Contains(qp.PlayerId))
+				Player player = Player.Get(info.Source);
+				if (player != null && EventHandlers.shPlayers.Contains(player.Id))
 				{
 					return false;
 				}
@@ -36,5 +36,5 @@ namespace SerpentsHand.Patches
 
 			return false;
 		}
-	}*/
+	}
 }
