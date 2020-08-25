@@ -211,7 +211,7 @@ namespace SerpentsHand
         public void OnShoot(ShootingEventArgs ev)
         {
             Player target = Player.Get(ev.Target);
-            if (!SerpentsHand.instance.Config.CanTrigger096 && target != null && target.Role == RoleType.Scp096 && shPlayers.Contains(ev.Shooter.Id))
+            if (target != null && target.Role == RoleType.Scp096 && shPlayers.Contains(ev.Shooter.Id))
             {
                 ev.IsAllowed = false;
             }
