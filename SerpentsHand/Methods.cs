@@ -30,7 +30,7 @@ namespace SerpentsHand
                 Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
             }
 
-            Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
+            //Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
         }
 
         internal static void CreateSquad(int size)

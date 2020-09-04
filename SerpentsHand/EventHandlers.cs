@@ -66,6 +66,14 @@ namespace SerpentsHand
             }
         }
 
+        public void OnSpawn(SpawningEventArgs ev)
+        {
+            if (shPlayers.Contains(ev.Player.Id))
+            {
+                ev.Position = shSpawnPos;
+            }
+        }
+
         public void OnPocketDimensionDie(FailingEscapePocketDimensionEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player.Id))
