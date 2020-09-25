@@ -27,7 +27,7 @@ namespace SerpentsHand
                 }
                 player.Health = SerpentsHand.instance.Config.Health;
                 // Prevent Serpents Hand from taking up Chaos spawn tickets
-                Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
+                //Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
             }
 
             //Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
