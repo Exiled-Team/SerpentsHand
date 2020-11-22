@@ -190,6 +190,21 @@ namespace SerpentsHand
                         ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                         ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
+
+                        foreach (int id in shPlayers)
+                        {
+                            Player p = Player.Get(id);
+                            if (p != null) p.IsFriendlyFireEnabled = true;
+                        }
+
+                        foreach (int id in shPocketPlayers)
+                        {
+                            Player p = Player.Get(id);
+                            if (p != null) p.IsFriendlyFireEnabled = true;
+                        }
+
+                        shPlayers.Clear();
+                        shPocketPlayers.Clear();
                     }
                 }
                 else
@@ -197,7 +212,39 @@ namespace SerpentsHand
                     ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                     ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
+
+                    foreach (int id in shPlayers)
+                    {
+                        Player p = Player.Get(id);
+                        if (p != null) p.IsFriendlyFireEnabled = true;
+                    }
+
+                    foreach (int id in shPocketPlayers)
+                    {
+                        Player p = Player.Get(id);
+                        if (p != null) p.IsFriendlyFireEnabled = true;
+                    }
+
+                    shPlayers.Clear();
+                    shPocketPlayers.Clear();
                 }
+            }
+            else if(SHAlive && !ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
+			{
+                foreach (int id in shPlayers)
+                {
+                    Player p = Player.Get(id);
+                    if (p != null) p.IsFriendlyFireEnabled = true;
+                }
+
+                foreach (int id in shPocketPlayers)
+                {
+                    Player p = Player.Get(id);
+                    if (p != null) p.IsFriendlyFireEnabled = true;
+                }
+
+                shPlayers.Clear();
+                shPocketPlayers.Clear();
             }
             else
             {
