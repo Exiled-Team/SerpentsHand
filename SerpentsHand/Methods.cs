@@ -69,6 +69,24 @@ namespace SerpentsHand
             Cassie.Message(SerpentsHand.instance.Config.EntryAnnouncement, true, true);
         }
 
+        internal static void GrantFF()
+		{
+            foreach (int id in shPlayers)
+            {
+                Player p = Player.Get(id);
+                if (p != null) p.IsFriendlyFireEnabled = true;
+            }
+
+            foreach (int id in SerpentsHand.instance.EventHandlers.shPocketPlayers)
+            {
+                Player p = Player.Get(id);
+                if (p != null) p.IsFriendlyFireEnabled = true;
+            }
+
+            shPlayers.Clear();
+            SerpentsHand.instance.EventHandlers.shPocketPlayers.Clear();
+        }
+
         private Player TryGet035()
         {
             return Scp035Data.GetScp035();

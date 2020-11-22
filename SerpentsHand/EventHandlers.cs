@@ -191,20 +191,7 @@ namespace SerpentsHand
                         ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
 
-                        foreach (int id in shPlayers)
-                        {
-                            Player p = Player.Get(id);
-                            if (p != null) p.IsFriendlyFireEnabled = true;
-                        }
-
-                        foreach (int id in shPocketPlayers)
-                        {
-                            Player p = Player.Get(id);
-                            if (p != null) p.IsFriendlyFireEnabled = true;
-                        }
-
-                        shPlayers.Clear();
-                        shPocketPlayers.Clear();
+                        GrantFF();
                     }
                 }
                 else
@@ -213,38 +200,12 @@ namespace SerpentsHand
                     ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
 
-                    foreach (int id in shPlayers)
-                    {
-                        Player p = Player.Get(id);
-                        if (p != null) p.IsFriendlyFireEnabled = true;
-                    }
-
-                    foreach (int id in shPocketPlayers)
-                    {
-                        Player p = Player.Get(id);
-                        if (p != null) p.IsFriendlyFireEnabled = true;
-                    }
-
-                    shPlayers.Clear();
-                    shPocketPlayers.Clear();
+                    GrantFF();
                 }
             }
             else if(SHAlive && !ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
 			{
-                foreach (int id in shPlayers)
-                {
-                    Player p = Player.Get(id);
-                    if (p != null) p.IsFriendlyFireEnabled = true;
-                }
-
-                foreach (int id in shPocketPlayers)
-                {
-                    Player p = Player.Get(id);
-                    if (p != null) p.IsFriendlyFireEnabled = true;
-                }
-
-                shPlayers.Clear();
-                shPocketPlayers.Clear();
+                GrantFF();
             }
             else
             {
