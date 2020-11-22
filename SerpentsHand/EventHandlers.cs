@@ -190,6 +190,8 @@ namespace SerpentsHand
                         ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                         ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
+
+                        GrantFF();
                     }
                 }
                 else
@@ -197,7 +199,13 @@ namespace SerpentsHand
                     ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
                     ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
+
+                    GrantFF();
                 }
+            }
+            else if(SHAlive && !ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
+			{
+                GrantFF();
             }
             else
             {
