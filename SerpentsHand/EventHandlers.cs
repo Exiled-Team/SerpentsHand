@@ -4,7 +4,6 @@ using MEC;
 using UnityEngine;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
-using System.Reflection;
 
 namespace SerpentsHand
 {
@@ -221,26 +220,6 @@ namespace SerpentsHand
                 if (GetTeam(ev.NewRole) != Team.TUT)
                 {
                     shPlayers.Remove(ev.Player.Id);
-                }
-
-                if (ev.NewRole == RoleType.Spectator)
-				{
-                    object afkComp = ev.Player.GameObject.GetComponent("AFKComponent");
-                    if (afkComp != null)
-                    {
-                        if (afkComp.GetType().GetMember("PlayerToReplace").Length > 0)
-                        {
-                            Player p = (Player)((FieldInfo)afkComp.GetType().GetMember("PlayerToReplace")[0]).GetValue(afkComp);
-                            if (p != null)
-                            {
-                                Timing.CallDelayed(1f, () =>
-                                {
-                                    shPlayers.Add(p.Id);
-                                    p.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
-                                });
-                            }
-                        }
-                    }
                 }
             }
         }
