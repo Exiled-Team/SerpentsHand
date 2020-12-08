@@ -70,6 +70,8 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Player.Id))
             {
+                ev.Player.CustomPlayerInfo = "SERPENT'S HAND";
+                ev.Player.PlayerInfoArea &= ~PlayerInfoArea.Role;
                 ev.Position = shSpawnPos;
             }
         }
@@ -140,6 +142,8 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Target.Id))
             {
+                ev.Target.CustomPlayerInfo = string.Empty;
+                ev.Target.PlayerInfoArea |= PlayerInfoArea.Role;
                 shPlayers.Remove(ev.Target.Id);
             }
 
