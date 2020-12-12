@@ -89,7 +89,7 @@
     <Compile Include="SerpentsHand.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Methods.cs" />
+    <Compile Include="Logic.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
