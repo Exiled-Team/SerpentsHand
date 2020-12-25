@@ -41,7 +41,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Desktop\scpsls\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
+    <Reference Include="Assembly-CSharp_publicized, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Desktop\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API, Version=2.1.12.0, Culture=neutral, processorArchitecture=AMD64">

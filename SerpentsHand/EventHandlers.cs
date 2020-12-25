@@ -18,7 +18,7 @@ namespace SerpentsHand
 
         private static System.Random rand = new System.Random();
 
-        private static Vector3 shSpawnPos = new Vector3(0, 1001, 8);
+        private static Vector3 shSpawnPos = new Vector3(0, 1002, 8);
 
         public void OnRoundStart()
         {
@@ -223,6 +223,8 @@ namespace SerpentsHand
                 if (GetTeam(ev.NewRole) != Team.TUT)
                 {
                     shPlayers.Remove(ev.Player.Id);
+                    ev.Player.CustomPlayerInfo = string.Empty;
+                    ev.Player.PlayerInfoArea |= PlayerInfoArea.Role;
                 }
             }
         }
@@ -241,6 +243,8 @@ namespace SerpentsHand
             if (shPlayers.Contains(ev.Player.Id))
             {
                 shPlayers.Remove(ev.Player.Id);
+                ev.Player.CustomPlayerInfo = string.Empty;
+                ev.Player.PlayerInfoArea |= PlayerInfoArea.Role;
             }
         }
 
