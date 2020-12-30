@@ -194,7 +194,7 @@ namespace SerpentsHand
                         ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
 
-                        GrantFF();
+                        if (SerpentsHand.instance.Config.EndRoundFriendlyFire) GrantFF();
                     }
                 }
                 else
@@ -203,12 +203,12 @@ namespace SerpentsHand
                     ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
 
-                    GrantFF();
+                    if (SerpentsHand.instance.Config.EndRoundFriendlyFire) GrantFF();
                 }
             }
-            else if(SHAlive && !ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
+            else if (SHAlive && !ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
 			{
-                GrantFF();
+                if (SerpentsHand.instance.Config.EndRoundFriendlyFire) GrantFF();
             }
             else
             {
