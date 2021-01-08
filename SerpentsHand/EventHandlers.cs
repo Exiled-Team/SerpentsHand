@@ -70,8 +70,8 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Player.Id))
             {
-                ev.Player.CustomPlayerInfo = "<color=#00FF58>Serpents Hand</color>";
-                ev.Player.PlayerInfoArea &= ~PlayerInfoArea.Role;
+                ev.Player.CustomInfo = "<color=#00FF58>Serpents Hand</color>";
+                ev.Player.InfoArea &= ~PlayerInfoArea.Role;
             }
         }
 
@@ -141,8 +141,8 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Target.Id))
             {
-                ev.Target.CustomPlayerInfo = string.Empty;
-                ev.Target.PlayerInfoArea |= PlayerInfoArea.Role;
+                ev.Target.CustomInfo = string.Empty;
+                ev.Target.InfoArea |= PlayerInfoArea.Role;
                 shPlayers.Remove(ev.Target.Id);
             }
 
@@ -223,8 +223,8 @@ namespace SerpentsHand
                 if (GetTeam(ev.NewRole) != Team.TUT)
                 {
                     shPlayers.Remove(ev.Player.Id);
-                    ev.Player.CustomPlayerInfo = string.Empty;
-                    ev.Player.PlayerInfoArea |= PlayerInfoArea.Role;
+                    ev.Player.CustomInfo = string.Empty;
+                    ev.Player.InfoArea |= PlayerInfoArea.Role;
                 }
             }
         }
@@ -243,8 +243,8 @@ namespace SerpentsHand
             if (shPlayers.Contains(ev.Player.Id))
             {
                 shPlayers.Remove(ev.Player.Id);
-                ev.Player.CustomPlayerInfo = string.Empty;
-                ev.Player.PlayerInfoArea |= PlayerInfoArea.Role;
+                ev.Player.CustomInfo = string.Empty;
+                ev.Player.InfoArea |= PlayerInfoArea.Role;
             }
         }
 
@@ -262,14 +262,19 @@ namespace SerpentsHand
             if (cmd == "spawnsh")
             {
                 ev.IsAllowed = false;
-
+                Log.Warn(1);
                 if (ev.Arguments.Count > 0 && ev.Arguments[0].Length > 0)
                 {
+                    Log.Warn(2);
                     Player cPlayer = Player.Get(ev.Arguments[0]);
+                    Log.Warn(3);
                     if (cPlayer != null)
                     {
+                        Log.Warn(4);
                         SpawnPlayer(cPlayer);
+                        Log.Warn(5);
                         ev.Sender.RemoteAdminMessage($"Spawned {cPlayer.Nickname} as Serpents Hand.", true);
+                        Log.Warn(6);
                         return;
                     }
                     else
