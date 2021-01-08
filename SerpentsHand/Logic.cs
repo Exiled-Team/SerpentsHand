@@ -21,7 +21,6 @@ namespace SerpentsHand
                 player.Ammo[(int)AmmoType.Nato762] = 250;
                 player.Ammo[(int)AmmoType.Nato9] = 250;
 
-                player.Inventory.items.ToList().Clear();
                 for (int i = 0; i < SerpentsHand.instance.Config.SpawnItems.Count; i++)
                 {
                     player.Inventory.AddNewItem((ItemType)SerpentsHand.instance.Config.SpawnItems[i]);
