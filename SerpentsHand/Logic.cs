@@ -12,7 +12,7 @@ namespace SerpentsHand
         internal static void SpawnPlayer(Player player, bool full = true)
         {
             shPlayers.Add(player.Id);
-            player.SetRole(RoleType.Tutorial, true);
+            player.SetRole(RoleType.Tutorial);
             player.Position = shSpawnPos;
             player.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
             if (full)
