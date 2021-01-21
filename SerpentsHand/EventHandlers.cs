@@ -44,7 +44,7 @@ namespace SerpentsHand
                         SHPlayers.Add(player);
                         CIPlayers.Remove(player);
                     }
-                    Timing.CallDelayed(0.5f, () => SpawnSquad(SHPlayers));
+                    Timing.CallDelayed(0.1f, () => SpawnSquad(SHPlayers));
                 }
                 else
                 {

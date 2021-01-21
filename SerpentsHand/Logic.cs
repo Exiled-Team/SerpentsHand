@@ -13,7 +13,6 @@ namespace SerpentsHand
         {
             shPlayers.Add(player.Id);
             player.SetRole(RoleType.Tutorial);
-            player.Position = shSpawnPos;
             player.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
             if (full)
             {
@@ -30,8 +29,8 @@ namespace SerpentsHand
                 //Respawning.RespawnTickets.Singleton.GrantTickets(Respawning.SpawnableTeamType.ChaosInsurgency, 1);
             }
 
-            //Timing.CallDelayed(0.3f, () => player.Position = shSpawnPos);
-        }
+			Timing.CallDelayed(0.5f, () => player.Position = shSpawnPos);
+		}
 
         internal static void CreateSquad(int size)
         {
