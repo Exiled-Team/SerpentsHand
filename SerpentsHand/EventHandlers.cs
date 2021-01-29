@@ -12,7 +12,8 @@ namespace SerpentsHand
         public static List<int> shPlayers = new List<int>();
         private List<int> shPocketPlayers = new List<int>();
 
-        private int respawnCount = 0;
+        private int teamRespawnCount = 0;
+        private int serpentsRespawnCount = 0;
 
         bool test = false;
 
@@ -25,15 +26,22 @@ namespace SerpentsHand
             test = false;
             shPlayers.Clear();
             shPocketPlayers.Clear();
-            respawnCount = 0;
+            teamRespawnCount = 0;
+            serpentsRespawnCount = 0;
         }
 
         public void OnTeamRespawn(RespawningTeamEventArgs ev)
         {
-            if (ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
+            if (serpentsRespawnCount < SerpentsHand.instance.Config.MaxSpawns)
             {
-                if (rand.Next(1, 101) <= SerpentsHand.instance.Config.SpawnChance && Player.List.Count() > 0 && respawnCount >= SerpentsHand.instance.Config.RespawnDelay)
+                if (rand.Next(1, 101) <= SerpentsHand.instance.Config.SpawnChance && Player.List.Count() > 0 && teamRespawnCount >= SerpentsHand.instance.Config.RespawnDelay)
                 {
+                    if (ev.NextKnownTeam == Respawning.SpawnableTeamType.NineTailedFox)
+                    {
+                        // Prevent announcement
+                        ev.NextKnownTeam = Respawning.SpawnableTeamType.ChaosInsurgency;
+                    }
+
                     List<Player> SHPlayers = new List<Player>();
                     List<Player> CIPlayers = new List<Player>(ev.Players);
                     ev.Players.Clear();
@@ -45,8 +53,10 @@ namespace SerpentsHand
                         CIPlayers.Remove(player);
                     }
                     Timing.CallDelayed(0.1f, () => SpawnSquad(SHPlayers));
+
+                    serpentsRespawnCount++;
                 }
-                else
+                else if (ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
                 {
                     string ann = SerpentsHand.instance.Config.CiEntryAnnouncement;
                     if (ann != string.Empty)
@@ -55,7 +65,7 @@ namespace SerpentsHand
                     }
                 }
             }
-            respawnCount++;
+            teamRespawnCount++;
         }
 
         public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)

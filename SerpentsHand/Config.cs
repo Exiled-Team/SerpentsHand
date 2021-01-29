@@ -20,6 +20,8 @@ namespace SerpentsHand
 		public int MaxSquad { get; set; } = 8;
 		[Description("How many respawn waves must occur before considering Serpents Hand to spawn.")]
 		public int RespawnDelay { get; set; } = 1;
+		[Description("The maxium number of times Serpents can spawn per game.")]
+		public int MaxSpawns { get; set; } = 1;
 
 		[Description("The message announced by CASSIE when Serpents hand spawn.")]
 		public string EntryAnnouncement { get; set; } = "SERPENTS HAND HASENTERED";
