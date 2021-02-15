@@ -36,6 +36,8 @@ namespace SerpentsHand
 		public bool TeleportTo106 { get; set; } = true;
 		[Description("Determines if Serpents Hand should be able to hurt SCPs after the round ends.")]
 		public bool EndRoundFriendlyFire { get; set; } = false;
+		[Description("Determines if Serpents Hand should be able to spawn when all SCPs are dead.")]
+		public bool CanSpawnWithoutSCPs { get; set; } = false;
 		[Description("[IMPORTANT] Set this config to false if Chaos and SCPs CANNOT win together on your server.")]
 		public bool ScpsWinWithChaos { get; set; } = true;
     }

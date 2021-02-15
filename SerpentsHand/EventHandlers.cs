@@ -32,7 +32,7 @@ namespace SerpentsHand
 
         public void OnTeamRespawn(RespawningTeamEventArgs ev)
         {
-            if (serpentsRespawnCount < SerpentsHand.instance.Config.MaxSpawns)
+            if (serpentsRespawnCount < SerpentsHand.instance.Config.MaxSpawns && !(!SerpentsHand.instance.Config.CanSpawnWithoutSCPs && Player.List.Where(x => x.Team == Team.SCP).Count() == 0))
             {
                 if (rand.Next(1, 101) <= SerpentsHand.instance.Config.SpawnChance && Player.List.Count() > 0 && teamRespawnCount >= SerpentsHand.instance.Config.RespawnDelay)
                 {
