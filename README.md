@@ -8,7 +8,7 @@ A plugin that adds a new class to your server named "Serpent's Hand". This class
 
 **If you have [AdminTools](https://github.com/galaxy119/AdminTools/tree/master/AdminTools) installed, make sure you set `admin_god_tuts: false` in your EXILED config.**
 
-Place the "SerpentsHand.dll" file in your sm_plugins folder.
+Place the "SerpentsHand.dll" file in your EXILED/Plugins folder.
 
 # Features
 * Uses the tutorial model for this class
