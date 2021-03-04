@@ -6,7 +6,6 @@ A plugin that adds a new class to your server named "Serpent's Hand". This class
 
 **[EXILED](https://github.com/galaxy119/EXILED) must be installed for this to work.**
 
-
 **If you have [AdminTools](https://github.com/galaxy119/AdminTools/tree/master/AdminTools) installed, make sure you set `admin_god_tuts: false` in your EXILED config.**
 
 Place the "SerpentsHand.dll" file in your sm_plugins folder.
@@ -32,7 +31,6 @@ Place the "SerpentsHand.dll" file in your sm_plugins folder.
 | sh_health | Integer | 120 | How much health Serpent's Hand members will have. |
 | sh_max_squad | Integer | 8 | The maximum number of Serpent's Hand members allowed to spawn. |
 | sh_team_respawn_delay | Integer | 1 | The amount of team respawns that must occur before Serpent's Hand can spawn. |
-
 
 # Commands
 |     Command    | Value Type | Description |

@@ -1,7 +1,11 @@
-﻿using Exiled.API.Features;
+﻿using System;
+using Exiled.API.Features;
 using Exiled.Loader;
 using HarmonyLib;
-using System.Reflection;
+
+using PlayerEvent = Exiled.Events.Handlers.Player;
+using ServerEvent = Exiled.Events.Handlers.Server;
+using Scp106Event = Exiled.Events.Handlers.Scp106;
 
 namespace SerpentsHand
 {
@@ -16,58 +20,57 @@ namespace SerpentsHand
 
         public override void OnEnabled()
         {
-            base.OnEnabled();
-
-            if (!Config.IsEnabled) return;
-
-            hInstance = new Harmony("cyanox.serpentshand");
+            hInstance = new Harmony($"cyanox.serpentshand-{DateTime.Now.Ticks}");
             hInstance.PatchAll();
 
             instance = this;
             EventHandlers = new EventHandlers();
             Check035();
 
-            Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStart;
-            Exiled.Events.Handlers.Server.RespawningTeam += EventHandlers.OnTeamRespawn;
-            Exiled.Events.Handlers.Player.EnteringPocketDimension += EventHandlers.OnPocketDimensionEnter;
-            Exiled.Events.Handlers.Player.FailingEscapePocketDimension += EventHandlers.OnPocketDimensionDie;
-            Exiled.Events.Handlers.Player.EscapingPocketDimension += EventHandlers.OnPocketDimensionExit;
-            Exiled.Events.Handlers.Player.Dying += EventHandlers.OnPlayerDying;
-            Exiled.Events.Handlers.Player.Hurting += EventHandlers.OnPlayerHurt;
-            Exiled.Events.Handlers.Server.EndingRound += EventHandlers.OnCheckRoundEnd;
-            Exiled.Events.Handlers.Player.ChangingRole += EventHandlers.OnSetRole;
-            Exiled.Events.Handlers.Player.Left += EventHandlers.OnDisconnect;
-            Exiled.Events.Handlers.Scp106.Containing += EventHandlers.OnContain106;
-            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand += EventHandlers.OnRACommand;
-            Exiled.Events.Handlers.Player.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
-            Exiled.Events.Handlers.Player.EnteringFemurBreaker += EventHandlers.OnFemurEnter;
-            Exiled.Events.Handlers.Player.Died += EventHandlers.OnPlayerDeath;
-            Exiled.Events.Handlers.Player.Shooting += EventHandlers.OnShoot;
+            ServerEvent.RoundStarted += EventHandlers.OnRoundStart;
+            ServerEvent.RespawningTeam += EventHandlers.OnTeamRespawn;
+            PlayerEvent.EnteringPocketDimension += EventHandlers.OnPocketDimensionEnter;
+            PlayerEvent.FailingEscapePocketDimension += EventHandlers.OnPocketDimensionDie;
+            PlayerEvent.EscapingPocketDimension += EventHandlers.OnPocketDimensionExit;
+            PlayerEvent.Dying += EventHandlers.OnPlayerDying;
+            PlayerEvent.Hurting += EventHandlers.OnPlayerHurt;
+            ServerEvent.EndingRound += EventHandlers.OnCheckRoundEnd;
+            PlayerEvent.ChangingRole += EventHandlers.OnSetRole;
+            PlayerEvent.Left += EventHandlers.OnDisconnect;
+            Scp106Event.Containing += EventHandlers.OnContain106;
+            ServerEvent.SendingRemoteAdminCommand += EventHandlers.OnRACommand;
+            PlayerEvent.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
+            PlayerEvent.EnteringFemurBreaker += EventHandlers.OnFemurEnter;
+            PlayerEvent.Died += EventHandlers.OnPlayerDeath;
+            PlayerEvent.Shooting += EventHandlers.OnShoot;
+
+            base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
-            base.OnDisabled();
-
-            Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStart;
-            Exiled.Events.Handlers.Server.RespawningTeam -= EventHandlers.OnTeamRespawn;
-            Exiled.Events.Handlers.Player.EnteringPocketDimension -= EventHandlers.OnPocketDimensionEnter;
-            Exiled.Events.Handlers.Player.FailingEscapePocketDimension -= EventHandlers.OnPocketDimensionDie;
-            Exiled.Events.Handlers.Player.EscapingPocketDimension -= EventHandlers.OnPocketDimensionExit;
-            Exiled.Events.Handlers.Player.Dying -= EventHandlers.OnPlayerDying;
-            Exiled.Events.Handlers.Player.Hurting -= EventHandlers.OnPlayerHurt;
-            Exiled.Events.Handlers.Server.EndingRound -= EventHandlers.OnCheckRoundEnd;
-            Exiled.Events.Handlers.Player.ChangingRole -= EventHandlers.OnSetRole;
-            Exiled.Events.Handlers.Player.Left -= EventHandlers.OnDisconnect;
-            Exiled.Events.Handlers.Scp106.Containing -= EventHandlers.OnContain106;
-            Exiled.Events.Handlers.Server.SendingRemoteAdminCommand -= EventHandlers.OnRACommand;
-            Exiled.Events.Handlers.Player.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
-            Exiled.Events.Handlers.Player.EnteringFemurBreaker -= EventHandlers.OnFemurEnter;
-            Exiled.Events.Handlers.Player.Died -= EventHandlers.OnPlayerDeath;
-            Exiled.Events.Handlers.Player.Shooting -= EventHandlers.OnShoot;
+            ServerEvent.RoundStarted -= EventHandlers.OnRoundStart;
+            ServerEvent.RespawningTeam -= EventHandlers.OnTeamRespawn;
+            PlayerEvent.EnteringPocketDimension -= EventHandlers.OnPocketDimensionEnter;
+            PlayerEvent.FailingEscapePocketDimension -= EventHandlers.OnPocketDimensionDie;
+            PlayerEvent.EscapingPocketDimension -= EventHandlers.OnPocketDimensionExit;
+            PlayerEvent.Dying -= EventHandlers.OnPlayerDying;
+            PlayerEvent.Hurting -= EventHandlers.OnPlayerHurt;
+            ServerEvent.EndingRound -= EventHandlers.OnCheckRoundEnd;
+            PlayerEvent.ChangingRole -= EventHandlers.OnSetRole;
+            PlayerEvent.Left -= EventHandlers.OnDisconnect;
+            Scp106Event.Containing -= EventHandlers.OnContain106;
+            ServerEvent.SendingRemoteAdminCommand -= EventHandlers.OnRACommand;
+            PlayerEvent.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
+            PlayerEvent.EnteringFemurBreaker -= EventHandlers.OnFemurEnter;
+            PlayerEvent.Died -= EventHandlers.OnPlayerDeath;
+            PlayerEvent.Shooting -= EventHandlers.OnShoot;
 
             hInstance.UnpatchAll();
             EventHandlers = null;
+            instance = null;
+
+            base.OnDisabled();
         }
 
         public override string Name => "SerpentsHand";
@@ -77,9 +80,10 @@ namespace SerpentsHand
         {
             foreach (var plugin in Loader.Plugins)
             {
-                if (plugin.Name == "scp035")
+                if (plugin.Name.ToLower() == "scp035" && plugin.Config.IsEnabled)
                 {
                     isScp035 = true;
+                    Log.Debug("SCP-035 plugin detected!");
                     return;
                 }
             }
