@@ -4,7 +4,7 @@ using MEC;
 using UnityEngine;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
-using System.Text;
+using Respawning;
 
 namespace SerpentsHand
 {
@@ -43,45 +43,43 @@ namespace SerpentsHand
 
         public void OnTeamRespawn(RespawningTeamEventArgs ev)
         {
-            if (isSpawnable)
-            {
-                if (ev.NextKnownTeam == Respawning.SpawnableTeamType.NineTailedFox)
-                {
-                    // Prevent announcement
-                    ev.NextKnownTeam = Respawning.SpawnableTeamType.ChaosInsurgency;
-                }
-
-                List<Player> SHPlayers = new List<Player>();
-                List<Player> CIPlayers = new List<Player>(ev.Players);
-                ev.Players.Clear();
-
-                for (int i = 0; i < SerpentsHand.instance.Config.MaxSquad && CIPlayers.Count > 0; i++)
-                {
-                    Player player = CIPlayers[rand.Next(CIPlayers.Count)];
-                    SHPlayers.Add(player);
-                    CIPlayers.Remove(player);
-                }
-                Timing.CallDelayed(0.1f, () =>
-                {
-                    if (!isSpawnable)
-                        SHPlayers.Clear();
-
-                    if (isSpawnable)
-                    {
-                        SpawnSquad(SHPlayers);
-                        serpentsRespawnCount++;
-                    }
-                });
-            }
-            else if (ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
-            {
-                string ann = SerpentsHand.instance.Config.CiEntryAnnouncement;
-                if (ann != string.Empty)
-                {
-                    Cassie.GlitchyMessage(ann, 0.05f, 0.05f);
-                }
-            }
             teamRespawnCount++;
+
+            if (ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency)
+            {
+                if (isSpawnable)
+                {
+                    List<Player> SHPlayers = new List<Player>();
+                    List<Player> CIPlayers = new List<Player>(ev.Players);
+                    ev.Players.Clear();
+
+                    for (int i = 0; i < SerpentsHand.instance.Config.MaxSquad && CIPlayers.Count > 0; i++)
+                    {
+                        Player player = CIPlayers[rand.Next(CIPlayers.Count)];
+                        SHPlayers.Add(player);
+                        CIPlayers.Remove(player);
+                    }
+                    Timing.CallDelayed(0.1f, () =>
+                    {
+                        if (!isSpawnable)
+                            SHPlayers.Clear();
+
+                        if (isSpawnable)
+                        {
+                            SpawnSquad(SHPlayers);
+                            serpentsRespawnCount++;
+                        }
+                    });
+                }
+                else
+                {
+                    string ann = SerpentsHand.instance.Config.CiEntryAnnouncement;
+                    if (ann != string.Empty)
+                    {
+                        Cassie.GlitchyMessage(ann, 0.05f, 0.05f);
+                    }
+                }
+            }
         }
 
         public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)
@@ -138,22 +136,6 @@ namespace SerpentsHand
             }
         }
 
-        public void OnPlayerDying(DyingEventArgs ev)
-        {
-            /* if (shPlayers.Contains(ev.Target.Id))
-             {
-                 shPlayers.Remove(ev.Target.Id);
-             }
-
-             if (ev.Target.Role == RoleType.Scp106 && !SerpentsHand.instance.Config.FriendlyFire)
-             {
-                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
-                 {
-                     player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformation.GetDamageType(), player.Id), player.GameObject);
-                 }
-             }*/
-        }
-
         public void OnPlayerDeath(DiedEventArgs ev)
         {
             if (shPlayers.Contains(ev.Target.Id))
@@ -170,14 +152,6 @@ namespace SerpentsHand
                     player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformations.GetDamageType(), player.Id), player.GameObject);
                 }
             }
-
-            /* for (int i = shPlayers.Count - 1; i >= 0; i--)
-             {
-                 if (Player.Get(shPlayers[i]).Role == RoleType.Spectator)
-                 {
-                     shPlayers.RemoveAt(i);
-                 }
-             }*/
         }
 
         public void OnCheckRoundEnd(EndingRoundEventArgs ev)
@@ -237,7 +211,7 @@ namespace SerpentsHand
         {
             if (shPlayers.Contains(ev.Player.Id))
             {
-                if (GetTeam(ev.NewRole) != Team.TUT)
+                if (ev.NewRole != RoleType.Tutorial)
                 {
                     shPlayers.Remove(ev.Player.Id);
                     ev.Player.CustomInfo = string.Empty;
@@ -246,7 +220,17 @@ namespace SerpentsHand
                 }
                 else
                 {
-                    ev.Player.CustomInfo = $"<color=#00FF58>{ev.Player.Nickname}\n{SerpentsHand.instance.Config.RoleName}</color>";
+                    string RoleName = string.Empty;
+
+                    if (!string.IsNullOrEmpty(SerpentsHand.instance.Config.RoleColor))
+                        RoleName += ($"<color={SerpentsHand.instance.Config.RoleColor}>");
+
+                    RoleName += $"{ev.Player.Nickname}\n{SerpentsHand.instance.Config.RoleName}";
+
+                    if (!string.IsNullOrEmpty(SerpentsHand.instance.Config.RoleColor))
+                        RoleName += "</color>";
+
+                    ev.Player.CustomInfo = RoleName;
                     ev.Player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
                     ev.Player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
                 }
@@ -262,7 +246,7 @@ namespace SerpentsHand
             }
         }
 
-        public void OnDisconnect(LeftEventArgs ev)
+        public void OnDisconnect(DestroyingEventArgs ev)
         {
             if (shPlayers.Contains(ev.Player.Id))
             {

@@ -18,6 +18,7 @@ namespace SerpentsHand
 
         public static bool isScp035 = false;
 
+
         public override void OnEnabled()
         {
             hInstance = new Harmony($"cyanox.serpentshand-{DateTime.Now.Ticks}");
@@ -32,11 +33,10 @@ namespace SerpentsHand
             PlayerEvent.EnteringPocketDimension += EventHandlers.OnPocketDimensionEnter;
             PlayerEvent.FailingEscapePocketDimension += EventHandlers.OnPocketDimensionDie;
             PlayerEvent.EscapingPocketDimension += EventHandlers.OnPocketDimensionExit;
-            PlayerEvent.Dying += EventHandlers.OnPlayerDying;
             PlayerEvent.Hurting += EventHandlers.OnPlayerHurt;
             ServerEvent.EndingRound += EventHandlers.OnCheckRoundEnd;
             PlayerEvent.ChangingRole += EventHandlers.OnSetRole;
-            PlayerEvent.Left += EventHandlers.OnDisconnect;
+            PlayerEvent.Destroying += EventHandlers.OnDisconnect;
             Scp106Event.Containing += EventHandlers.OnContain106;
             ServerEvent.SendingRemoteAdminCommand += EventHandlers.OnRACommand;
             PlayerEvent.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
@@ -54,11 +54,10 @@ namespace SerpentsHand
             PlayerEvent.EnteringPocketDimension -= EventHandlers.OnPocketDimensionEnter;
             PlayerEvent.FailingEscapePocketDimension -= EventHandlers.OnPocketDimensionDie;
             PlayerEvent.EscapingPocketDimension -= EventHandlers.OnPocketDimensionExit;
-            PlayerEvent.Dying -= EventHandlers.OnPlayerDying;
             PlayerEvent.Hurting -= EventHandlers.OnPlayerHurt;
             ServerEvent.EndingRound -= EventHandlers.OnCheckRoundEnd;
             PlayerEvent.ChangingRole -= EventHandlers.OnSetRole;
-            PlayerEvent.Left -= EventHandlers.OnDisconnect;
+            PlayerEvent.Destroying -= EventHandlers.OnDisconnect;
             Scp106Event.Containing -= EventHandlers.OnContain106;
             ServerEvent.SendingRemoteAdminCommand -= EventHandlers.OnRACommand;
             PlayerEvent.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
@@ -75,6 +74,8 @@ namespace SerpentsHand
 
         public override string Name => "SerpentsHand";
         public override string Author => "Cyanox";
+        public override Version Version => new Version(2, 0, 0);
+        public override Version RequiredExiledVersion => new Version(2, 8, 0);
 
         internal void Check035()
         {
