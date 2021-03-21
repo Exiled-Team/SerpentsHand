@@ -45,20 +45,29 @@
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\Exiled Stuff\Exiled dll\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.API.dll</HintPath>
+    <Reference Include="Exiled.API, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.API.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Events.dll</HintPath>
+    <Reference Include="Exiled.Bootstrap, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.Bootstrap.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Loader">
-      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Loader.dll</HintPath>
+    <Reference Include="Exiled.CreditTags, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.CreditTags.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Permissions">
-      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Permissions.dll</HintPath>
+    <Reference Include="Exiled.CustomItems, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.CustomItems.dll</HintPath>
     </Reference>
-    <Reference Include="Exiled.Updater">
-      <HintPath>..\..\..\Exiled Stuff\Exiled dll\Exiled.Updater.dll</HintPath>
+    <Reference Include="Exiled.Events, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.Events.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Loader, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Permissions, Version=2.8.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.Updater, Version=3.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\EXILED.2.8.0\lib\net472\Exiled.Updater.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
       <HintPath>..\..\..\Exiled Stuff\Exiled dll\Mirror.dll</HintPath>
@@ -71,10 +80,7 @@
     </Reference>
     <Reference Include="Scp035, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Downloads\Scp035.dll</HintPath>
-    </Reference>
-    <Reference Include="Smod2">
-      <HintPath>..\References\Smod2.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Scp035.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -90,14 +96,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\SerpentsHand.cs" />
+    <Compile Include="API.cs" />
+    <Compile Include="Commands\SerpentsHandParentCommand.cs" />
+    <Compile Include="Commands\SubCommands\List.cs" />
+    <Compile Include="Commands\SubCommands\Spawn.cs" />
+    <Compile Include="Commands\SubCommands\SpawnTeam.cs" />
+    <Compile Include="Configs\SubConfigs\SerepentsHandModifiers.cs" />
+    <Compile Include="Configs\SubConfigs\SpawnManager.cs" />
     <Compile Include="Patches\Scp939Attack.cs" />
     <Compile Include="Patches\SHSpawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerpentsHand.cs" />
     <Compile Include="EventHandlers.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Configs\Config.cs" />
     <Compile Include="Logic.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

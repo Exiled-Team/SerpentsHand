@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SerpentsHand.API
+namespace SerpentsHand
 {
-	public static class SerpentsHand
+	public static class API
 	{
+		public static bool IsSerpent(Player player)
+        {
+			return EventHandlers.shPlayers.Contains(player.Id);
+        }
+
 		public static void SpawnPlayer(Player player, bool full = true)
 		{
-			EventHandlers.SpawnPlayer(player, full);
+			EventHandlers.instance.SpawnPlayer(player, full);
 		}
 
 		public static void SpawnSquad(List<Player> playerList)
 		{
-			EventHandlers.SpawnSquad(playerList);
+			EventHandlers.instance.SpawnSquad(playerList);
 		}
 
 		public static void SpawnSquad(int size)
 		{
-			EventHandlers.CreateSquad(size);
+			EventHandlers.instance.CreateSquad(size);
 		}
 
 		public static List<Player> GetSHPlayers()

@@ -1,16 +1,16 @@
-﻿using Exiled.API.Features;
-using HarmonyLib;
-using UnityEngine;
-
-namespace SerpentsHand.Patches
+﻿namespace SerpentsHand.Patches
 {
+	using Exiled.API.Features;
+	using HarmonyLib;
+	using UnityEngine;
+
 	[HarmonyPatch(typeof(Scp939PlayerScript), nameof(Scp939PlayerScript.CallCmdShoot))]
-	class Scp939Attack
+	public class Scp939Attack
 	{
 		public static void Postfix(Scp939PlayerScript __instance, GameObject target)
 		{
 			Player player = Player.Get(target);
-			if (player.Role == RoleType.Tutorial && !SerpentsHand.instance.Config.FriendlyFire)
+			if (EventHandlers.shPlayers.Contains(player.Id) && !SerpentsHand.instance.Config.SerepentsHandModifiers.FriendlyFire)
 			{
 				player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Amnesia>();
 			}

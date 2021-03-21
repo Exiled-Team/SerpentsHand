@@ -1,44 +1,67 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Exiled.API.Enums;
-using Exiled.API.Features;
-using MEC;
-using Scp035.API;
-
-namespace SerpentsHand
+﻿namespace SerpentsHand
 {
-    partial class EventHandlers
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using MEC;
+
+    public partial class EventHandlers
     {
-        internal static void SpawnPlayer(Player player, bool full = true)
+        internal void SpawnPlayer(Player player, bool full = true)
         {
             shPlayers.Add(player.Id);
-            player.SetRole(RoleType.Tutorial);
-            player.Broadcast(10, SerpentsHand.instance.Config.SpawnBroadcast);
+            player.Role = RoleType.Tutorial;
+            player.Broadcast(10, plugin.Config.SpawnManager.SpawnBroadcast);
+
             if (full)
             {
-                player.ResetInventory(SerpentsHand.instance.Config.SpawnItems);
+                player.ClearInventory();
+
+                foreach (string item in plugin.Config.SerepentsHandModifiers.SpawnItems)
+                {
+                    try
+                    {
+                        player.AddItem((ItemType)Enum.Parse(typeof(ItemType), item, true));
+                    }
+                    catch(Exception)
+                    {
+                        if (!SerpentsHand.isCustomItems)
+                        {
+                            Log.Error($"\"{item}\" is not a valid item name.");
+                            continue;
+                        }
+                        else
+                            CustomItemHandler(player, item);
+                    }
+                }
 
                 player.Ammo[(int)AmmoType.Nato556] = 250;
                 player.Ammo[(int)AmmoType.Nato762] = 250;
                 player.Ammo[(int)AmmoType.Nato9] = 250;
 
-                player.Health = SerpentsHand.instance.Config.Health;
+                player.Health = plugin.Config.SerepentsHandModifiers.Health;
             }
 
             Timing.CallDelayed(0.5f, () => player.Position = shSpawnPos);
         }
 
-        internal static void CreateSquad(int size)
+        internal void CustomItemHandler(Player player, string item)
+        {
+            if(!Exiled.CustomItems.API.Features.CustomItem.TryGive(player, item, false))
+            {
+                Log.Error($"\"{item}\" is not a valid item / customitem name.");
+            }
+        }
+
+        internal void CreateSquad(int size)
         {
             List<Player> spec = new List<Player>();
-            List<Player> pList = Player.List.ToList();
 
-            foreach (Player player in pList)
+            foreach (Player player in Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled))
             {
-                if (player.Team == Team.RIP)
-                {
-                    spec.Add(player);
-                }
+                spec.Add(player);
             }
 
             int spawnCount = 1;
@@ -54,18 +77,18 @@ namespace SerpentsHand
             }
         }
 
-        internal static void SpawnSquad(List<Player> players)
+        internal void SpawnSquad(List<Player> players)
         {
             foreach (Player player in players)
             {
                 SpawnPlayer(player);
             }
 
-            if (players.Count > 0) 
-                Cassie.GlitchyMessage(SerpentsHand.instance.Config.EntryAnnouncement, 0.05f, 0.05f);
+            if (players.Count > 0)
+                Cassie.GlitchyMessage(plugin.Config.SpawnManager.EntryAnnouncement, 0.05f, 0.05f);
         }
 
-        internal static void GrantFF()
+        internal void GrantFF()
         {
             foreach (int id in shPlayers)
             {
@@ -73,19 +96,19 @@ namespace SerpentsHand
                 if (p != null) p.IsFriendlyFireEnabled = true;
             }
 
-            foreach (int id in SerpentsHand.instance.EventHandlers.shPocketPlayers)
+            foreach (int id in shPocketPlayers)
             {
                 Player p = Player.Get(id);
                 if (p != null) p.IsFriendlyFireEnabled = true;
             }
 
             shPlayers.Clear();
-            SerpentsHand.instance.EventHandlers.shPocketPlayers.Clear();
+            shPocketPlayers.Clear();
         }
 
         private Player TryGet035()
         {
-            return Scp035Data.AllScp035.FirstOrDefault();
+            return Scp035.API.AllScp035.FirstOrDefault();
         }
 
         private int CountRoles(Team team)
@@ -111,7 +134,7 @@ namespace SerpentsHand
 
         private void TeleportTo106(Player player)
         {
-            Player scp106 = Player.List.Where(x => x.Role == RoleType.Scp106).FirstOrDefault();
+            Player scp106 = Player.List.FirstOrDefault(x => x.Role == RoleType.Scp106);
             if (scp106 != null)
             {
                 player.Position = scp106.Position;
@@ -120,6 +143,15 @@ namespace SerpentsHand
             {
                 player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
             }
+        }
+
+        private string FakeMtfUnit()
+        {
+            const string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            int unitNumber = rand.Next(0, 16);
+            string unitName = $"nato_{alphabet[rand.Next(alphabet.Count())]} {unitNumber}";
+
+            return unitName;
         }
     }
 }

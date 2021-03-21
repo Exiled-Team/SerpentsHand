@@ -1,13 +1,25 @@
-﻿using HarmonyLib;
-
-namespace SerpentsHand.Patches
+﻿namespace SerpentsHand.Patches
 {
-    [HarmonyPatch(typeof(Respawning.RespawnTickets), nameof(Respawning.RespawnTickets.DrawRandomTeam))]
-    class UIUSpawn
+    using Exiled.API.Features;
+    using HarmonyLib;
+    using Respawning;
+    using System;
+
+    [HarmonyPatch(typeof(RespawnTickets), nameof(RespawnTickets.DrawRandomTeam))]
+    class SHSpawn
     {
-        public static void Postfix(ref Respawning.SpawnableTeamType __result)
+        public static void Postfix(ref SpawnableTeamType __result)
         {
-            SerpentsHand.instance.EventHandlers.CalculateChance();
+            try
+            {
+                if (__result == SpawnableTeamType.ChaosInsurgency)
+                    EventHandlers.instance.CalculateChance();
+            }
+            catch(Exception e)
+            {
+                Log.Error(e);
+            }
         }
     }
 }
+
