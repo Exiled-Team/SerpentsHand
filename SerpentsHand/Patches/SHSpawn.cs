@@ -1,12 +1,15 @@
 ﻿namespace SerpentsHand.Patches
 {
+    using System;
     using Exiled.API.Features;
     using HarmonyLib;
     using Respawning;
-    using System;
 
+    /// <summary>
+    /// Handles calling <see cref="EventHandlers.CalculateChance"/> when <see cref="SpawnableTeamType"/> is choosed.
+    /// </summary>
     [HarmonyPatch(typeof(RespawnTickets), nameof(RespawnTickets.DrawRandomTeam))]
-    class SHSpawn
+    internal class SHSpawn
     {
         public static void Postfix(ref SpawnableTeamType __result)
         {
@@ -15,11 +18,10 @@
                 if (__result == SpawnableTeamType.ChaosInsurgency)
                     EventHandlers.instance.CalculateChance();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Error(e);
             }
         }
     }
 }
-

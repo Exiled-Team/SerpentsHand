@@ -5,32 +5,50 @@
     using Exiled.Loader;
     using HarmonyLib;
 
-    using ServerEvent = Exiled.Events.Handlers.Server;
     using PlayerEvent = Exiled.Events.Handlers.Player;
     using Scp106Event = Exiled.Events.Handlers.Scp106;
+    using ServerEvent = Exiled.Events.Handlers.Server;
 
+    /// <summary>
+    /// The main class which inherits <see cref="Plugin{TConfig}"/>.
+    /// </summary>
     public class SerpentsHand : Plugin<Configs.Config>
     {
+        /// <inheritdoc/>
         public override string Name => "SerpentsHand";
+
+        /// <inheritdoc/>
         public override string Author => "Cyanox, maintained by Michal78900";
+
+        /// <inheritdoc/>
         public override Version Version => new Version(2, 0, 0);
+
+        /// <inheritdoc/>
         public override Version RequiredExiledVersion => new Version(2, 8, 0);
 
 
-        public static SerpentsHand instance;
+        public static SerpentsHand Instance;
 
-        private EventHandlers EventHandlers;
+        private EventHandlers eventHandlers;
 
         private Harmony hInstance;
 
-        public static bool isScp035 = false;
-        public static bool isCustomItems = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether SCP-035 plugin is installed.
+        /// </summary>
+        public static bool IsScp035 { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether ustomItems plugin is installed.
+        /// </summary>
+        public static bool IsCustomItems { get; set; } = false;
 
 
+        /// <inheritdoc/>
         public override void OnEnabled()
         {
-            instance = this;
-            EventHandlers = new EventHandlers(this);
+            Instance = this;
+            eventHandlers = new EventHandlers(this);
 
             hInstance = new Harmony($"cyanox.serpentshand-{DateTime.Now.Ticks}");
             hInstance.PatchAll();
@@ -39,62 +57,60 @@
             {
                 if (plugin.Name.ToLower() == "scp035" && plugin.Config.IsEnabled)
                 {
-                    isScp035 = true;
+                    IsScp035 = true;
                     Log.Debug("SCP-035 plugin detected!");
                 }
 
                 if (plugin.Name.ToLower() == "customitems" && plugin.Config.IsEnabled)
                 {
-                    isCustomItems = true;
+                    IsCustomItems = true;
                     Log.Debug("CustomItems plugin detected!");
                 }
             }
 
-            ServerEvent.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
-            ServerEvent.RespawningTeam += EventHandlers.OnTeamRespawn;
-            ServerEvent.EndingRound += EventHandlers.OnCheckRoundEnd;
-            //ServerEvent.SendingRemoteAdminCommand += EventHandlers.OnRACommand;
+            ServerEvent.WaitingForPlayers += eventHandlers.OnWaitingForPlayers;
+            ServerEvent.RespawningTeam += eventHandlers.OnTeamRespawn;
+            ServerEvent.EndingRound += eventHandlers.OnCheckRoundEnd;
 
-            PlayerEvent.EnteringPocketDimension += EventHandlers.OnPocketDimensionEnter;
-            PlayerEvent.FailingEscapePocketDimension += EventHandlers.OnPocketDimensionFail;
-            PlayerEvent.EscapingPocketDimension += EventHandlers.OnPocketDimensionEscape;
-            PlayerEvent.Hurting += EventHandlers.OnPlayerHurt;
-            PlayerEvent.ChangingRole += EventHandlers.OnChangingRole;
-            PlayerEvent.Destroying += EventHandlers.OnDestroying;
-            PlayerEvent.InsertingGeneratorTablet += EventHandlers.OnGeneratorInsert;
-            PlayerEvent.EnteringFemurBreaker += EventHandlers.OnFemurEnter;
-            PlayerEvent.Died += EventHandlers.OnPlayerDeath;
-            PlayerEvent.Shooting += EventHandlers.OnShooting;
+            PlayerEvent.EnteringPocketDimension += eventHandlers.OnPocketDimensionEnter;
+            PlayerEvent.FailingEscapePocketDimension += eventHandlers.OnPocketDimensionFail;
+            PlayerEvent.EscapingPocketDimension += eventHandlers.OnPocketDimensionEscape;
+            PlayerEvent.Hurting += eventHandlers.OnPlayerHurt;
+            PlayerEvent.ChangingRole += eventHandlers.OnChangingRole;
+            PlayerEvent.Destroying += eventHandlers.OnDestroying;
+            PlayerEvent.InsertingGeneratorTablet += eventHandlers.OnGeneratorInsert;
+            PlayerEvent.EnteringFemurBreaker += eventHandlers.OnFemurEnter;
+            PlayerEvent.Died += eventHandlers.OnPlayerDeath;
+            PlayerEvent.Shooting += eventHandlers.OnShooting;
 
-            Scp106Event.Containing += EventHandlers.OnContaining106;
+            Scp106Event.Containing += eventHandlers.OnContaining106;
 
             base.OnEnabled();
         }
 
+        /// <inheritdoc/>
         public override void OnDisabled()
         {
-            ServerEvent.WaitingForPlayers -= EventHandlers.OnWaitingForPlayers;
-            ServerEvent.RespawningTeam -= EventHandlers.OnTeamRespawn;
-            ServerEvent.EndingRound -= EventHandlers.OnCheckRoundEnd;
-            //ServerEvent.SendingRemoteAdminCommand -= EventHandlers.OnRACommand;
+            ServerEvent.WaitingForPlayers -= eventHandlers.OnWaitingForPlayers;
+            ServerEvent.RespawningTeam -= eventHandlers.OnTeamRespawn;
+            ServerEvent.EndingRound -= eventHandlers.OnCheckRoundEnd;
 
-            PlayerEvent.EnteringPocketDimension -= EventHandlers.OnPocketDimensionEnter;
-            PlayerEvent.FailingEscapePocketDimension -= EventHandlers.OnPocketDimensionFail;
-            PlayerEvent.EscapingPocketDimension -= EventHandlers.OnPocketDimensionEscape;
-            PlayerEvent.Hurting -= EventHandlers.OnPlayerHurt;
-            PlayerEvent.ChangingRole -= EventHandlers.OnChangingRole;
-            PlayerEvent.Destroying -= EventHandlers.OnDestroying;
-            PlayerEvent.InsertingGeneratorTablet -= EventHandlers.OnGeneratorInsert;
-            PlayerEvent.EnteringFemurBreaker -= EventHandlers.OnFemurEnter;
-            PlayerEvent.Died -= EventHandlers.OnPlayerDeath;
-            PlayerEvent.Shooting -= EventHandlers.OnShooting;
+            PlayerEvent.EnteringPocketDimension -= eventHandlers.OnPocketDimensionEnter;
+            PlayerEvent.FailingEscapePocketDimension -= eventHandlers.OnPocketDimensionFail;
+            PlayerEvent.EscapingPocketDimension -= eventHandlers.OnPocketDimensionEscape;
+            PlayerEvent.Hurting -= eventHandlers.OnPlayerHurt;
+            PlayerEvent.ChangingRole -= eventHandlers.OnChangingRole;
+            PlayerEvent.Destroying -= eventHandlers.OnDestroying;
+            PlayerEvent.InsertingGeneratorTablet -= eventHandlers.OnGeneratorInsert;
+            PlayerEvent.EnteringFemurBreaker -= eventHandlers.OnFemurEnter;
+            PlayerEvent.Died -= eventHandlers.OnPlayerDeath;
+            PlayerEvent.Shooting -= eventHandlers.OnShooting;
 
-            Scp106Event.Containing -= EventHandlers.OnContaining106;
+            Scp106Event.Containing -= eventHandlers.OnContaining106;
 
             hInstance.UnpatchAll();
-            EventHandlers = null;
-            instance = null;
-            //EventHandlers.instance = null;
+            eventHandlers = null;
+            Instance = null;
 
             base.OnDisabled();
         }

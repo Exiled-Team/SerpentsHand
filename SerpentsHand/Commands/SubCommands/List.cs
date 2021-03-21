@@ -1,10 +1,10 @@
-﻿using CommandSystem;
-using Exiled.API.Features;
-using Exiled.Permissions.Extensions;
-using System;
-
-namespace SerpentsHand.Commands.SubCommands
+﻿namespace SerpentsHand.Commands.SubCommands
 {
+    using System;
+    using CommandSystem;
+    using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
+
     /// <summary>
     /// A command which shows a list with players that are Serpents Hand.
     /// </summary>
@@ -30,7 +30,7 @@ namespace SerpentsHand.Commands.SubCommands
 
             string message = "\nList of players that are Serpent's Hand:\n";
 
-            foreach (var shId in EventHandlers.shPlayers)
+            foreach (var shId in EventHandlers.ShPlayers)
             {
                 Player shPlayer = Player.Get(shId);
 

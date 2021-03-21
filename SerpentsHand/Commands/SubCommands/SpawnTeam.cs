@@ -1,9 +1,9 @@
-﻿using CommandSystem;
-using Exiled.Permissions.Extensions;
-using System;
-
-namespace SerpentsHand.Commands.SubCommands
+﻿namespace SerpentsHand.Commands.SubCommands
 {
+    using System;
+    using CommandSystem;
+    using Exiled.Permissions.Extensions;
+
     /// <summary>
     /// A command which spawns a Serpents Hand team.
     /// </summary>
@@ -29,7 +29,7 @@ namespace SerpentsHand.Commands.SubCommands
 
             if (arguments.Count == 0)
             {
-                API.SpawnSquad(SerpentsHand.instance.Config.SpawnManager.MaxSquad);
+                API.SpawnSquad(SerpentsHand.Instance.Config.SpawnManager.MaxSquad);
             }
             else
             {

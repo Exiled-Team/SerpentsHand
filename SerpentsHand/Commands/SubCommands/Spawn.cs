@@ -1,11 +1,11 @@
-﻿using CommandSystem;
-using Exiled.API.Features;
-using Exiled.Permissions.Extensions;
-using RemoteAdmin;
-using System;
-
-namespace SerpentsHand.Commands.SubCommands
+﻿namespace SerpentsHand.Commands.SubCommands
 {
+    using System;
+    using CommandSystem;
+    using Exiled.API.Features;
+    using Exiled.Permissions.Extensions;
+    using RemoteAdmin;
+
     /// <summary>
     /// A command which spawns a single Serpents Hand.
     /// </summary>
@@ -61,7 +61,6 @@ namespace SerpentsHand.Commands.SubCommands
 
                 response = $"{player.Nickname} is now a Serpent's Hand.";
                 return true;
-
             }
         }
     }

@@ -7,11 +7,19 @@
     using Exiled.API.Features;
     using MEC;
 
+    /// <summary>
+    /// EventHandlers and Logic which Serpents Hand use.
+    /// </summary>
     public partial class EventHandlers
     {
+        /// <summary>
+        /// Spawns <see cref="Player"/> as Serpents Hand.
+        /// </summary>
+        /// <param name="player"> The player to spawn.</param>
+        /// <param name="full"> Should items and ammo be given to spawned <see cref="Player"/>.</param>
         internal void SpawnPlayer(Player player, bool full = true)
         {
-            shPlayers.Add(player.Id);
+            ShPlayers.Add(player.Id);
             player.Role = RoleType.Tutorial;
             player.Broadcast(10, plugin.Config.SpawnManager.SpawnBroadcast);
 
@@ -25,15 +33,17 @@
                     {
                         player.AddItem((ItemType)Enum.Parse(typeof(ItemType), item, true));
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
-                        if (!SerpentsHand.isCustomItems)
+                        if (!SerpentsHand.IsCustomItems)
                         {
                             Log.Error($"\"{item}\" is not a valid item name.");
                             continue;
                         }
                         else
+                        {
                             CustomItemHandler(player, item);
+                        }
                     }
                 }
 
@@ -44,9 +54,28 @@
                 player.Health = plugin.Config.SerepentsHandModifiers.Health;
             }
 
+            string roleName = string.Empty;
+
+            if (!string.IsNullOrEmpty(plugin.Config.SerepentsHandModifiers.RoleColor))
+                roleName += $"<color={plugin.Config.SerepentsHandModifiers.RoleColor}>";
+
+            roleName += $"{player.Nickname}\n{plugin.Config.SerepentsHandModifiers.RoleName}";
+
+            if (!string.IsNullOrEmpty(plugin.Config.SerepentsHandModifiers.RoleColor))
+                roleName += "</color>";
+
+            player.CustomInfo = roleName;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
+
             Timing.CallDelayed(0.5f, () => player.Position = shSpawnPos);
         }
 
+        /// <summary>
+        /// Handles giving customitems to the player.
+        /// </summary>
+        /// <param name="player">The player to which custom item should be given.</param>
+        /// <param name="item">The name of custom item</param>
         internal void CustomItemHandler(Player player, string item)
         {
             if(!Exiled.CustomItems.API.Features.CustomItem.TryGive(player, item, false))
@@ -55,6 +84,23 @@
             }
         }
 
+        /// <summary>
+        /// Removes Serpents Hand role name and id from a <see cref="Player"/>.
+        /// </summary>
+        /// <param name="player">The player to remove.</param>
+        internal void DestroySH(Player player)
+        {
+            ShPlayers.Remove(player.Id);
+
+            player.CustomInfo = string.Empty;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
+        }
+
+        /// <summary>
+        /// Spawns Serpents Hand squad.
+        /// </summary>
+        /// <param name="size"> The number of players in squad (this can be lower due to not enough Spectators).</param>
         internal void CreateSquad(int size)
         {
             List<Player> spec = new List<Player>();
@@ -77,6 +123,10 @@
             }
         }
 
+        /// <summary>
+        /// Spawns Serpents Hand squad.
+        /// </summary>
+        /// <param name="players"> List of players to spawn.</param>
         internal void SpawnSquad(List<Player> players)
         {
             foreach (Player player in players)
@@ -88,21 +138,26 @@
                 Cassie.GlitchyMessage(plugin.Config.SpawnManager.EntryAnnouncement, 0.05f, 0.05f);
         }
 
+        /// <summary>
+        /// Gives Serpents Hand players friendly fire.
+        /// </summary>
         internal void GrantFF()
         {
-            foreach (int id in shPlayers)
+            foreach (int id in ShPlayers)
             {
                 Player p = Player.Get(id);
-                if (p != null) p.IsFriendlyFireEnabled = true;
+                if (p != null)
+                    p.IsFriendlyFireEnabled = true;
             }
 
             foreach (int id in shPocketPlayers)
             {
                 Player p = Player.Get(id);
-                if (p != null) p.IsFriendlyFireEnabled = true;
+                if (p != null)
+                    p.IsFriendlyFireEnabled = true;
             }
 
-            shPlayers.Clear();
+            ShPlayers.Clear();
             shPocketPlayers.Clear();
         }
 
@@ -115,7 +170,7 @@
         {
             Player scp035 = null;
 
-            if (SerpentsHand.isScp035)
+            if (SerpentsHand.IsScp035)
             {
                 scp035 = TryGet035();
             }
@@ -125,10 +180,12 @@
             {
                 if (pl.Team == team)
                 {
-                    if (scp035 != null && pl.Id == scp035.Id) continue;
+                    if (scp035 != null && pl.Id == scp035.Id)
+                        continue;
                     count++;
                 }
             }
+
             return count;
         }
 
