@@ -1,6 +1,7 @@
 ﻿namespace SerpentsHand.Commands.SubCommands
 {
     using System;
+    using System.Collections.Generic;
     using CommandSystem;
     using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
@@ -30,11 +31,11 @@
 
             string message = "\nList of players that are Serpent's Hand:\n";
 
-            foreach (var shId in EventHandlers.ShPlayers)
-            {
-                Player shPlayer = Player.Get(shId);
+            List<Player> shPlayers = API.GetSHPlayers();
 
-                message += $"- ({shId}) {shPlayer.Nickname}\n";
+            foreach (var shPly in shPlayers)
+            {
+                message += $"- ({shPly.Id}) {shPly.Nickname}\n";
             }
 
             response = message;

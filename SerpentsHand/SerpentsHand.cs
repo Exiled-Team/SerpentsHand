@@ -26,7 +26,7 @@
         /// <inheritdoc/>
         public override Version RequiredExiledVersion => new Version(2, 8, 0);
 
-
+        /// <inheritdoc/>
         public static SerpentsHand Instance;
 
         private EventHandlers eventHandlers;
@@ -34,15 +34,14 @@
         private Harmony hInstance;
 
         /// <summary>
-        /// Gets or sets a value indicating whether SCP-035 plugin is installed.
+        /// Gets a value indicating whether SCP-035 plugin is installed and enabled.
         /// </summary>
-        public static bool IsScp035 { get; set; } = false;
+        public static bool IsScp035 { get; private set; } = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether ustomItems plugin is installed.
+        /// Gets a value indicating whether CustomItems plugin is installed and enabled.
         /// </summary>
-        public static bool IsCustomItems { get; set; } = false;
-
+        public static bool IsCustomItems { get; private set; } = false;
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -58,13 +57,13 @@
                 if (plugin.Name.ToLower() == "scp035" && plugin.Config.IsEnabled)
                 {
                     IsScp035 = true;
-                    Log.Debug("SCP-035 plugin detected!");
+                    Log.Debug("SCP-035 plugin detected!", Config.Debug);
                 }
 
                 if (plugin.Name.ToLower() == "customitems" && plugin.Config.IsEnabled)
                 {
                     IsCustomItems = true;
-                    Log.Debug("CustomItems plugin detected!");
+                    Log.Debug("CustomItems plugin detected!", Config.Debug);
                 }
             }
 

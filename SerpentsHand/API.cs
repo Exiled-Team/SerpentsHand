@@ -26,7 +26,7 @@
         /// <param name="full"> Should items and ammo be given to spawned <see cref="Player"/>.</param>
         public static void SpawnPlayer(Player player, bool full = true)
         {
-            EventHandlers.instance.SpawnPlayer(player, full);
+            EventHandlers.Instance.SpawnPlayer(player, full);
         }
 
         /// <summary>
@@ -35,16 +35,16 @@
         /// <param name="playerList"> List of players to spawn.</param>
         public static void SpawnSquad(List<Player> playerList)
         {
-            EventHandlers.instance.SpawnSquad(playerList);
+            EventHandlers.Instance.SpawnSquad(playerList);
         }
 
         /// <summary>
         /// Spawns Serpents Hand squad.
         /// </summary>
         /// <param name="size"> The number of players in squad (this can be lower due to not enough Spectators).</param>
-        public static void SpawnSquad(int size)
+        public static void SpawnSquad(uint size)
         {
-            EventHandlers.instance.CreateSquad(size);
+            EventHandlers.Instance.SpawnSquad(size);
         }
 
         /// <summary>

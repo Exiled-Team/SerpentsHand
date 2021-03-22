@@ -1,7 +1,9 @@
 ﻿namespace SerpentsHand.Commands.SubCommands
 {
     using System;
+    using System.Linq;
     using CommandSystem;
+    using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
 
     /// <summary>
@@ -27,23 +29,50 @@
                 return false;
             }
 
+            uint validPlayers = 0;
+            foreach (Player player in Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled))
+            {
+                validPlayers++;
+            }
+
             if (arguments.Count == 0)
             {
-                API.SpawnSquad(SerpentsHand.Instance.Config.SpawnManager.MaxSquad);
+                uint maxSquad = SerpentsHand.Instance.Config.SpawnManager.MaxSquad;
+
+                if (validPlayers >= maxSquad)
+                {
+                    API.SpawnSquad(SerpentsHand.Instance.Config.SpawnManager.MaxSquad);
+
+                    response = $"Serpent's Hand squad with {maxSquad} players has been spawned.";
+                    return true;
+                }
+                else
+                {
+                    response = $"There is not enough Spectators to spawn Serpent's Hand squad with {maxSquad} players. Required {maxSquad - validPlayers} more.";
+                    return false;
+                }
             }
             else
             {
-                if (int.TryParse(arguments.At(0), out int num))
+                if (!uint.TryParse(arguments.At(0), out uint num))
                 {
                     response = $"\"{arguments.At(0)}\" is not a valid number.";
                     return false;
                 }
 
-                API.SpawnSquad(num);
-            }
+                if (validPlayers >= num)
+                {
+                    API.SpawnSquad(num);
 
-            response = "Serpent's Hand squad has been spawned.";
-            return true;
+                    response = $"Serpent's Hand squad with {num} players has been spawned.";
+                    return true;
+                }
+                else
+                {
+                    response = $"There is not enough Spectators to spawn Serpent's Hand squad with {num} players. Required {num - validPlayers} more.";
+                    return false;
+                }
+            }
         }
     }
 }

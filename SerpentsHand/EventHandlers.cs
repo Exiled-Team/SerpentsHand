@@ -1,5 +1,6 @@
 ﻿namespace SerpentsHand
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Features;
@@ -13,26 +14,47 @@
     public partial class EventHandlers
     {
         private readonly SerpentsHand plugin;
+
+        /// <inheritdoc/>
         public EventHandlers(SerpentsHand plugin) => this.plugin = plugin;
 
-        public static EventHandlers instance;
+        /// <summary>
+        /// The <see cref="EventHandlers"></see> <see langword="static"/> instance.
+        /// </summary>
+        internal static EventHandlers Instance;
 
+        /// <summary>
+        /// Players IDs that are currently Serpents Hand.
+        /// </summary>
         public static List<int> ShPlayers = new List<int>();
-        private List<int> shPocketPlayers = new List<int>();
 
+        /// <summary>
+        /// How many respaws have occured.
+        /// </summary>
         public static int TeamRespawnCount = 0;
+
+        /// <summary>
+        /// How many times Serpents Hand team have been spawned by <see cref="Exiled.Events.Handlers.Server.OnRespawningTeam(RespawningTeamEventArgs)"/>.
+        /// </summary>
         public static int SerpentsRespawnCount = 0;
 
+        /// <summary>
+        /// Is Serpents Hand spawnable in <see cref="Exiled.Events.Handlers.Server.OnRespawningTeam(RespawningTeamEventArgs)"/>.
+        /// </summary>
         public static bool IsSpawnable;
 
         private static System.Random rand = new System.Random();
 
-        private static Vector3 shSpawnPos = new Vector3(0, 1002, 8);
+        private static Vector3 shSpawnPos;
+
+        private List<int> shPocketPlayers = new List<int>();
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
         internal void OnWaitingForPlayers()
         {
-            instance = this;
+            Instance = this;
+
+            shSpawnPos = new Vector3(plugin.Config.SpawnManager.SpawnPos["X"], plugin.Config.SpawnManager.SpawnPos["Y"], plugin.Config.SpawnManager.SpawnPos["Z"]);
 
             ShPlayers.Clear();
             shPocketPlayers.Clear();
@@ -45,10 +67,12 @@
         /// </summary>
         internal void CalculateChance()
         {
+            Log.Info(Convert.ToInt32(TryGet035() != null));
+
             if (rand.Next(1, 101) <= plugin.Config.SpawnManager.SpawnChance &&
-                Player.List.Count() > 0 &&
                 TeamRespawnCount >= plugin.Config.SpawnManager.RespawnDelay &&
-                SerpentsRespawnCount < plugin.Config.SpawnManager.MaxSpawns)
+                SerpentsRespawnCount < plugin.Config.SpawnManager.MaxSpawns &&
+                !(!plugin.Config.SpawnManager.CanSpawnWithoutSCPs && Player.Get(Team.SCP).Count() + Convert.ToInt32(TryGet035() != null) == 0))
             {
                 IsSpawnable = true;
             }
@@ -88,7 +112,9 @@
                         if (IsSpawnable)
                         {
                             SpawnSquad(sHPlayers);
-                            SerpentsRespawnCount++;
+
+                            if (plugin.Config.SpawnManager.MaxSpawns > 0)
+                                SerpentsRespawnCount++;
                         }
                     });
                 }
@@ -275,7 +301,7 @@
             {
                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
                 {
-                    player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(50000, "WORLD", ev.HitInformations.GetDamageType(), player.Id), player.GameObject);
+                    player.Hurt(50000f, DamageTypes.Contain, "WORLD", player.Id);
                 }
             }
         }
@@ -288,7 +314,5 @@
                 DestroySH(ev.Player);
             }
         }
-
-        public static int MaxSpawns = SerpentsHand.Instance.Config.SpawnManager.MaxSpawns;
     }
 }

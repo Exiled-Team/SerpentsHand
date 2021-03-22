@@ -25,7 +25,8 @@
 
             if (full)
             {
-                player.ClearInventory();
+                if (plugin.Config.SerepentsHandModifiers.SpawnItems.Count > 0)
+                    player.ClearInventory();
 
                 foreach (string item in plugin.Config.SerepentsHandModifiers.SpawnItems)
                 {
@@ -47,12 +48,14 @@
                     }
                 }
 
-                player.Ammo[(int)AmmoType.Nato556] = 250;
-                player.Ammo[(int)AmmoType.Nato762] = 250;
-                player.Ammo[(int)AmmoType.Nato9] = 250;
-
-                player.Health = plugin.Config.SerepentsHandModifiers.Health;
+                foreach (var ammo in plugin.Config.SerepentsHandModifiers.SpawnAmmo)
+                {
+                    player.Ammo[(int)ammo.Key] = ammo.Value;
+                }
             }
+
+            player.MaxHealth = (int)plugin.Config.SerepentsHandModifiers.Health;
+            player.Health = plugin.Config.SerepentsHandModifiers.Health;
 
             string roleName = string.Empty;
 
@@ -75,10 +78,10 @@
         /// Handles giving customitems to the player.
         /// </summary>
         /// <param name="player">The player to which custom item should be given.</param>
-        /// <param name="item">The name of custom item</param>
+        /// <param name="item">The name of custom item.</param>
         internal void CustomItemHandler(Player player, string item)
         {
-            if(!Exiled.CustomItems.API.Features.CustomItem.TryGive(player, item, false))
+            if (!Exiled.CustomItems.API.Features.CustomItem.TryGive(player, item, false))
             {
                 Log.Error($"\"{item}\" is not a valid item / customitem name.");
             }
@@ -92,6 +95,8 @@
         {
             ShPlayers.Remove(player.Id);
 
+            player.MaxHealth = default;
+
             player.CustomInfo = string.Empty;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
@@ -101,7 +106,7 @@
         /// Spawns Serpents Hand squad.
         /// </summary>
         /// <param name="size"> The number of players in squad (this can be lower due to not enough Spectators).</param>
-        internal void CreateSquad(int size)
+        internal void SpawnSquad(uint size)
         {
             List<Player> spec = new List<Player>();
 
@@ -121,6 +126,9 @@
                     spawnCount++;
                 }
             }
+
+            if (spawnCount > 0)
+                Cassie.GlitchyMessage(plugin.Config.SpawnManager.EntryAnnouncement, 0.05f, 0.05f);
         }
 
         /// <summary>
@@ -202,6 +210,7 @@
             }
         }
 
+        /*
         private string FakeMtfUnit()
         {
             const string alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -210,5 +219,18 @@
 
             return unitName;
         }
+
+        private string NatoHandler(string letter)
+        {
+            switch (letter)
+            {
+                case "a": return "ALPHA";
+                case "b": return "BRAVO";
+                case "c": return "CHARLIE";
+
+                default: return null;
+            }
+        }
+        */
     }
 }

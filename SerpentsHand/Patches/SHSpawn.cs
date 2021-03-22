@@ -11,12 +11,14 @@
     [HarmonyPatch(typeof(RespawnTickets), nameof(RespawnTickets.DrawRandomTeam))]
     internal class SHSpawn
     {
+        /// <inheritdoc/>
         public static void Postfix(ref SpawnableTeamType __result)
         {
+            Log.Debug("Trying to calculate chance of spawing Serpents Hand...", SerpentsHand.Instance.Config.Debug);
             try
             {
                 if (__result == SpawnableTeamType.ChaosInsurgency)
-                    EventHandlers.instance.CalculateChance();
+                    EventHandlers.Instance.CalculateChance();
             }
             catch (Exception e)
             {
