@@ -11,9 +11,9 @@ A plugin that adds a new class to your server named "Serpent's Hand". This class
 Place the "SerpentsHand.dll" file in your EXILED/Plugins folder.
 
 # Features
-* Uses the tutorial model for this class
+* Uses the Tutorial model for this class
 * Class has a configrable percent chance to spawn instead of chaos
-* A custom spawn location
+* A configurable spawn location
 * Commands to spawn individual members and a squad manually
 * Announcements for a squad of Serpent's Hand spawning, as well as one for chaos spawning to let the players know which one spawned
 * Custom API for other plugins to interact with
@@ -28,7 +28,7 @@ Place the "SerpentsHand.dll" file in your EXILED/Plugins folder.
 Configs for Serpents Hand player.
 | Config        | Value Type | Default Value | Description |
 | :-------------: | :---------: | :------: | :--------- |
-| `role_name` | string | "Serpent's Hand" | Determines role name seen in game.
+| `role_name` | string | Serpent's Hand | Determines role name seen in game.
 | `role_color` | string | '' | Determines color role name seen in game. (leave empty for default Tutorial green)
 | `health` | float | 120 | The amount of health Serpents Hand has.
 | `spawn_items` | List | GunProject90, KeycardChaosInsurgency, GrenadeFlash, Radio, Medkit | The items Serpents Hand spawn with. (supports [CustomItems](https://github.com/Exiled-Team/CustomItems))
@@ -37,6 +37,20 @@ Configs for Serpents Hand player.
 | `teleport_to106` | bool | true | Determines if Serpents Hand should teleport to SCP-106 after exiting his pocket dimension.
 | `end_round_friendly_fire` | bool | false | Determines if Serpents Hand should be able to hurt SCPs after the round ends.
 | `scps_win_with_chaos` | bool | true | Set this to false if Chaos and SCPs CANNOT win together on your server.
+
+## SpawnManager
+Configs for Serpents Hand spawning options.
+| Config        | Value Type | Default Value | Description |
+| :-------------: | :---------: | :------: | :--------- |
+| `spawn_chance` | int | 50 | The chance for Serpents Hand to spawn instead of Chaos.
+| `max_squad` | uint | | 8 | The maximum size of a Serpents Hand squad.
+| `respawn_delay` | int | 1 | How many respawn waves must occur before considering Serpents Hand to spawn.
+| `max_spawns` | int | 1 | The maximum number of times Serpents can spawn per game.
+| `can_spawn_without_scps` | bool | false | Determines if Serpents Hand should be able to spawn when there is no SCPs.
+| `entry_announcement` | string | SERPENTS HAND HASENTERED | The message announced by CASSIE when Serpents hand spawn.
+| `ci_entry_announcement` | string | '' | The message announced by CASSIE when Chaos spawn.
+| `spawn_broadcast` | string | \<size=60>You are \<color=#03F555>\<b>Serpents Hand\</b>\</color>\</size>\n\<i>Help the \<color=\"red\">SCPs</color> by killing all other classes!\</i> | The broadcast sent to Serpents Hand when they spawn.
+| `spawn_pos` | Vector3 | X: 0, Y: 1002, Z: 8 | The Serpents Hand spawn position.
 
 # Commands
 All Serpents Hand commands begins with `sh` prefix.
