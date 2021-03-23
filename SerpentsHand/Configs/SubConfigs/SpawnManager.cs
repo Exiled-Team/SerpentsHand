@@ -36,7 +36,7 @@
         /// Gets a value indicating whether Serpents Hand should be able to spawn when there is no SCPs.
         /// </summary>
         [Description("Determines if Serpents Hand should be able to spawn when there is no SCPs.")]
-        public bool CanSpawnWithoutSCPs { get; private set; } = false;
+        public bool CanSpawnWithoutScps { get; private set; } = false;
 
         /// <summary>
         /// Gets the message announced by CASSIE when Serpents hand spawn.

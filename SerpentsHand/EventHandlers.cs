@@ -70,7 +70,7 @@
             if (rand.Next(1, 101) <= plugin.Config.SpawnManager.SpawnChance &&
                 TeamRespawnCount >= plugin.Config.SpawnManager.RespawnDelay &&
                 SerpentsRespawnCount < plugin.Config.SpawnManager.MaxSpawns &&
-                !(!plugin.Config.SpawnManager.CanSpawnWithoutSCPs && Player.Get(Team.SCP).Count() + Convert.ToInt32(TryGet035() != null) == 0))
+                !(!plugin.Config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCP).Count() + Convert.ToInt32(TryGet035() != null) == 0))
             {
                 IsSpawnable = true;
             }
