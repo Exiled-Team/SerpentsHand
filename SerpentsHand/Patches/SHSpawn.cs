@@ -14,7 +14,6 @@
         /// <inheritdoc/>
         public static void Postfix(ref SpawnableTeamType __result)
         {
-            Log.Debug("Trying to calculate chance of spawing Serpents Hand...", SerpentsHand.Instance.Config.Debug);
             try
             {
                 if (__result == SpawnableTeamType.ChaosInsurgency)

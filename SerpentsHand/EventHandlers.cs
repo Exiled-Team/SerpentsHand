@@ -67,8 +67,6 @@
         /// </summary>
         internal void CalculateChance()
         {
-            Log.Info(Convert.ToInt32(TryGet035() != null));
-
             if (rand.Next(1, 101) <= plugin.Config.SpawnManager.SpawnChance &&
                 TeamRespawnCount >= plugin.Config.SpawnManager.RespawnDelay &&
                 SerpentsRespawnCount < plugin.Config.SpawnManager.MaxSpawns &&

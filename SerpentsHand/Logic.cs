@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Exiled.API.Enums;
     using Exiled.API.Features;
     using MEC;
 
@@ -209,28 +208,5 @@
                 player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
             }
         }
-
-        /*
-        private string FakeMtfUnit()
-        {
-            const string alphabet = "abcdefghijklmnopqrstuvwxyz";
-            int unitNumber = rand.Next(0, 16);
-            string unitName = $"nato_{alphabet[rand.Next(alphabet.Count())]} {unitNumber}";
-
-            return unitName;
-        }
-
-        private string NatoHandler(string letter)
-        {
-            switch (letter)
-            {
-                case "a": return "ALPHA";
-                case "b": return "BRAVO";
-                case "c": return "CHARLIE";
-
-                default: return null;
-            }
-        }
-        */
     }
 }
