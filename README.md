@@ -17,6 +17,7 @@ Place the "SerpentsHand.dll" file in your EXILED/Plugins folder.
 * Commands to spawn individual members and a squad manually
 * Announcements for a squad of Serpent's Hand spawning, as well as one for chaos spawning to let the players know which one spawned
 * Custom API for other plugins to interact with
+* Compatible with [RespawnTimer](https://github.com/Michal78900/RespawnTimer)
 
 # Configs
 | Config        | Value Type | Default Value | Description |
