@@ -23,5 +23,9 @@ Place the "SerpentsHand.dll" file in your EXILED/Plugins folder.
 | :-------------: | :---------: | :------: | :--------- |
 
 # Commands
-|     Command    | Value Type | Description |
-| :-------------: | :---------: | :--------- |
+All Serpents Hand commands begins with `sh` prefix.
+| Command | Prefix | Required permission | Description | Example |
+| :-------------: | :---------: | :---------: | :---------: | :---------:
+| **list** | l | `sh.list` | Shows the list of players that are currently Serpents Hand. | `sh l`
+| **spawn** | s | `sh.spawn` | Makes the player a Serpents Hand. (it uses IDs / nicknames as argument, if no argument is given, it will make the Command Sender a Serpents Hand) | `sh s 2` `sh s`
+| **spawnteam** | st | `sh.spawnteam` | Spawns Serpents Hand team with given number of players (if no argument is given it will try to spawn a squad with max number provided in a config) **Keep in mind this command won't work if there is not enough Spectators** | `sh st`
