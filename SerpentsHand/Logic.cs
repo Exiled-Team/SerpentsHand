@@ -38,7 +38,6 @@
                         if (!SerpentsHand.IsCustomItems)
                         {
                             Log.Error($"\"{item}\" is not a valid item name.");
-                            continue;
                         }
                         else
                         {
