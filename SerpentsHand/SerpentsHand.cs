@@ -21,10 +21,10 @@
         public override string Author => "Cyanox, maintained by Michal78900";
 
         /// <inheritdoc/>
-        public override Version Version => new Version(2, 0, 0);
+        public override Version Version => new Version(2, 0, 1);
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(2, 8, 1);
+        public override Version RequiredExiledVersion => new Version(2, 8, 0);
 
         /// <inheritdoc/>
         public static SerpentsHand Instance;
