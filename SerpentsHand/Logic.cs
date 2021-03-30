@@ -169,7 +169,14 @@
 
         private Player TryGet035()
         {
-            return Scp035.API.AllScp035.FirstOrDefault();
+            try
+            {
+                return Scp035.API.AllScp035.FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private int CountRoles(Team team)

@@ -81,7 +81,7 @@
     </Reference>
     <Reference Include="Scp035, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\AppData\Roaming\EXILED\Plugins\Scp035.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\Scp035.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

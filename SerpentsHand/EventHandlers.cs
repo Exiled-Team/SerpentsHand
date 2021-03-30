@@ -67,10 +67,18 @@
         /// </summary>
         internal void CalculateChance()
         {
+            int scp035num = 0;
+
+            if (SerpentsHand.IsScp035)
+            {
+                if (TryGet035() != null)
+                    scp035num = 1;
+            }
+
             if (rand.Next(1, 101) <= plugin.Config.SpawnManager.SpawnChance &&
                 TeamRespawnCount >= plugin.Config.SpawnManager.RespawnDelay &&
                 SerpentsRespawnCount < plugin.Config.SpawnManager.MaxSpawns &&
-                !(!plugin.Config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCP).Count() + Convert.ToInt32(TryGet035() != null) == 0))
+                !(!plugin.Config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCP).Count() + scp035num == 0))
             {
                 IsSpawnable = true;
             }
