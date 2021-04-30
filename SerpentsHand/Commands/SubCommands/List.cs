@@ -7,7 +7,7 @@
     using Exiled.Permissions.Extensions;
 
     /// <summary>
-    /// A command which shows a list with players that are Serpents Hand.
+    /// A command which shows a list of players that are currently a Serpents Hand.
     /// </summary>
     public class List : ICommand
     {

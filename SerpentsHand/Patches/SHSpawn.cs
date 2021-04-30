@@ -17,7 +17,7 @@
             try
             {
                 if (__result == SpawnableTeamType.ChaosInsurgency)
-                    EventHandlers.Instance.CalculateChance();
+                    EventHandlers.CalculateChance();
             }
             catch (Exception e)
             {

@@ -8,7 +8,6 @@
     using RemoteAdmin;
     using SubCommands;
 
-
     /// <summary>
     /// The base parent command.
     /// </summary>

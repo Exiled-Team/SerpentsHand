@@ -51,7 +51,7 @@
                     return false;
                 }
 
-                if(API.IsSerpent(player))
+                if (API.IsSerpent(player))
                 {
                     response = $"{player.Nickname} is already a Serpent's Hand.";
                     return false;

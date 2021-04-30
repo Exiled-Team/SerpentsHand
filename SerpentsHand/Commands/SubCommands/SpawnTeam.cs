@@ -54,7 +54,7 @@
             }
             else
             {
-                if (!uint.TryParse(arguments.At(0), out uint num))
+                if (!uint.TryParse(arguments.At(0), out uint num) || num == 0)
                 {
                     response = $"\"{arguments.At(0)}\" is not a valid number.";
                     return false;

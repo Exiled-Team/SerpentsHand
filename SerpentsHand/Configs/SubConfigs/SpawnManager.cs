@@ -1,7 +1,7 @@
 ﻿namespace SerpentsHand.Configs.SubConfigs
 {
-    using System.Collections.Generic;
     using System.ComponentModel;
+    using Serializable;
 
     /// <summary>
     /// Configs for Serpents Hand spawning options.
@@ -60,11 +60,6 @@
         /// Gets the Serpents Hand spawn position.
         /// </summary>
         [Description("The Serpents Hand spawn position.")]
-        public Dictionary<string, float> SpawnPos { get; private set; } = new Dictionary<string, float>()
-        {
-            { "X",  0f },
-            { "Y",  1002f },
-            { "Z",  8f },
-        };
+        public Vector SpawnPos { get; private set; } = new Vector { X = 0f, Y = 1002f, Z = 8f };
     }
 }
