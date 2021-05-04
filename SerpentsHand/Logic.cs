@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.CustomItems.API.Features;
     using MEC;
@@ -204,7 +205,7 @@
             }
             else
             {
-                player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
+                player.Position = Role.GetRandomSpawnPoint(RoleType.Scp096);
             }
         }
     }
