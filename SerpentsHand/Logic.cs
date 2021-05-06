@@ -38,6 +38,10 @@
             int count = 0;
             foreach (Player pl in Player.List)
             {
+                if (pl.SessionVariables.ContainsKey("IsNPC"))
+                {
+                    continue;
+                }
                 if (pl.Team == team)
                 {
                     if (scp035 != null && pl.Id == scp035.Id)
