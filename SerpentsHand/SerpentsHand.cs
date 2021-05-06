@@ -21,7 +21,7 @@
         public override string Author => "Cyanox, maintained by Michal78900";
 
         /// <inheritdoc/>
-        public override Version Version => new Version(2, 1, 0);
+        public override Version Version => new Version(2, 1, 1);
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion => new Version(2, 10, 0);
@@ -50,6 +50,7 @@
                 {
                     IsScp035 = true;
                     Log.Debug("SCP-035 plugin detected!", Config.Debug);
+                    break;
                 }
             }
 

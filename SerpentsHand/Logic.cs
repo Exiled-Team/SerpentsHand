@@ -14,6 +14,41 @@
     /// </summary>
     public partial class EventHandlers
     {
+        public static Player TryGet035()
+        {
+            try
+            {
+                return Scp035.API.AllScp035.FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public static int CountRoles(Team team)
+        {
+            Player scp035 = null;
+
+            if (SerpentsHand.IsScp035)
+            {
+                scp035 = TryGet035();
+            }
+
+            int count = 0;
+            foreach (Player pl in Player.List)
+            {
+                if (pl.Team == team)
+                {
+                    if (scp035 != null && pl.Id == scp035.Id)
+                        continue;
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         // TEMP!!!
         internal static void GiveCustomInventory(List<string> inventory, Player player)
         {
@@ -159,41 +194,6 @@
 
             ShPlayers.Clear();
             shPocketPlayers.Clear();
-        }
-
-        private static Player TryGet035()
-        {
-            try
-            {
-                return Scp035.API.AllScp035.FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private static int CountRoles(Team team)
-        {
-            Player scp035 = null;
-
-            if (SerpentsHand.IsScp035)
-            {
-                scp035 = TryGet035();
-            }
-
-            int count = 0;
-            foreach (Player pl in Player.List)
-            {
-                if (pl.Team == team)
-                {
-                    if (scp035 != null && pl.Id == scp035.Id)
-                        continue;
-                    count++;
-                }
-            }
-
-            return count;
         }
 
         private static void TeleportTo106(Player player)
