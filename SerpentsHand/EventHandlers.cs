@@ -1,7 +1,6 @@
 ﻿namespace SerpentsHand
 {
-    #pragma warning disable SA1202
-    #pragma warning disable SA1311
+#pragma warning disable SA1311
 
     using System.Collections.Generic;
     using System.Linq;
@@ -11,19 +10,13 @@
     using Exiled.Events.EventArgs;
     using MEC;
     using Respawning;
+    using static API;
 
     /// <summary>
     /// EventHandlers and Logic which Serpents Hand uses.
     /// </summary>
     public partial class EventHandlers
     {
-        private static readonly Config Config = SerpentsHand.Instance.Config;
-
-        /// <summary>
-        /// Players IDs that are currently Serpents Hand.
-        /// </summary>
-        public static List<int> ShPlayers = new List<int>();
-
         /// <summary>
         /// How many respaws have occured.
         /// </summary>
@@ -41,12 +34,11 @@
 
         private static readonly System.Random rng = new System.Random();
 
-        private static List<int> shPocketPlayers = new List<int>();
+        private static List<Player> shPocketPlayers = new List<Player>();
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers()"/>
         internal static void OnWaitingForPlayers()
         {
-            ShPlayers.Clear();
             shPocketPlayers.Clear();
             TeamRespawnCount = 0;
             SerpentsRespawnCount = 0;
@@ -59,11 +51,8 @@
         {
             int scp035num = 0;
 
-            if (SerpentsHand.IsScp035)
-            {
-                if (TryGet035() != null)
-                    scp035num = 1;
-            }
+            if (GetScp035s() != null)
+                scp035num = 1;
 
             IsSpawnable = rng.Next(1, 101) <= Config.SpawnManager.SpawnChance &&
                 TeamRespawnCount >= Config.SpawnManager.RespawnDelay &&
@@ -126,16 +115,16 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEnteringPocketDimension(EnteringPocketDimensionEventArgs)"/>
         internal static void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id))
+            if (IsSerpent(ev.Player))
             {
-                shPocketPlayers.Add(ev.Player.Id);
+                shPocketPlayers.Add(ev.Player);
             }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnFailingEscapePocketDimension(FailingEscapePocketDimensionEventArgs)"/>
         internal static void OnPocketDimensionFail(FailingEscapePocketDimensionEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id))
+            if (IsSerpent(ev.Player))
             {
                 if (!Config.SerepentsHandModifiers.FriendlyFire)
                 {
@@ -147,14 +136,14 @@
                     TeleportTo106(ev.Player);
                 }
 
-                shPocketPlayers.Remove(ev.Player.Id);
+                shPocketPlayers.Remove(ev.Player);
             }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEscapingPocketDimension(EscapingPocketDimensionEventArgs)"/>
         internal static void OnPocketDimensionEscape(EscapingPocketDimensionEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id))
+            if (IsSerpent(ev.Player))
             {
                 ev.IsAllowed = false;
                 if (Config.SerepentsHandModifiers.TeleportTo106)
@@ -162,23 +151,18 @@
                     TeleportTo106(ev.Player);
                 }
 
-                shPocketPlayers.Remove(ev.Player.Id);
+                shPocketPlayers.Remove(ev.Player);
             }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnHurting(HurtingEventArgs)"/>
         internal static void OnPlayerHurt(HurtingEventArgs ev)
         {
-            Player scp035 = null;
+            List<Player> scp035s = GetScp035s();
 
-            if (SerpentsHand.IsScp035)
-            {
-                scp035 = TryGet035();
-            }
-
-            if (((ShPlayers.Contains(ev.Target.Id) && (ev.Attacker.Team == Team.SCP || ev.HitInformations.GetDamageType() == DamageTypes.Pocket)) ||
-                (ShPlayers.Contains(ev.Attacker.Id) && (ev.Target.Team == Team.SCP || (scp035 != null && ev.Target == scp035))) ||
-                (ShPlayers.Contains(ev.Target.Id) && ShPlayers.Contains(ev.Attacker.Id) && ev.Target != ev.Attacker)) && !Config.SerepentsHandModifiers.FriendlyFire)
+            if (((IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.HitInformations.GetDamageType() == DamageTypes.Pocket)) ||
+                (IsSerpent(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target)))) ||
+                (IsSerpent(ev.Target) && IsSerpent(ev.Attacker) && ev.Target != ev.Attacker)) && !Config.SerepentsHandModifiers.FriendlyFire)
             {
                 ev.IsAllowed = false;
             }
@@ -187,19 +171,14 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
         internal static void OnCheckRoundEnd(EndingRoundEventArgs ev)
         {
-            Player scp035 = null;
-
-            if (SerpentsHand.IsScp035)
-            {
-                scp035 = TryGet035();
-            }
+            List<Player> scp035s = GetScp035s();
 
             bool mtfAlive = CountRoles(Team.MTF) > 0;
             bool ciAlive = CountRoles(Team.CHI) > 0;
-            bool scpAlive = CountRoles(Team.SCP) + (scp035 != null && scp035.Role != RoleType.Spectator ? 1 : 0) > 0;
+            bool scpAlive = CountRoles(Team.SCP) + scp035s.Count > 0;
             bool dclassAlive = CountRoles(Team.CDP) > 0;
             bool scientistsAlive = CountRoles(Team.RSC) > 0;
-            bool shAlive = ShPlayers.Count > 0;
+            bool shAlive = GetSHPlayers().Count > 0;
 
             if (shAlive && ((ciAlive && !Config.SerepentsHandModifiers.ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
             {
@@ -240,7 +219,7 @@
         internal static void OnShooting(ShootingEventArgs ev)
         {
             Player target = Player.Get(ev.Target);
-            if (target != null && target.Role == RoleType.Scp096 && ShPlayers.Contains(ev.Shooter.Id))
+            if (target != null && target.Role == RoleType.Scp096 && IsSerpent(ev.Shooter))
             {
                 ev.IsAllowed = false;
             }
@@ -249,7 +228,7 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp106.OnContaining(ContainingEventArgs)"/>
         internal static void OnContaining106(ContainingEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id) && !Config.SerepentsHandModifiers.FriendlyFire)
+            if (IsSerpent(ev.Player) && !Config.SerepentsHandModifiers.FriendlyFire)
             {
                 ev.IsAllowed = false;
             }
@@ -258,7 +237,7 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnInsertingGeneratorTablet(InsertingGeneratorTabletEventArgs)"/>
         internal static void OnGeneratorInsert(InsertingGeneratorTabletEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id) && !Config.SerepentsHandModifiers.FriendlyFire)
+            if (IsSerpent(ev.Player) && !Config.SerepentsHandModifiers.FriendlyFire)
             {
                 ev.IsAllowed = false;
             }
@@ -267,7 +246,7 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEnteringFemurBreaker(EnteringFemurBreakerEventArgs)"/>
         internal static void OnFemurEnter(EnteringFemurBreakerEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id) && !Config.SerepentsHandModifiers.FriendlyFire)
+            if (IsSerpent(ev.Player) && !Config.SerepentsHandModifiers.FriendlyFire)
             {
                 ev.IsAllowed = false;
             }
@@ -276,7 +255,7 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
         internal static void OnDestroying(DestroyingEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id))
+            if (IsSerpent(ev.Player))
             {
                 DestroySH(ev.Player);
             }
@@ -285,7 +264,7 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDied(DiedEventArgs)"/>
         internal static void OnPlayerDeath(DiedEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Target.Id))
+            if (IsSerpent(ev.Target))
             {
                 DestroySH(ev.Target);
                 return;
@@ -293,7 +272,7 @@
 
             if (ev.Target.Role == RoleType.Scp106 && !Config.SerepentsHandModifiers.FriendlyFire)
             {
-                foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x.Id)))
+                foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x)))
                 {
                     player.Hurt(50000f, DamageTypes.Contain, "WORLD", player.Id);
                 }
@@ -303,10 +282,12 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnChangingRole(ChangingRoleEventArgs)"/>
         internal static void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if (ShPlayers.Contains(ev.Player.Id) && ev.NewRole != RoleType.Tutorial)
+            if (IsSerpent(ev.Player) && ev.NewRole != RoleType.Tutorial)
             {
                 DestroySH(ev.Player);
             }
         }
+
+        private static readonly Config Config = SerpentsHand.Instance.Config;
     }
 }

@@ -1,6 +1,8 @@
 ﻿namespace SerpentsHand
 {
     using System;
+    using System.Linq;
+    using System.Reflection;
     using Exiled.API.Features;
     using Exiled.Loader;
     using HarmonyLib;
@@ -21,20 +23,15 @@
         public override string Author => "Cyanox, maintained by Michal78900";
 
         /// <inheritdoc/>
-        public override Version Version => new Version(2, 1, 1);
+        public override Version Version => new Version(2, 2, 0);
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(2, 10, 0);
+        public override Version RequiredExiledVersion => new Version(2, 11, 1);
 
         /// <inheritdoc/>
         public static SerpentsHand Instance;
 
         private Harmony hInstance;
-
-        /// <summary>
-        /// Gets a value indicating whether SCP-035 plugin is installed and enabled.
-        /// </summary>
-        public static bool IsScp035 { get; private set; } = false;
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -43,16 +40,6 @@
 
             hInstance = new Harmony($"cyanox.serpentshand-{DateTime.Now.Ticks}");
             hInstance.PatchAll();
-
-            foreach (var plugin in Loader.Plugins)
-            {
-                if (Name.ToLower() == "scp035" && Config.IsEnabled)
-                {
-                    IsScp035 = true;
-                    Log.Debug("SCP-035 plugin detected!", Config.Debug);
-                    break;
-                }
-            }
 
             ServerEvent.WaitingForPlayers += EventHandlers.OnWaitingForPlayers;
             ServerEvent.RespawningTeam += EventHandlers.OnTeamRespawn;

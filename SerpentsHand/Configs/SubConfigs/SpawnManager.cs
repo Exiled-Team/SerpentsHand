@@ -1,7 +1,7 @@
 ﻿namespace SerpentsHand.Configs.SubConfigs
 {
     using System.ComponentModel;
-    using Serializable;
+    using UnityEngine;
 
     /// <summary>
     /// Configs for Serpents Hand spawning options.
@@ -60,6 +60,6 @@
         /// Gets the Serpents Hand spawn position.
         /// </summary>
         [Description("The Serpents Hand spawn position.")]
-        public Vector SpawnPos { get; private set; } = new Vector { X = 0f, Y = 1002f, Z = 8f };
+        public Vector3 SpawnPos { get; private set; } = new Vector3(0f, 1002f, 8f);
     }
 }

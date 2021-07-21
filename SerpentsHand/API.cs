@@ -16,7 +16,7 @@
         /// <returns><see langword="true"/> if player is Serpents Hand, <see langword="false"/> if not.</returns>
         public static bool IsSerpent(Player player)
         {
-            return EventHandlers.ShPlayers.Contains(player.Id);
+            return player.SessionVariables.ContainsKey("IsSH");
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
         /// <returns><see cref="List{Player}"/> of all alive Serpents Hand players.</returns>
         public static List<Player> GetSHPlayers()
         {
-            return EventHandlers.ShPlayers.Select(x => Player.Get(x)).ToList();
+            return Player.List.Where(x => x.SessionVariables.ContainsKey("IsSH")).ToList();
         }
     }
 }

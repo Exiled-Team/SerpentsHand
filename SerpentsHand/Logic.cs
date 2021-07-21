@@ -1,74 +1,47 @@
 ﻿namespace SerpentsHand
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
-    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomItems.API;
     using MEC;
     using Respawning;
+    using static API;
 
     /// <summary>
     /// EventHandlers and Logic which Serpents Hand use.
     /// </summary>
     public partial class EventHandlers
     {
-        public static Player TryGet035()
+        public static List<Player> GetScp035s()
         {
-            try
-            {
-                return Scp035.API.AllScp035.FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return Player.List.Where(x => x.SessionVariables.ContainsKey("IsScp035")).ToList();
         }
 
         public static int CountRoles(Team team)
         {
-            Player scp035 = null;
+            List<Player> scp035 = null;
 
-            if (SerpentsHand.IsScp035)
-            {
-                scp035 = TryGet035();
-            }
+            scp035 = GetScp035s();
 
             int count = 0;
-            foreach (Player pl in Player.List)
+            foreach (Player player in Player.List)
             {
-                if (pl.SessionVariables.ContainsKey("IsNPC"))
+                if (player.SessionVariables.ContainsKey("IsNPC"))
                 {
                     continue;
                 }
-                if (pl.Team == team)
+
+                if (player.Team == team)
                 {
-                    if (scp035 != null && pl.Id == scp035.Id)
+                    if (scp035 != null && scp035.Contains(player))
                         continue;
                     count++;
                 }
             }
 
             return count;
-        }
-
-        // TEMP!!!
-        internal static void GiveCustomInventory(List<string> inventory, Player player)
-        {
-            player.ClearInventory();
-
-            foreach (string item in inventory)
-            {
-                if (Enum.TryParse(item, out ItemType parsedItem))
-                {
-                    player.AddItem(parsedItem);
-                }
-                else
-                {
-                    CustomItem.TryGive(player, item, false);
-                }
-            }
         }
 
         /// <summary>
@@ -78,14 +51,13 @@
         /// <param name="full"> Should items and ammo be given to spawned <see cref="Player"/>.</param>
         internal static void SpawnPlayer(Player player, bool full = true)
         {
-            ShPlayers.Add(player.Id);
+            player.SessionVariables.Add("IsSH", null);
             player.Role = RoleType.Tutorial;
             player.Broadcast(10, Config.SpawnManager.SpawnBroadcast);
 
             if (full)
             {
-                if (Config.SerepentsHandModifiers.SpawnItems.Count > 0)
-                    GiveCustomInventory(Config.SerepentsHandModifiers.SpawnItems, player);
+                player.ResetInventory(Config.SerepentsHandModifiers.SpawnItems);
 
                 foreach (var ammo in Config.SerepentsHandModifiers.SpawnAmmo)
                 {
@@ -109,7 +81,7 @@
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 
-            Timing.CallDelayed(0.5f, () => player.Position = Config.SpawnManager.SpawnPos.ToVector3());
+            Timing.CallDelayed(0.5f, () => player.Position = Config.SpawnManager.SpawnPos);
         }
 
         /// <summary>
@@ -118,7 +90,7 @@
         /// <param name="player">The player to remove.</param>
         internal static void DestroySH(Player player)
         {
-            ShPlayers.Remove(player.Id);
+            player.SessionVariables.Remove("IsSH");
 
             player.MaxHealth = default;
 
@@ -133,12 +105,7 @@
         /// <param name="size"> The number of players in squad (this can be lower due to not enough Spectators).</param>
         internal static void SpawnSquad(uint size)
         {
-            List<Player> spec = new List<Player>();
-
-            foreach (Player player in Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled))
-            {
-                spec.Add(player);
-            }
+            List<Player> spec = Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled).ToList();
 
             bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
 
@@ -182,21 +149,16 @@
         /// </summary>
         internal static void GrantFF()
         {
-            foreach (int id in ShPlayers)
+            foreach (Player sh in GetSHPlayers())
             {
-                Player p = Player.Get(id);
-                if (p != null)
-                    p.IsFriendlyFireEnabled = true;
+                sh.IsFriendlyFireEnabled = true;
             }
 
-            foreach (int id in shPocketPlayers)
+            foreach (Player sh in shPocketPlayers)
             {
-                Player p = Player.Get(id);
-                if (p != null)
-                    p.IsFriendlyFireEnabled = true;
+                sh.IsFriendlyFireEnabled = true;
             }
 
-            ShPlayers.Clear();
             shPocketPlayers.Clear();
         }
 
