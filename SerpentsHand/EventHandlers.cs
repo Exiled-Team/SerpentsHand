@@ -100,6 +100,13 @@
                                 SerpentsRespawnCount++;
                         }
                     });
+                    
+                    string message = Config.SpawnManager.ScpBroadcast;
+                    int duration = Config.SpawnManager.BroadcastDuration;
+                    foreach (var scp in Player.Get(Team.SCP))
+                    {
+                        scp.Broadcast(duration, message);
+                    }
                 }
                 else
                 {
