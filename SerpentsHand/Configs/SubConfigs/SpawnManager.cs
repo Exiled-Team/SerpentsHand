@@ -71,7 +71,7 @@
         /// <summary>
         /// Gets the duration of the broadcast that the scp recieve.
         /// <summary>
-        [Description("The duration of the broadcast that the SCPs recieve.)]
+        [Description("The duration of the broadcast that the SCPs recieve.")]
         public int BroadcastDuration { get; private set; } = 5;
     }
 }
