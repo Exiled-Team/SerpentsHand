@@ -61,5 +61,17 @@
         /// </summary>
         [Description("The Serpents Hand spawn position.")]
         public Vector3 SpawnPos { get; private set; } = new Vector3(0f, 1002f, 8f);
+        
+        /// <summary>
+        /// Gets the broadcast sent to SCPs when Serpent Hands spawn.
+        /// </summary>
+        [Description("The broadcast sent to SCPs when Serpent Hands spawn.")]
+        public string ScpBroadcast { get; private set; } = "Serpent Hand has spawn, remember that they are on your team";
+        
+        /// <summary>
+        /// Gets the duration of the scp broadcast.
+        /// </summary>
+        [Description("The duration of the scp broadcast.")]
+        public int BroadcastDuration { get; private set; } = 5;
     }
 }
