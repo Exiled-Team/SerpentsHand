@@ -69,9 +69,9 @@
         public string ScpBroadcast { get; private set; } = "Serpent Hands has spawn, remember that they are in your team";
         
         /// <summary>
-        /// Gets the duration of the broadcast that the scp recieve.
+        /// Gets the duration of the broadcast that the scp receive.
         /// <summary>
-        [Description("The duration of the broadcast that the SCPs recieve.")]
+        [Description("The duration of the broadcast that the SCPs receive.")]
         public int BroadcastDuration { get; private set; } = 5;
     }
 }
