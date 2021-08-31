@@ -1,6 +1,7 @@
 ﻿namespace SerpentsHand.Configs.SubConfigs
 {
     using System.ComponentModel;
+    using Exiled.API.Features;
     using UnityEngine;
 
     /// <summary>
@@ -54,7 +55,13 @@
         /// Gets the broadcast sent to Serpents Hand when they spawn.
         /// </summary>
         [Description("The broadcast sent to Serpents Hand when they spawn.")]
-        public string SpawnBroadcast { get; private set; } = "<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>";
+        public Broadcast SpawnBroadcast { get; private set; } = new Broadcast("<size=60>You are <color=#03F555><b>Serpents Hand</b></color></size>\n<i>Help the <color=\"red\">SCPs</color> by killing all other classes!</i>");
+
+        /// <summary>
+        /// Gets the broadcast sent to SCPs when Serpents Hand respawns.
+        /// </summary>
+        [Description("The broadcast shown to SCPs when the Serpents Hand respawns.")]
+        public Broadcast EntryBroadcast { get; private set; } = new Broadcast("<color=orange>Serpent's Hand has entered the facility!</color>");
 
         /// <summary>
         /// Gets the Serpents Hand spawn position.

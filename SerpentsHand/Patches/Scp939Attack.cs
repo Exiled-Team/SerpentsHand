@@ -2,18 +2,21 @@
 {
     using Exiled.API.Features;
     using HarmonyLib;
+    using Mirror;
+    using PlayableScps;
     using UnityEngine;
     using static API;
 
     /// <summary>
     /// Disables Amnesia effect from Serpents Hand, when SCP-939 bites them.
     /// </summary>
-    [HarmonyPatch(typeof(Scp939PlayerScript), nameof(Scp939PlayerScript.CallCmdShoot))]
+    [HarmonyPatch(typeof(Scp939), nameof(Scp939.ServerAttack))]
     public class Scp939Attack
     {
-        public static void Postfix(Scp939PlayerScript __instance, GameObject target)
+        public static void Postfix(Scp939 __instance, NetworkConnection conn, PlayableScps.Messages.Scp939AttackMessage msg)
         {
-            Player player = Player.Get(target);
+            Player player = Player.Get(msg.Victim);
+
             if (IsSerpent(player) && !SerpentsHand.Instance.Config.SerepentsHandModifiers.FriendlyFire)
             {
                 player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Amnesia>();

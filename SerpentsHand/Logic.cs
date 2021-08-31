@@ -7,7 +7,7 @@
     using Exiled.CustomItems.API;
     using MEC;
     using Respawning;
-    using static API;
+    using UnityEngine;
 
     /// <summary>
     /// EventHandlers and Logic which Serpents Hand use.
@@ -21,22 +21,19 @@
 
         public static int CountRoles(Team team)
         {
-            List<Player> scp035 = null;
-
-            scp035 = GetScp035s();
+            List<Player> scp035 = GetScp035s();
 
             int count = 0;
             foreach (Player player in Player.List)
             {
                 if (player.SessionVariables.ContainsKey("IsNPC"))
-                {
                     continue;
-                }
 
                 if (player.Team == team)
                 {
                     if (scp035 != null && scp035.Contains(player))
                         continue;
+
                     count++;
                 }
             }
@@ -53,7 +50,7 @@
         {
             player.SessionVariables.Add("IsSH", null);
             player.Role = RoleType.Tutorial;
-            player.Broadcast(10, Config.SpawnManager.SpawnBroadcast);
+            player.Broadcast(Config.SpawnManager.SpawnBroadcast);
 
             if (full)
             {
@@ -61,7 +58,7 @@
 
                 foreach (var ammo in Config.SerepentsHandModifiers.SpawnAmmo)
                 {
-                    player.Ammo[(int)ammo.Key] = ammo.Value;
+                    player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
                 }
             }
 
@@ -115,18 +112,23 @@
             int spawnCount = 1;
             while (spec.Count > 0 && spawnCount <= size)
             {
-                int index = rng.Next(0, spec.Count);
+                int index = Random.Range(0, spec.Count);
                 if (spec[index] != null)
                 {
-                    Player player = prioritySpawn ? spec.First() : spec[rng.Next(spec.Count)];
+                    Player player = prioritySpawn ? spec.First() : spec[Random.Range(0, spec.Count)];
                     SpawnPlayer(spec[index]);
                     spec.RemoveAt(index);
                     spawnCount++;
                 }
             }
 
-            if (spawnCount > 0)
+            if (spawnCount > 0 && !string.IsNullOrEmpty(Config.SpawnManager.EntryAnnouncement))
                 Cassie.GlitchyMessage(Config.SpawnManager.EntryAnnouncement, 0.05f, 0.05f);
+
+            foreach (Player scp in Player.List.Where(x => x.Team == Team.SCP || x.SessionVariables.ContainsKey("Is035")))
+            {
+                scp.Broadcast(Config.SpawnManager.EntryBroadcast);
+            }
         }
 
         /// <summary>
@@ -142,36 +144,24 @@
 
             if (players.Count > 0)
                 Cassie.GlitchyMessage(Config.SpawnManager.EntryAnnouncement, 0.05f, 0.05f);
-        }
 
-        /// <summary>
-        /// Gives Serpents Hand players friendly fire.
-        /// </summary>
-        internal static void GrantFF()
-        {
-            foreach (Player sh in GetSHPlayers())
+            foreach (Player scp in Player.List.Where(x => x.Team == Team.SCP || x.SessionVariables.ContainsKey("Is035")))
             {
-                sh.IsFriendlyFireEnabled = true;
+                scp.Broadcast(Config.SpawnManager.EntryBroadcast);
             }
-
-            foreach (Player sh in shPocketPlayers)
-            {
-                sh.IsFriendlyFireEnabled = true;
-            }
-
-            shPocketPlayers.Clear();
         }
 
         private static void TeleportTo106(Player player)
         {
             Player scp106 = Player.List.FirstOrDefault(x => x.Role == RoleType.Scp106);
+
             if (scp106 != null)
             {
                 player.Position = scp106.Position;
             }
             else
             {
-                player.Position = Role.GetRandomSpawnPoint(RoleType.Scp096);
+                player.Position = RoleType.Scp096.GetRandomSpawnProperties().Item1;
             }
         }
     }

@@ -33,22 +33,25 @@
         [Description("The items Serpents Hand spawn with. (supports CustomItems)")]
         public List<string> SpawnItems { get; private set; } = new List<string>()
         {
-            "GunProject90",
+            "GunCrossvec",
             "KeycardChaosInsurgency",
             "GrenadeFlash",
             "Radio",
             "Medkit",
+            "ArmorCombat",
         };
 
         /// <summary>
         /// Gets Serpents Hand starting ammo.
         /// </summary>
         [Description("The ammo Serpents Hand spawn with.")]
-        public Dictionary<AmmoType, uint> SpawnAmmo { get; private set; } = new Dictionary<AmmoType, uint>()
+        public Dictionary<AmmoType, ushort> SpawnAmmo { get; private set; } = new Dictionary<AmmoType, ushort>()
         {
-            { AmmoType.Nato556, 250 },
-            { AmmoType.Nato762, 250 },
-            { AmmoType.Nato9, 250 },
+            { AmmoType.Nato556, 0 },
+            { AmmoType.Nato762, 0 },
+            { AmmoType.Nato9, 60 },
+            { AmmoType.Ammo12Gauge, 0 },
+            { AmmoType.Ammo44Cal, 0 },
         };
 
         /// <summary>
@@ -62,12 +65,6 @@
         /// </summary>
         [Description("Determines if Serpents Hand should teleport to SCP-106 after exiting his pocket dimension.")]
         public bool TeleportTo106 { get; private set; } = true;
-
-        /// <summary>
-        /// Gets a value indicating whether Serpents Hand should be able to hurt SCPs after the round ends.
-        /// </summary>
-        [Description("Determines if Serpents Hand should be able to hurt SCPs after the round ends.")]
-        public bool EndRoundFriendlyFire { get; private set; } = false;
 
         /// <summary>
         /// Gets a value indicating whether Chaos and SCPs CANNOT win together on a server.
