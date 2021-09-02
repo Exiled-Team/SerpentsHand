@@ -17,7 +17,7 @@
         {
             Player player = Player.Get(msg.Victim);
 
-            if (IsSerpent(player) && !SerpentsHand.Instance.Config.SerepentsHandModifiers.FriendlyFire)
+            if (player != null && IsSerpent(player) && !SerpentsHand.Instance.Config.SerepentsHandModifiers.FriendlyFire)
             {
                 player.ReferenceHub.playerEffectsController.DisableEffect<CustomPlayerEffects.Amnesia>();
             }
