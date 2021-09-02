@@ -54,12 +54,15 @@
 
             if (full)
             {
-                player.ResetInventory(Config.SerepentsHandModifiers.SpawnItems);
-
-                foreach (var ammo in Config.SerepentsHandModifiers.SpawnAmmo)
+                Timing.CallDelayed(0.3f, () =>
                 {
-                    player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
-                }
+                    player.ResetInventory(Config.SerepentsHandModifiers.SpawnItems);
+
+                    foreach (var ammo in Config.SerepentsHandModifiers.SpawnAmmo)
+                    {
+                        player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
+                    }
+                });
             }
 
             player.Health = Config.SerepentsHandModifiers.Health;
@@ -78,7 +81,7 @@
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 
-            Timing.CallDelayed(0.5f, () => player.Position = Config.SpawnManager.SpawnPos);
+            Timing.CallDelayed(1.5f, () => player.Position = Config.SpawnManager.SpawnPos);
         }
 
         /// <summary>

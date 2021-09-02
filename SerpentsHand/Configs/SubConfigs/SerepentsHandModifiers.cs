@@ -49,7 +49,7 @@
         {
             { AmmoType.Nato556, 0 },
             { AmmoType.Nato762, 0 },
-            { AmmoType.Nato9, 60 },
+            { AmmoType.Nato9, 120 },
             { AmmoType.Ammo12Gauge, 0 },
             { AmmoType.Ammo44Cal, 0 },
         };
