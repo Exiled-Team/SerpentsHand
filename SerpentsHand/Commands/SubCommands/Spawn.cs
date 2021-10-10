@@ -31,7 +31,7 @@
 
             if (arguments.Count == 0)
             {
-                Player player = Player.Get((sender as PlayerCommandSender).ReferenceHub);
+                Player player = Player.Get(sender);
                 if (API.IsSerpent(player))
                 {
                     response = "You are already a Serpent's Hand.";

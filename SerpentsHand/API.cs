@@ -14,10 +14,7 @@
         /// </summary>
         /// <param name="player"> The player to check.</param>
         /// <returns><see langword="true"/> if player is Serpents Hand, <see langword="false"/> if not.</returns>
-        public static bool IsSerpent(Player player)
-        {
-            return player.SessionVariables.ContainsKey("IsSH");
-        }
+        public static bool IsSerpent(Player player) => player.SessionVariables.ContainsKey("IsSH");
 
         /// <summary>
         /// Spawns <see cref="Player"/> as Serpents Hand.

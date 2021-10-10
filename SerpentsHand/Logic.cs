@@ -154,17 +154,17 @@
             }
         }
 
-        private static void TeleportTo106(Player player)
+        private static Vector3 Get106Position()
         {
             Player scp106 = Player.List.FirstOrDefault(x => x.Role == RoleType.Scp106);
 
             if (scp106 != null)
             {
-                player.Position = scp106.Position;
+                return scp106.Position;
             }
             else
             {
-                player.Position = RoleType.Scp096.GetRandomSpawnProperties().Item1;
+                return RoleType.Scp096.GetRandomSpawnProperties().Item1;
             }
         }
     }

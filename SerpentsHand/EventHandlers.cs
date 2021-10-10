@@ -93,6 +93,7 @@
                         SerpentsRespawnCount++;
 
                     IsSpawnable = false;
+                    ev.NextKnownTeam = SpawnableTeamType.None;
                 });
             }
             else
@@ -122,11 +123,9 @@
                 if (!Config.SerepentsHandModifiers.FriendlyFire)
                 {
                     ev.IsAllowed = false;
-                }
 
-                if (Config.SerepentsHandModifiers.TeleportTo106)
-                {
-                    TeleportTo106(ev.Player);
+                    if (Config.SerepentsHandModifiers.TeleportTo106)
+                        ev.Player.Position = Get106Position();
                 }
 
                 shPocketPlayers.Remove(ev.Player);
@@ -138,10 +137,9 @@
         {
             if (IsSerpent(ev.Player))
             {
-                ev.IsAllowed = false;
                 if (Config.SerepentsHandModifiers.TeleportTo106)
                 {
-                    TeleportTo106(ev.Player);
+                    ev.TeleportPosition = Get106Position();
                 }
 
                 shPocketPlayers.Remove(ev.Player);

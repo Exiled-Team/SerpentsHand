@@ -39,19 +39,18 @@
         /// <inheritdoc/>
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            Player player = Player.Get((sender as PlayerCommandSender).ReferenceHub);
+            Player player = Player.Get(sender);
 
-            string message = "\nPlease enter a valid subcommand:\n";
+            response = "\nPlease enter a valid subcommand:\n";
 
-            foreach (var command in AllCommands.ToList())
+            foreach (var command in AllCommands)
             {
                 if (player.CheckPermission($"sh.{command.Command}"))
                 {
-                    message += $"- {command.Command} ({command.Aliases[0]})\n";
+                    response += $"- {command.Command} ({string.Join(", ", Aliases)})\n";
                 }
             }
 
-            response = message;
             return false;
         }
     }

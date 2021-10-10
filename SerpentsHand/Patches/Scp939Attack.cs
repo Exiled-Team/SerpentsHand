@@ -13,9 +13,9 @@
     [HarmonyPatch(typeof(Scp939), nameof(Scp939.ServerAttack))]
     public class Scp939Attack
     {
-        public static void Postfix(Scp939 __instance, NetworkConnection conn, PlayableScps.Messages.Scp939AttackMessage msg)
+        public static void Postfix(Scp939 __instance, GameObject target)
         {
-            Player player = Player.Get(msg.Victim);
+            Player player = Player.Get(target);
 
             if (player != null && IsSerpent(player) && !SerpentsHand.Instance.Config.SerepentsHandModifiers.FriendlyFire)
             {
