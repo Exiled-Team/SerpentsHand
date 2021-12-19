@@ -154,12 +154,14 @@
             if (ev.Target == null || ev.Attacker == null)
                 return;
 
-            if (((IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension)) ||
-                (IsSerpent(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target)))) ||
-                (IsSerpent(ev.Target) && IsSerpent(ev.Attacker) && ev.Target != ev.Attacker)) && !Config.SerepentsHandModifiers.FriendlyFire)
-            {
+            if (IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension))
                 ev.IsAllowed = false;
-            }
+
+            if (IsSerpent(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target))))
+                ev.IsAllowed = false;
+
+            if (IsSerpent(ev.Target) && IsSerpent(ev.Attacker) && ev.Target != ev.Attacker && !Config.SerepentsHandModifiers.FriendlyFire)
+                ev.IsAllowed = false;
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
