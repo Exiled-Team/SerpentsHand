@@ -79,10 +79,10 @@
         public override string Name => "SerpentsHand";
 
         /// <inheritdoc/>
-        public override string Author => "Cyanox, maintained by Michal78900";
+        public override string Author => "Cyanox, maintained by Michal78900, Marco15453";
 
         /// <inheritdoc/>
-        public override Version Version => new Version(3, 2, 0);
+        public override Version Version => new Version(3, 3, 0);
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion => new Version(4, 1, 7);

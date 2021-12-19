@@ -277,11 +277,10 @@
             {
                 ev.IsAllowed = false;
 
-                /*Role role = CharacterClassManager._staticClasses.SafeGet(ev.Role);
+                /*
+                Re-implement
 
-                global::Ragdoll.SpecialRigidbody info = new global::Ragdoll.SpecialRigidbody
-                {
-                }
+                Role role = CharacterClassManager._staticClasses.SafeGet(ev.Role);
 
                 global::Ragdoll.Info info = new global::Ragdoll.Info
                 {
