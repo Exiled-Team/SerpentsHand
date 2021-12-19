@@ -82,9 +82,9 @@
         public override string Author => "Cyanox, maintained by Michal78900";
 
         /// <inheritdoc/>
-        public override Version Version => new Version(3, 1, 0);
+        public override Version Version => new Version(3, 2, 0);
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion => new Version(3, 0, 5);
+        public override Version RequiredExiledVersion => new Version(4, 1, 7);
     }
 }

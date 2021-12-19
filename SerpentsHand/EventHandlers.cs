@@ -151,7 +151,7 @@
         {
             List<Player> scp035s = GetScp035s();
 
-            if (((IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.DamageType == DamageTypes.Pocket)) ||
+            if (((IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension)) ||
                 (IsSerpent(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target)))) ||
                 (IsSerpent(ev.Target) && IsSerpent(ev.Attacker) && ev.Target != ev.Attacker)) && !Config.SerepentsHandModifiers.FriendlyFire)
             {
@@ -253,7 +253,7 @@
             {
                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x)))
                 {
-                    player.Hurt(50000f, DamageTypes.Contain, "WORLD", player.Id);
+                    player.Hurt(DamageType.Recontainment.ToString(), 50000f);
                 }
             }
         }
@@ -274,18 +274,23 @@
             {
                 ev.IsAllowed = false;
 
-                Role role = CharacterClassManager._staticClasses.SafeGet(ev.RoleType);
+                /*Role role = CharacterClassManager._staticClasses.SafeGet(ev.Role);
+
+                global::Ragdoll.SpecialRigidbody info = new global::Ragdoll.SpecialRigidbody
+                {
+                }
+
                 global::Ragdoll.Info info = new global::Ragdoll.Info
                 {
                     ClassColor = role.classColor,
-                    DeathCause = ev.HitInformations,
+                    DeathCause = ev.Info,
                     FullName = Config.SerepentsHandModifiers.RoleName,
                     Nick = ev.Owner.Nickname,
-                    ownerHLAPI_id = ev.PlayerId.ToString(),
-                    PlayerId = ev.PlayerId,
+                    ownerHLAPI_id = ev.Owner.ToString(),
+                    PlayerId = ev.Owner.Id,
                 };
 
-                Ragdoll.Spawn(role, info, ev.Position, ev.Rotation, ev.Velocity, true);
+                Ragdoll.Spawn(role, info, ev.Position, ev.Rotation, ev.Position, true);*/
             }
         }
 
