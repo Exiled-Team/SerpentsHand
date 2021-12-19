@@ -253,7 +253,7 @@
             {
                 foreach (Player player in Player.List.Where(x => shPocketPlayers.Contains(x)))
                 {
-                    player.Hurt(DamageType.Recontainment.ToString(), 50000f);
+                    player.Hurt("WORLD", 50000f);
                 }
             }
         }
