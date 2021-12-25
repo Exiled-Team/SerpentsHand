@@ -1,6 +1,7 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using PlayerStatsSystem;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -89,8 +90,13 @@ namespace SerpentsHand.Events
 
         public void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
         {
-            if (API.IsSerpent(ev.Owner))
-                ev.IsAllowed = false;
+            if (!API.IsSerpent(ev.Owner))
+                return;
+
+            ev.IsAllowed = false;
+
+            RagdollInfo info = new RagdollInfo(Server.Host.ReferenceHub, ev.DamageHandlerBase, ev.Role, ev.Position, ev.Rotation, ev.Nickname, ev.CreationTime);
+            new Exiled.API.Features.Ragdoll(info, true);
         }
     }
 }

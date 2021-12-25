@@ -15,7 +15,7 @@ namespace SerpentsHand
         private static SerpentsHand plugin = SerpentsHand.Singleton;
 
         public static List<Player> GetScp035s() => Player.List.Where(x => x.SessionVariables.ContainsKey("IsScp035")).ToList();
-        public static int CountRoles(Team team) => Player.List.Where(x => x.Team == team).Count();
+        public static int CountRoles(Team team) => Player.List.Where(x => x.Team == team && !x.SessionVariables.ContainsKey("IsNPC")).Count();
 
         public static void SpawnPlayer(Player player, bool full = true)
         {
@@ -42,8 +42,7 @@ namespace SerpentsHand
                         player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
                 });
             }
-
-            Timing.CallDelayed(1.5f, () => player.Position = config.SpawnManager.SpawnPos);
+            Timing.CallDelayed(0.5f, () => player.Position = config.SpawnManager.SpawnPos);
         }
 
         public static void DestroySH(Player player)
