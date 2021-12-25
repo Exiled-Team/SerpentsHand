@@ -14,7 +14,7 @@ namespace SerpentsHand
         public static SerpentsHand Singleton;
 
         public override string Name => "Serpents Hand";
-        public override string Author => "Original by Cyanox and Michal78900, Continued by Marco15453";
+        public override string Author => "yanox, Michal78900 and Marco15453";
         public override Version RequiredExiledVersion => new Version(4, 1, 7);
         public override Version Version => new Version(4, 0, 0);
 
