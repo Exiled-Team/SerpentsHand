@@ -9,13 +9,7 @@ namespace SerpentsHand.Commands.Subcmds
 	{
 		public string Command { get; } = "list";
 		public string[] Aliases { get; } = { "l" };
-
-
-		public string Description
-		{
-			get;
-		} = "Shows a list with players that are currently Serpents Hand.";
-
+		public string Description { get; } = "Shows a list with players that are currently Serpents Hand.";
 
 		public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
 		{
