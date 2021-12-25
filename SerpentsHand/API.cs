@@ -1,12 +1,9 @@
-﻿namespace SerpentsHand
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Exiled.API.Features;
+using Exiled.API.Features;
+using System.Collections.Generic;
+using System.Linq;
 
-    /// <summary>
-    /// The Serpents Hand API with <see langword="static"/> methods.
-    /// </summary>
+namespace SerpentsHand
+{
     public static class API
     {
         /// <summary>
@@ -21,36 +18,24 @@
         /// </summary>
         /// <param name="player"> The player to spawn.</param>
         /// <param name="full"> Should items and ammo be given to spawned <see cref="Player"/>.</param>
-        public static void SpawnPlayer(Player player, bool full = true)
-        {
-            EventHandlers.SpawnPlayer(player, full);
-        }
+        public static void SpawnPlayer(Player player, bool full = true) => Extensions.SpawnPlayer(player, full);
 
         /// <summary>
         /// Spawns Serpents Hand squad.
         /// </summary>
         /// <param name="playerList"> List of players to spawn.</param>
-        public static void SpawnSquad(List<Player> playerList)
-        {
-            EventHandlers.SpawnSquad(playerList);
-        }
+        public static void SpawnSquad(List<Player> playerList) => Extensions.SpawnSquad(playerList);
 
         /// <summary>
         /// Spawns Serpents Hand squad.
         /// </summary>
         /// <param name="size"> The number of players in squad (this can be lower due to not enough number of Spectators).</param>
-        public static void SpawnSquad(uint size)
-        {
-            EventHandlers.SpawnSquad(size);
-        }
+        public static void SpawnSquad(uint size) => Extensions.SpawnSquad(size);
 
         /// <summary>
         /// Gets all alive Serpents Hand players.
         /// </summary>
         /// <returns><see cref="List{Player}"/> of all alive Serpents Hand players.</returns>
-        public static List<Player> GetSHPlayers()
-        {
-            return Player.List.Where(x => x.SessionVariables.ContainsKey("IsSH")).ToList();
-        }
+        public static List<Player> GetSHPlayers() => Player.List.Where(x => x.SessionVariables.ContainsKey("IsSH")).ToList();
     }
 }
