@@ -1,55 +1,51 @@
-using System;
 using Exiled.API.Features;
-using Exiled.Events;
-using Exiled.Events.EventArgs;
-using Exiled.Events.Handlers;
 using HarmonyLib;
 using SerpentsHand.Events;
-
+using System;
 using Player = Exiled.Events.Handlers.Player;
+using Scp106 = Exiled.Events.Handlers.Scp106;
 using Server = Exiled.Events.Handlers.Server;
 using Warhead = Exiled.Events.Handlers.Warhead;
-using Scp106 = Exiled.Events.Handlers.Scp106;
 
 namespace SerpentsHand
 {
-	public class SerpentsHand : Plugin<Config>
-	{
-		public static SerpentsHand Singleton;
+    public class SerpentsHand : Plugin<Config>
+    {
+        public static SerpentsHand Singleton;
 
-		public override string Name => "Serpents Hand";
-		public override string Author => "Original by Cyanox and Michal78900, Continued by Marco15453";
-		public override Version RequiredExiledVersion => new Version(4, 1, 7);
-		public override Version Version => new Version(4, 0, 0);
+        public override string Name => "Serpents Hand";
+        public override string Author => "Original by Cyanox and Michal78900, Continued by Marco15453";
+        public override Version RequiredExiledVersion => new Version(4, 1, 7);
+        public override Version Version => new Version(4, 0, 0);
 
-		public int TeamRespawnCount;
-		public int SerpentsRespawnCount;
-		public bool IsSpawnable;
+        public int TeamRespawnCount;
+        public int SerpentsRespawnCount;
+        public bool IsSpawnable;
 
-		private PlayerHandler playerHandler;
-		private ServerHandler serverHandler;
-		private WarheadHandler warheadHandler;
-		private Scp106Handler scp106Handler;
+        private PlayerHandler playerHandler;
+        private ServerHandler serverHandler;
+        private WarheadHandler warheadHandler;
+        private Scp106Handler scp106Handler;
 
-		private Harmony harmony;
+        private Harmony harmony;
 
-		public override void OnEnabled()
-		{
-			Singleton = this;
+        public override void OnEnabled()
+        {
+            Singleton = this;
 
-			harmony = new Harmony($"marco15453.serpentshand-{DateTime.Now.Ticks}");
-			harmony.PatchAll();
+            harmony = new Harmony($"marco15453.serpentshand-{DateTime.Now.Ticks}");
+            harmony.PatchAll();
 
-			RegisterEvents();
-			base.OnEnabled();
-		}
+            RegisterEvents();
+            base.OnEnabled();
+        }
 
-		public override void OnDisabled()
-		{
-			harmony.UnpatchAll();
+        public override void OnDisabled()
+        {
+            harmony.UnpatchAll();
 
-			UnregisterEvents();
-			base.OnDisabled();
+            UnregisterEvents();
+            base.OnDisabled();
         }
 
         private void RegisterEvents()
@@ -59,61 +55,61 @@ namespace SerpentsHand
             warheadHandler = new WarheadHandler();
             scp106Handler = new Scp106Handler();
 
-			// Player
-			Player.FailingEscapePocketDimension += playerHandler.OnFailingEscapePocketDimension;
-			Player.EscapingPocketDimension += playerHandler.OnEscapingPocketDimension;
-			Player.Hurting += playerHandler.OnHurting;
-			Player.Shooting += playerHandler.OnShooting;
-			Player.ActivatingGenerator += playerHandler.OnActivatingGenerator;
-			Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
-			Player.Destroying += playerHandler.OnDestroying;
-			Player.Died += playerHandler.OnDied;
-			Player.ChangingRole += playerHandler.OnChangingRole;
-			Player.SpawningRagdoll += playerHandler.OnSpawningRagdoll;
+            // Player
+            Player.FailingEscapePocketDimension += playerHandler.OnFailingEscapePocketDimension;
+            Player.EscapingPocketDimension += playerHandler.OnEscapingPocketDimension;
+            Player.Hurting += playerHandler.OnHurting;
+            Player.Shooting += playerHandler.OnShooting;
+            Player.ActivatingGenerator += playerHandler.OnActivatingGenerator;
+            Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
+            Player.Destroying += playerHandler.OnDestroying;
+            Player.Died += playerHandler.OnDied;
+            Player.ChangingRole += playerHandler.OnChangingRole;
+            Player.SpawningRagdoll += playerHandler.OnSpawningRagdoll;
 
-			// Server
-			Server.WaitingForPlayers += serverHandler.OnWaitingForPlayers;
-			Server.RespawningTeam += serverHandler.OnRespawningTeam;
-			Server.EndingRound += serverHandler.OnEndingRound;
+            // Server
+            Server.WaitingForPlayers += serverHandler.OnWaitingForPlayers;
+            Server.RespawningTeam += serverHandler.OnRespawningTeam;
+            Server.EndingRound += serverHandler.OnEndingRound;
 
-			// Warhead
-			Warhead.Detonated += warheadHandler.OnDetonated;
+            // Warhead
+            Warhead.Detonated += warheadHandler.OnDetonated;
 
-			// Scp-106
-			Scp106.Containing += scp106Handler.OnContaining;
+            // Scp-106
+            Scp106.Containing += scp106Handler.OnContaining;
 
-		}
+        }
 
         private void UnregisterEvents()
-		{
-			// Player
-			Player.FailingEscapePocketDimension -= playerHandler.OnFailingEscapePocketDimension;
-			Player.EscapingPocketDimension-= playerHandler.OnEscapingPocketDimension;
-			Player.Hurting -= playerHandler.OnHurting;
-			Player.Shooting -= playerHandler.OnShooting;
-			Player.ActivatingGenerator -= playerHandler.OnActivatingGenerator;
-			Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
-			Player.Destroying -= playerHandler.OnDestroying;
-			Player.Died -= playerHandler.OnDied;
-			Player.ChangingRole -= playerHandler.OnChangingRole;
-			Player.SpawningRagdoll -= playerHandler.OnSpawningRagdoll;
+        {
+            // Player
+            Player.FailingEscapePocketDimension -= playerHandler.OnFailingEscapePocketDimension;
+            Player.EscapingPocketDimension -= playerHandler.OnEscapingPocketDimension;
+            Player.Hurting -= playerHandler.OnHurting;
+            Player.Shooting -= playerHandler.OnShooting;
+            Player.ActivatingGenerator -= playerHandler.OnActivatingGenerator;
+            Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
+            Player.Destroying -= playerHandler.OnDestroying;
+            Player.Died -= playerHandler.OnDied;
+            Player.ChangingRole -= playerHandler.OnChangingRole;
+            Player.SpawningRagdoll -= playerHandler.OnSpawningRagdoll;
 
-			// Server
-			Server.WaitingForPlayers -= serverHandler.OnWaitingForPlayers;
-			Server.RespawningTeam -= serverHandler.OnRespawningTeam;
-			Server.EndingRound -= serverHandler.OnEndingRound;
+            // Server
+            Server.WaitingForPlayers -= serverHandler.OnWaitingForPlayers;
+            Server.RespawningTeam -= serverHandler.OnRespawningTeam;
+            Server.EndingRound -= serverHandler.OnEndingRound;
 
-			// Warhead
-			Warhead.Detonated -= warheadHandler.OnDetonated;
+            // Warhead
+            Warhead.Detonated -= warheadHandler.OnDetonated;
 
-			// Scp-106
-			Scp106.Containing -= scp106Handler.OnContaining;
+            // Scp-106
+            Scp106.Containing -= scp106Handler.OnContaining;
 
 
-			playerHandler = null;
-			serverHandler = null;
-			warheadHandler = null;
-			scp106Handler = null;
-		}
-	}
+            playerHandler = null;
+            serverHandler = null;
+            warheadHandler = null;
+            scp106Handler = null;
+        }
+    }
 }
