@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SerpentsHand
 {
-    public static class Extensions
+    internal static class Extensions
     {
         private static Config config = SerpentsHand.Singleton.Config;
         private static SerpentsHand plugin = SerpentsHand.Singleton;
