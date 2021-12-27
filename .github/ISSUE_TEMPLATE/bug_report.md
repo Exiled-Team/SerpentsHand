@@ -23,7 +23,11 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Serpents Hand Version** (LATEST IS NOT A VERSION)
+**Serpents Hand Version ("latest" is not a version)**
+Your Serpents Hand version you are using
+
+**Server Logs**
+A clean log from your server logs
 
 **Additional context**
 Add any other context about the problem here.
