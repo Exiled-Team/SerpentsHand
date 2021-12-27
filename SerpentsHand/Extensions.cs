@@ -42,7 +42,7 @@ namespace SerpentsHand
                         player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
                 });
             }
-            Timing.CallDelayed(0.9f, () => player.Position = config.SpawnManager.SpawnPos);
+            Timing.CallDelayed(1.0f, () => player.Position = config.SpawnManager.SpawnPos);
         }
 
         public static void DestroySH(Player player)
