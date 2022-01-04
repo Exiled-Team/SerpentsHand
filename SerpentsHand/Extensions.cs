@@ -27,9 +27,7 @@ namespace SerpentsHand
             player.CustomInfo = config.SerpentsHandModifiers.RoleName;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.CustomInfo;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.UnitName;
 
             player.Broadcast(config.SpawnManager.SpawnBroadcast);
 
@@ -54,9 +52,7 @@ namespace SerpentsHand
             player.UnitName = string.Empty;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.CustomInfo;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.UnitName;
         }
 
         public static void SpawnSquad(uint size)
