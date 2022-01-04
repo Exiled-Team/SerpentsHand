@@ -9,8 +9,8 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="4.1.7" />
-    <PackageReference Include="Lib.Harmony" Version="2.1.1" />
+    <PackageReference Include="EXILED" Version="4.2.2" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
