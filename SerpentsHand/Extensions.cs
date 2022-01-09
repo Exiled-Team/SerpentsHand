@@ -27,6 +27,7 @@ namespace SerpentsHand
             player.CustomInfo = config.SerpentsHandModifiers.RoleName;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.UnitName;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 
             player.Broadcast(config.SpawnManager.SpawnBroadcast);
@@ -40,7 +41,7 @@ namespace SerpentsHand
                         player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
                 });
             }
-            Timing.CallDelayed(1.0f, () => player.Position = config.SpawnManager.SpawnPos);
+            Timing.CallDelayed(1.5f, () => player.Position = config.SpawnManager.SpawnPos);
         }
 
         public static void DestroySH(Player player)
@@ -52,6 +53,7 @@ namespace SerpentsHand
             player.UnitName = string.Empty;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
+            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.UnitName;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
         }
 
