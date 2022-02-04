@@ -34,14 +34,14 @@ namespace SerpentsHand
 
             if (full)
             {
-                Timing.CallDelayed(0.3f, () =>
+                Timing.CallDelayed(0.4f, () =>
                 {
                     player.ResetInventory(config.SerpentsHandModifiers.SpawnItems);
                     foreach (var ammo in config.SerpentsHandModifiers.SpawnAmmo)
                         player.Ammo[ammo.Key.GetItemType()] = ammo.Value;
                 });
             }
-            Timing.CallDelayed(1.5f, () => player.Position = config.SpawnManager.SpawnPos);
+            Timing.CallDelayed(1.7f, () => player.Position = config.SpawnManager.SpawnPos);
         }
 
         public static void DestroySH(Player player)
