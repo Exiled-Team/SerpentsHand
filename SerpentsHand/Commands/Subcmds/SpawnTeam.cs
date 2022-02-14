@@ -35,7 +35,7 @@ namespace SerpentsHand.Commands.Subcmds
                 return false;
             }
 
-            if (uint.TryParse(arguments.At(0), out uint num) || num == 0)
+            if (!uint.TryParse(arguments.At(0), out uint num) || num == 0)
             {
                 response = $"'{num}' is not a valid number.";
                 return false;
