@@ -20,7 +20,7 @@ namespace SerpentsHand.Commands.Subcmds
                 return false;
             }
 
-            int validPlayers = Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled).Count();
+            int validPlayers = Player.List.Where(x => x.Role.Team == Team.RIP && !x.IsOverwatchEnabled).Count();
 
             if (arguments.Count == 0)
             {

@@ -15,12 +15,12 @@ namespace SerpentsHand
         private static SerpentsHand plugin = SerpentsHand.Singleton;
 
         public static List<Player> GetScp035s() => Player.List.Where(x => x.SessionVariables.ContainsKey("IsScp035")).ToList();
-        public static int CountRoles(Team team) => Player.List.Where(x => x.Team == team && !x.SessionVariables.ContainsKey("IsNPC")).Count();
+        public static int CountRoles(Team team) => Player.List.Where(x => x.Role.Team == team && !x.SessionVariables.ContainsKey("IsNPC")).Count();
 
         public static void SpawnPlayer(Player player, bool full = true)
         {
             player.SessionVariables.Add("IsSH", null);
-            player.Role = RoleType.Tutorial;
+            player.Role.Type = RoleType.Tutorial;
             player.Health = config.SerpentsHandModifiers.Health;
             player.MaxHealth = (int)config.SerpentsHandModifiers.Health;
             player.UnitName = config.SpawnManager.UnitNames[UnityEngine.Random.Range(0, config.SpawnManager.UnitNames.Count)];
@@ -59,7 +59,7 @@ namespace SerpentsHand
 
         public static void SpawnSquad(uint size)
         {
-            List<Player> spec = Player.List.Where(x => x.Team == Team.RIP && !x.IsOverwatchEnabled).ToList();
+            List<Player> spec = Player.List.Where(x => x.Role.Team == Team.RIP && !x.IsOverwatchEnabled).ToList();
             bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
 
             if (prioritySpawn)
@@ -80,7 +80,7 @@ namespace SerpentsHand
             if (spawnCount > 0 && !string.IsNullOrEmpty(config.SpawnManager.EntryAnnoucement))
                 Cassie.GlitchyMessage(config.SpawnManager.EntryAnnoucement, 0.05f, 0.05f);
 
-            foreach (Player scp in Player.List.Where(x => x.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
+            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
                 scp.Broadcast(config.SpawnManager.EntryBroadcast);
         }
 
@@ -92,7 +92,7 @@ namespace SerpentsHand
             if (players.Count > 0)
                 Cassie.GlitchyMessage(config.SpawnManager.EntryAnnoucement, 0.05f, 0.05f);
 
-            foreach (Player scp in Player.List.Where(x => x.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
+            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
                 scp.Broadcast(config.SpawnManager.EntryBroadcast);
         }
 
