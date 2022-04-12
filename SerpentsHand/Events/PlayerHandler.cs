@@ -31,16 +31,9 @@ namespace SerpentsHand.Events
         {
             List<Player> scp035s = Extensions.GetScp035s();
 
-            if (ev.Target == null || ev.Attacker == null)
-                return;
-
-            if (API.IsSerpent(ev.Target) && (ev.Attacker.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension))
-                ev.IsAllowed = false;
-
-            if (API.IsSerpent(ev.Attacker) && (ev.Target.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target))))
-                ev.IsAllowed = false;
-
-            if (API.IsSerpent(ev.Target) && API.IsSerpent(ev.Attacker) && ev.Target != ev.Attacker && !config.SerpentsHandModifiers.FriendlyFire)
+            if (((API.IsSerpent(ev.Target) && (ev.Attacker.Role.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension)) ||
+                (API.IsSerpent(ev.Attacker) && (ev.Target.Role.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target)))) ||
+                (API.IsSerpent(ev.Target) && API.IsSerpent(ev.Attacker) && ev.Target != ev.Attacker)) && !config.SerpentsHandModifiers.FriendlyFire)
                 ev.IsAllowed = false;
         }
 
@@ -79,7 +72,7 @@ namespace SerpentsHand.Events
 
             if (ev.Target.Role == RoleType.Scp106 && !config.SerpentsHandModifiers.FriendlyFire)
                 foreach (Player player in Player.List.Where(x => x.CurrentRoom.Type == RoomType.Pocket))
-                    player.Hurt("WORLD", 50000f);
+                    player.Hurt(new CustomReasonDamageHandler("WORLD", 50000f));
         }
 
         public void OnChangingRole(ChangingRoleEventArgs ev)
