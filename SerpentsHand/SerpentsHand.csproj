@@ -9,7 +9,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.0.0-alpha.21" />
+    <PackageReference Include="EXILED" Version="5.1.1" />
     <PackageReference Include="Lib.Harmony" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
