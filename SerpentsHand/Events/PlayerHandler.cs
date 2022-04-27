@@ -31,6 +31,9 @@ namespace SerpentsHand.Events
         {
             List<Player> scp035s = Extensions.GetScp035s();
 
+            if (ev.Attacker == null)
+                return;
+
             if (((API.IsSerpent(ev.Target) && (ev.Attacker.Role.Team == Team.SCP || ev.Handler.Type == DamageType.PocketDimension)) ||
                 (API.IsSerpent(ev.Attacker) && (ev.Target.Role.Team == Team.SCP || (scp035s != null && scp035s.Contains(ev.Target)))) ||
                 (API.IsSerpent(ev.Target) && API.IsSerpent(ev.Attacker) && ev.Target != ev.Attacker)) && !config.SerpentsHandModifiers.FriendlyFire)
