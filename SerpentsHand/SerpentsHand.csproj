@@ -2,48 +2,39 @@
   <PropertyGroup>
     <AssemblyName>SerpentsHand</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.3.1" />
+    <PackageReference Include="EXILED" Version="6.0.0-beta.25" />
     <PackageReference Include="Lib.Harmony" Version="2.2.2" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\References\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\..\..\References\CommandSystem.Core.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\..\..\References\Mirror.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\References\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="0Harmony" />
     <Reference Include="Exiled.Events" />
+    <Reference Include="Mirror">
+      <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\Mirror.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <HintPath>/usr/share/dotnet/shared/Microsoft.NETCore.App/3.1.10/System.Core.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Permissions" />
     <Reference Include="Exiled.CustomItems" />
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\References\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\References\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\..\scpslfiles\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
