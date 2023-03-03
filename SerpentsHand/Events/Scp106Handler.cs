@@ -6,10 +6,10 @@ namespace SerpentsHand.Events
     {
         private Config config = SerpentsHand.Singleton.Config;
 
-        public void OnContaining(ContainingEventArgs ev)
+        /*public void OnContaining(ContainingEventArgs ev)
         {
             if (API.IsSerpent(ev.Player) && !config.SerpentsHandModifiers.FriendlyFire)
                 ev.IsAllowed = false;
-        }
+        }*/
     }
 }
