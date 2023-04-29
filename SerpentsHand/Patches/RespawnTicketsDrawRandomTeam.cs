@@ -3,7 +3,7 @@ using Respawning;
 
 namespace SerpentsHand.Patches
 {
-    [HarmonyPatch(typeof(RespawnTickets), nameof(RespawnTickets.DrawRandomTeam))]
+    [HarmonyPatch(typeof(RespawnTokensManager), nameof(RespawnTicketsDrawRandomTeam))]
     internal class RespawnTicketsDrawRandomTeam
     {
         public static void Postfix(ref SpawnableTeamType __result)

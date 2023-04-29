@@ -15,8 +15,8 @@ namespace SerpentsHand
 
         public override string Name => "Serpents Hand";
         public override string Author => "yanox, Michal78900 and Marco15453";
-        public override Version RequiredExiledVersion => new Version(5, 3, 0);
-        public override Version Version => new Version(4, 5, 1);
+        public override Version RequiredExiledVersion => new Version(6, 1, 0);
+        public override Version Version => new Version(5, 0, 0);
 
         public int TeamRespawnCount;
         public int SerpentsRespawnCount;
@@ -25,7 +25,6 @@ namespace SerpentsHand
         private PlayerHandler playerHandler;
         private ServerHandler serverHandler;
         private WarheadHandler warheadHandler;
-        private Scp106Handler scp106Handler;
 
         private Harmony harmony;
 
@@ -53,7 +52,6 @@ namespace SerpentsHand
             playerHandler = new PlayerHandler();
             serverHandler = new ServerHandler();
             warheadHandler = new WarheadHandler();
-            scp106Handler = new Scp106Handler();
 
             // Player
             Player.FailingEscapePocketDimension += playerHandler.OnFailingEscapePocketDimension;
@@ -61,11 +59,9 @@ namespace SerpentsHand
             Player.Hurting += playerHandler.OnHurting;
             Player.Shooting += playerHandler.OnShooting;
             Player.ActivatingGenerator += playerHandler.OnActivatingGenerator;
-            Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
             Player.Destroying += playerHandler.OnDestroying;
             Player.Died += playerHandler.OnDied;
             Player.ChangingRole += playerHandler.OnChangingRole;
-            Player.SpawningRagdoll += playerHandler.OnSpawningRagdoll;
 
             // Server
             Server.WaitingForPlayers += serverHandler.OnWaitingForPlayers;
@@ -74,10 +70,6 @@ namespace SerpentsHand
 
             // Warhead
             Warhead.Detonated += warheadHandler.OnDetonated;
-
-            // Scp-106
-            Scp106.Containing += scp106Handler.OnContaining;
-
         }
 
         private void UnregisterEvents()
@@ -88,11 +80,9 @@ namespace SerpentsHand
             Player.Hurting -= playerHandler.OnHurting;
             Player.Shooting -= playerHandler.OnShooting;
             Player.ActivatingGenerator -= playerHandler.OnActivatingGenerator;
-            Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
             Player.Destroying -= playerHandler.OnDestroying;
             Player.Died -= playerHandler.OnDied;
             Player.ChangingRole -= playerHandler.OnChangingRole;
-            Player.SpawningRagdoll -= playerHandler.OnSpawningRagdoll;
 
             // Server
             Server.WaitingForPlayers -= serverHandler.OnWaitingForPlayers;
@@ -102,14 +92,9 @@ namespace SerpentsHand
             // Warhead
             Warhead.Detonated -= warheadHandler.OnDetonated;
 
-            // Scp-106
-            Scp106.Containing -= scp106Handler.OnContaining;
-
-
             playerHandler = null;
             serverHandler = null;
             warheadHandler = null;
-            scp106Handler = null;
         }
     }
 }

@@ -1,6 +1,7 @@
 using CommandSystem;
 using Exiled.API.Features;
 using Exiled.Permissions.Extensions;
+using PlayerRoles;
 using System;
 using System.Linq;
 
@@ -20,7 +21,7 @@ namespace SerpentsHand.Commands.Subcmds
                 return false;
             }
 
-            int validPlayers = Player.List.Where(x => x.Role.Team == Team.RIP && !x.IsOverwatchEnabled).Count();
+            int validPlayers = Player.List.Where(x => x.Role.Team == Team.Dead && !x.IsOverwatchEnabled).Count();
 
             if (arguments.Count == 0)
             {

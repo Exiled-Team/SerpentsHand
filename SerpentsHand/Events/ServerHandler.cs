@@ -1,7 +1,9 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
+using Exiled.Events.EventArgs.Server;
 using MEC;
+using PlayerRoles;
 using Respawning;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,15 +37,11 @@ namespace SerpentsHand.Events
             }
 
             ev.IsAllowed = false;
-            bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
-
-            if (prioritySpawn)
-                ev.Players.OrderBy(x => x.ReferenceHub.characterClassManager.DeathTime);
 
             List<Player> sHPlayers = new List<Player>();
             for (int i = 0; i < config.SpawnManager.MaxSquad && ev.Players.Count > 0; i++)
             {
-                Player player = prioritySpawn ? ev.Players.First() : ev.Players[UnityEngine.Random.Range(0, ev.Players.Count)];
+                Player player = ev.Players[UnityEngine.Random.Range(0, ev.Players.Count)];
                 sHPlayers.Add(player);
                 ev.Players.Remove(player);
             }
@@ -59,16 +57,16 @@ namespace SerpentsHand.Events
 
         public void OnEndingRound(EndingRoundEventArgs ev)
         {
-            bool mtfAlive = Extensions.CountRoles(Team.MTF) > 0;
-            bool ciAlive = Extensions.CountRoles(Team.CHI) > 0;
-            bool scpAlive = Extensions.CountRoles(Team.SCP) + Extensions.GetScp035s().Count > 0;
-            bool dclassAlive = Extensions.CountRoles(Team.CDP) > 0;
-            bool scientistsAlive = Extensions.CountRoles(Team.RSC) > 0;
+            bool mtfAlive = Extensions.CountRoles(Team.FoundationForces) > 0;
+            bool ciAlive = Extensions.CountRoles(Team.ChaosInsurgency) > 0;
+            bool scpAlive = Extensions.CountRoles(Team.SCPs) + Extensions.GetScp035s().Count > 0;
+            bool dclassAlive = Extensions.CountRoles(Team.ClassD) > 0;
+            bool scientistsAlive = Extensions.CountRoles(Team.Scientists) > 0;
             bool shAlive = API.GetSHPlayers().Count > 0;
 
             if (shAlive && ((ciAlive && !config.SerpentsHandModifiers.ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
             {
-                ev.IsAllowed = false;
+                ev.IsRoundEnded = false;
             }
             else if (shAlive && scpAlive && !mtfAlive && !dclassAlive && !scientistsAlive)
             {
@@ -77,14 +75,12 @@ namespace SerpentsHand.Events
                     if (!ciAlive)
                     {
                         ev.LeadingTeam = LeadingTeam.Anomalies;
-                        ev.IsAllowed = true;
                         ev.IsRoundEnded = true;
                     }
                 }
                 else
                 {
                     ev.LeadingTeam = LeadingTeam.Anomalies;
-                    ev.IsAllowed = true;
                     ev.IsRoundEnded = true;
                 }
             }

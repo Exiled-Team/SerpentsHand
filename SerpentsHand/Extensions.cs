@@ -2,6 +2,7 @@ using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.CustomItems.API;
 using MEC;
+using PlayerRoles;
 using Respawning;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,9 @@ namespace SerpentsHand
         public static void SpawnPlayer(Player player, bool full = true)
         {
             player.SessionVariables.Add("IsSH", null);
-            player.Role.Type = RoleType.Tutorial;
+            player.Role.Set(RoleTypeId.Tutorial);
             player.Health = config.SerpentsHandModifiers.Health;
             player.MaxHealth = (int)config.SerpentsHandModifiers.Health;
-            player.UnitName = config.SpawnManager.UnitNames[UnityEngine.Random.Range(0, config.SpawnManager.UnitNames.Count)];
             player.CustomInfo = config.SerpentsHandModifiers.RoleName;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
@@ -50,7 +50,6 @@ namespace SerpentsHand
             player.MaxHealth = default;
             player.Health = default;
             player.CustomInfo = string.Empty;
-            player.UnitName = string.Empty;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.UnitName;
@@ -59,11 +58,7 @@ namespace SerpentsHand
 
         public static void SpawnSquad(uint size)
         {
-            List<Player> spec = Player.List.Where(x => x.Role.Team == Team.RIP && !x.IsOverwatchEnabled).ToList();
-            bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
-
-            if (prioritySpawn)
-                spec.OrderBy(x => x.ReferenceHub.characterClassManager.DeathTime);
+            List<Player> spec = Player.List.Where(x => x.Role.Team == Team.Dead && !x.IsOverwatchEnabled).ToList();
 
             int spawnCount = 1;
             while (spec.Count > 0 && spawnCount <= size)
@@ -80,7 +75,7 @@ namespace SerpentsHand
             if (spawnCount > 0 && !string.IsNullOrEmpty(config.SpawnManager.EntryAnnoucement))
                 Cassie.GlitchyMessage(config.SpawnManager.EntryAnnoucement, 0.05f, 0.05f);
 
-            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
+            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCPs || x.SessionVariables.ContainsKey("IsScp035")))
                 scp.Broadcast(config.SpawnManager.EntryBroadcast);
         }
 
@@ -92,14 +87,14 @@ namespace SerpentsHand
             if (players.Count > 0)
                 Cassie.GlitchyMessage(config.SpawnManager.EntryAnnoucement, 0.05f, 0.05f);
 
-            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCP || x.SessionVariables.ContainsKey("IsScp035")))
+            foreach (Player scp in Player.List.Where(x => x.Role.Team == Team.SCPs || x.SessionVariables.ContainsKey("IsScp035")))
                 scp.Broadcast(config.SpawnManager.EntryBroadcast);
         }
 
         public static Vector3 Get106Position()
         {
-            Player scp106 = Player.List.FirstOrDefault(x => x.Role == RoleType.Scp106);
-            if (scp106 == null) return RoleType.Scp096.GetRandomSpawnProperties().Item1;
+            Player scp106 = Player.List.FirstOrDefault(x => x.Role == RoleTypeId.Scp106);
+            if (scp106 == null) return RoleTypeId.Scp106.GetRandomSpawnLocation().Position;
             return scp106.Position;
         }
 
@@ -112,9 +107,9 @@ namespace SerpentsHand
             plugin.IsSpawnable = UnityEngine.Random.Range(0, 101) <= config.SpawnManager.SpawnChance &&
                 plugin.TeamRespawnCount >= config.SpawnManager.RespawnDelay &&
                 plugin.SerpentsRespawnCount < config.SpawnManager.MaxSpawns &&
-                !(!config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCP).Count() + scp035num == 0);
+                !(!config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCPs).Count() + scp035num == 0);
 
-            Log.Debug($"Is Serpent's Hand team now spawnable?: {plugin.IsSpawnable}", config.Debug);
+            Log.Debug($"Is Serpent's Hand team now spawnable?: {plugin.IsSpawnable}");
         }
     }
 }

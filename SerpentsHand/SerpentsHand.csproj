@@ -2,35 +2,35 @@
   <PropertyGroup>
     <AssemblyName>SerpentsHand</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="5.3.1" />
-    <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+    <PackageReference Include="EXILED" Version="6.1.0-rc.0-4" />
+    <PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\References\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
-      <HintPath>..\..\..\References\CommandSystem.Core.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\CommandSystem.Core.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API" />
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp-Publicized.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="Mirror">
-      <HintPath>..\..\..\References\Mirror.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\References\UnityEngine.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony" />
     <Reference Include="Exiled.Events" />
@@ -40,10 +40,10 @@
     <Reference Include="Exiled.Permissions" />
     <Reference Include="Exiled.CustomItems" />
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\References\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\References\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(EXILED_REFERENCES)\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
