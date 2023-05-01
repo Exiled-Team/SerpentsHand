@@ -1,9 +1,7 @@
 using Exiled.API.Features;
-using HarmonyLib;
 using SerpentsHand.Events;
 using System;
 using Player = Exiled.Events.Handlers.Player;
-using Scp106 = Exiled.Events.Handlers.Scp106;
 using Server = Exiled.Events.Handlers.Server;
 using Warhead = Exiled.Events.Handlers.Warhead;
 
@@ -16,7 +14,7 @@ namespace SerpentsHand
         public override string Name => "Serpents Hand";
         public override string Author => "yanox, Michal78900 and Marco15453";
         public override Version RequiredExiledVersion => new Version(6, 1, 0);
-        public override Version Version => new Version(5, 0, 0);
+        public override Version Version => new Version(5, 0, 1);
 
         public int TeamRespawnCount;
         public int SerpentsRespawnCount;
@@ -26,14 +24,9 @@ namespace SerpentsHand
         private ServerHandler serverHandler;
         private WarheadHandler warheadHandler;
 
-        private Harmony harmony;
-
         public override void OnEnabled()
         {
             Singleton = this;
-
-            harmony = new Harmony($"marco15453.serpentshand-{DateTime.Now.Ticks}");
-            harmony.PatchAll();
 
             RegisterEvents();
             base.OnEnabled();
@@ -41,8 +34,6 @@ namespace SerpentsHand
 
         public override void OnDisabled()
         {
-            harmony.UnpatchAll();
-
             UnregisterEvents();
             base.OnDisabled();
         }

@@ -29,6 +29,8 @@ namespace SerpentsHand.Events
             if (ev.NextKnownTeam != SpawnableTeamType.ChaosInsurgency)
                 return;
 
+            Extensions.CalculateChance();
+
             if (!plugin.IsSpawnable)
             {
                 if(!string.IsNullOrEmpty(config.SpawnManager.ChaosEntryAnnoucement))

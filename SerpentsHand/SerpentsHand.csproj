@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EXILED" Version="6.1.0-rc.0-4" />
-    <PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
