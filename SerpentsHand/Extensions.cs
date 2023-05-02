@@ -1,5 +1,6 @@
 using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Exiled.API.Features.Roles;
 using Exiled.CustomItems.API;
 using MEC;
 using PlayerRoles;
@@ -16,7 +17,7 @@ namespace SerpentsHand
         private static SerpentsHand plugin = SerpentsHand.Singleton;
 
         public static List<Player> GetScp035s() => Player.List.Where(x => x.SessionVariables.ContainsKey("IsScp035")).ToList();
-        public static int CountRoles(Team team) => Player.List.Where(x => x.Role.Team == team && !x.SessionVariables.ContainsKey("IsNPC")).Count();
+        public static int CountRoles(Team team) => Player.List.Count(x => x.Role.Team == team && !x.SessionVariables.ContainsKey("IsNPC"));
 
         public static void SpawnPlayer(Player player, bool full = true)
         {
@@ -27,7 +28,6 @@ namespace SerpentsHand
             player.CustomInfo = config.SerpentsHandModifiers.RoleName;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Nickname;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.UnitName;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 
             player.Broadcast(config.SpawnManager.SpawnBroadcast);
@@ -52,13 +52,16 @@ namespace SerpentsHand
             player.CustomInfo = string.Empty;
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Nickname;
-            player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.UnitName;
             player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
         }
 
         public static void SpawnSquad(uint size)
         {
             List<Player> spec = Player.List.Where(x => x.Role.Team == Team.Dead && !x.IsOverwatchEnabled).ToList();
+            bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
+
+            if (prioritySpawn)
+                spec.OrderBy(x => (x.Role as SpectatorRole).DeathTime);
 
             int spawnCount = 1;
             while (spec.Count > 0 && spawnCount <= size)

@@ -1,7 +1,6 @@
 namespace SerpentsHand.Configs
 {
     using Exiled.API.Features;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using UnityEngine;
 
@@ -35,6 +34,6 @@ namespace SerpentsHand.Configs
         public Broadcast EntryBroadcast { get; set; } = new Broadcast("<color=orange>Serpent's Hand has entered the facility!</color>");
 
         [Description("The Serpents Hand spawn position.")]
-        public Vector3 SpawnPos { get; set; } = new Vector3(0f, 1002f, 8f);
+        public Vector3 SpawnPos { get; set; } = new Vector3(63f, 992f, -50f);
     }
 }

@@ -1,6 +1,6 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using Exiled.Events.EventArgs;
+using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Server;
 using MEC;
 using PlayerRoles;
@@ -33,17 +33,21 @@ namespace SerpentsHand.Events
 
             if (!plugin.IsSpawnable)
             {
-                if(!string.IsNullOrEmpty(config.SpawnManager.ChaosEntryAnnoucement))
+                if (!string.IsNullOrEmpty(config.SpawnManager.ChaosEntryAnnoucement))
                     Cassie.GlitchyMessage(config.SpawnManager.ChaosEntryAnnoucement, 0.05f, 0.05f);
                 return;
             }
 
             ev.IsAllowed = false;
+            bool prioritySpawn = RespawnManager.Singleton._prioritySpawn;
+
+            if (prioritySpawn)
+                ev.Players.OrderBy(x => (x.Role as SpectatorRole).DeathTime);
 
             List<Player> sHPlayers = new List<Player>();
             for (int i = 0; i < config.SpawnManager.MaxSquad && ev.Players.Count > 0; i++)
             {
-                Player player = ev.Players[UnityEngine.Random.Range(0, ev.Players.Count)];
+                Player player = prioritySpawn ? ev.Players.First() : ev.Players[UnityEngine.Random.Range(0, ev.Players.Count)];
                 sHPlayers.Add(player);
                 ev.Players.Remove(player);
             }
@@ -61,7 +65,7 @@ namespace SerpentsHand.Events
         {
             bool mtfAlive = Extensions.CountRoles(Team.FoundationForces) > 0;
             bool ciAlive = Extensions.CountRoles(Team.ChaosInsurgency) > 0;
-            bool scpAlive = Extensions.CountRoles(Team.SCPs) + Extensions.GetScp035s().Count > 0;
+            bool scpAlive = (Extensions.CountRoles(Team.SCPs) + Extensions.GetScp035s().Count) > 0;
             bool dclassAlive = Extensions.CountRoles(Team.ClassD) > 0;
             bool scientistsAlive = Extensions.CountRoles(Team.Scientists) > 0;
             bool shAlive = API.GetSHPlayers().Count > 0;
