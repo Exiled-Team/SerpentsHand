@@ -63,11 +63,11 @@ namespace SerpentsHand.Events
 
         public void OnEndingRound(EndingRoundEventArgs ev)
         {
-            bool mtfAlive = Extensions.CountRoles(Team.FoundationForces) > 0;
-            bool ciAlive = Extensions.CountRoles(Team.ChaosInsurgency) > 0;
-            bool scpAlive = (Extensions.CountRoles(Team.SCPs) + Extensions.GetScp035s().Count) > 0;
-            bool dclassAlive = Extensions.CountRoles(Team.ClassD) > 0;
-            bool scientistsAlive = Extensions.CountRoles(Team.Scientists) > 0;
+            bool mtfAlive = ev.ClassList.mtf_and_guards > 0;
+            bool ciAlive = ev.ClassList.chaos_insurgents > 0;
+            bool scpAlive = (ev.ClassList.scps_except_zombies + Extensions.GetScp035s().Count) > 0;
+            bool dclassAlive = ev.ClassList.class_ds > 0;
+            bool scientistsAlive = ev.ClassList.scientists > 0;
             bool shAlive = API.GetSHPlayers().Count > 0;
 
             if (shAlive && ((ciAlive && !config.SerpentsHandModifiers.ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
@@ -82,6 +82,9 @@ namespace SerpentsHand.Events
                     {
                         ev.LeadingTeam = LeadingTeam.Anomalies;
                         ev.IsRoundEnded = true;
+                    } else
+                    {
+                        ev.IsRoundEnded = false;
                     }
                 }
                 else

@@ -14,7 +14,7 @@ namespace SerpentsHand
         public override string Name => "Serpents Hand";
         public override string Author => "yanox, Michal78900 and Marco15453";
         public override Version RequiredExiledVersion => new Version(6, 1, 0);
-        public override Version Version => new Version(5, 0, 2);
+        public override Version Version => new Version(5, 0, 3);
 
         public int TeamRespawnCount;
         public int SerpentsRespawnCount;
