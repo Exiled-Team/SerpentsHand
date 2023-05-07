@@ -37,12 +37,12 @@ namespace SerpentsHand.Configs
         [Description("The Serpents Hand spawn position.")]
         public Vector3 SpawnPos { get; set; } = new Vector3(0f, 1002f, 8f);
 
-        /*[Description("The Serpents Hand Unit Names")]
+        [Description("The Serpents Hand Unit Names")]
         public List<string> UnitNames { get; set; } = new List<string>
         {
             "SH-Vector 13",
             "SH-Alpha 09",
             "SH-Delta 15"
-        };*/
+        };
     }
 }

@@ -61,7 +61,7 @@ namespace SerpentsHand
             Player.Hurting += playerHandler.OnHurting;
             Player.Shooting += playerHandler.OnShooting;
             Player.ActivatingGenerator += playerHandler.OnActivatingGenerator;
-            //Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
+            Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
             Player.Destroying += playerHandler.OnDestroying;
             Player.Died += playerHandler.OnDied;
             Player.ChangingRole += playerHandler.OnChangingRole;
@@ -76,7 +76,7 @@ namespace SerpentsHand
             Warhead.Detonated += warheadHandler.OnDetonated;
 
             // Scp-106
-            //Scp106.Containing += scp106Handler.OnContaining;
+            Scp106.Containing += scp106Handler.OnContaining;
 
         }
 
@@ -88,7 +88,7 @@ namespace SerpentsHand
             Player.Hurting -= playerHandler.OnHurting;
             Player.Shooting -= playerHandler.OnShooting;
             Player.ActivatingGenerator -= playerHandler.OnActivatingGenerator;
-            //Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
+            Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
             Player.Destroying -= playerHandler.OnDestroying;
             Player.Died -= playerHandler.OnDied;
             Player.ChangingRole -= playerHandler.OnChangingRole;
@@ -103,7 +103,7 @@ namespace SerpentsHand
             Warhead.Detonated -= warheadHandler.OnDetonated;
 
             // Scp-106
-            //Scp106.Containing -= scp106Handler.OnContaining;
+            Scp106.Containing -= scp106Handler.OnContaining;
 
 
             playerHandler = null;
