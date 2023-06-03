@@ -77,6 +77,9 @@ namespace SerpentsHand.Events
         {
             if (API.IsSerpent(ev.Player) && ev.NewRole != RoleTypeId.Tutorial)
                 Extensions.DestroySH(ev.Player);
+
+            if (config.SpawnManager.AutoConvertTutorial && ev.NewRole == RoleTypeId.Tutorial && !ev.Player.IsOverwatchEnabled)
+                Extensions.SpawnPlayer(ev.Player);
         }
     }
 }

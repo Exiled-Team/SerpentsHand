@@ -18,6 +18,9 @@ namespace SerpentsHand.Configs
         [Description("The maximum number of times Serpents can spawn per game.")]
         public int MaxSpawns { get; set; } = 1;
 
+        [Description("Should Tutorial automaticly be converted to Serpends Hand?")]
+        public bool AutoConvertTutorial { get; set; } = false;
+
         [Description("Determines if Serpents Hand should be able to spawn when there is no SCPs.")]
         public bool CanSpawnWithoutScps { get; set; } = false;
 

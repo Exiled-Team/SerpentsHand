@@ -108,7 +108,7 @@ namespace SerpentsHand
                 scp035num = 1;
 
             plugin.IsSpawnable = UnityEngine.Random.Range(0, 101) <= config.SpawnManager.SpawnChance &&
-                plugin.TeamRespawnCount >= config.SpawnManager.RespawnDelay &&
+                plugin.TeamRespawnCount > config.SpawnManager.RespawnDelay &&
                 plugin.SerpentsRespawnCount < config.SpawnManager.MaxSpawns &&
                 !(!config.SpawnManager.CanSpawnWithoutScps && Player.Get(Team.SCPs).Count() + scp035num == 0);
 
