@@ -112,7 +112,7 @@ namespace SerpentsHand
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if((Check(ev.Player) && ev.Attacker.Role.Team == Team.SCPs) ||
+            if ((Check(ev.Player) && ev.Attacker.Role.Team == Team.SCPs) ||
                 (ev.Attacker != null && Check(ev.Attacker) && ev.Player.Role.Team == Team.SCPs) ||
                 (ev.Attacker != null && Check(ev.Attacker) && Check(ev.Player) && ev.Player != ev.Attacker))
                 ev.IsAllowed = false;
@@ -127,13 +127,13 @@ namespace SerpentsHand
 
         private void OnActivatingGenerator(ActivatingGeneratorEventArgs ev)
         {
-            if(Check(ev.Player))
+            if (Check(ev.Player))
                 ev.IsAllowed = false;
         }
 
         private void OnChangingRole(ChangingRoleEventArgs ev)
         {
-            if(AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled)
+            if (AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled)
                 AddRole(ev.Player);
         }
 
@@ -146,9 +146,9 @@ namespace SerpentsHand
             bool scientistsAlive = false;
             bool shAlive = TrackedPlayers.Count > 0;
 
-            foreach(Player player in Player.List)
+            foreach (Player player in Player.List)
             {
-                switch(player.Role.Team)
+                switch (player.Role.Team)
                 {
                     case Team.FoundationForces:
                         mtfAlive = true;

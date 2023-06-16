@@ -1,5 +1,4 @@
 ﻿using Exiled.API.Features;
-using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Server;
 using Exiled.Loader;
 using PlayerRoles;
@@ -25,7 +24,7 @@ namespace SerpentsHand
 
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
-            if (Loader.Random.Next(100) <= plugin.Config.SerpentsHand.SpawnChance && 
+            if (Loader.Random.Next(100) <= plugin.Config.SerpentsHand.SpawnChance &&
                 Respawns >= plugin.Config.SerpentsHand.RespawnDelay &&
                 SHRespawns < plugin.Config.SerpentsHand.MaxSpawns &&
                 ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
@@ -36,7 +35,7 @@ namespace SerpentsHand
                 else
                     players = ev.Players.GetRange(0, ev.Players.Count);
 
-                foreach(Player player in ev.Players)
+                foreach (Player player in ev.Players)
                 {
                     if (player is null)
                         continue;
