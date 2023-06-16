@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 using PlayerEvent = Exiled.Events.Handlers.Player;
-using ServerEvent = Exiled.Events.Handlers.Server;
 
 namespace SerpentsHand
 {
@@ -86,8 +85,6 @@ namespace SerpentsHand
             PlayerEvent.ActivatingGenerator += OnActivatingGenerator;
             PlayerEvent.ChangingRole += OnChangingRole;
 
-            ServerEvent.EndingRound += OnEndingRound;
-
             base.SubscribeEvents();
         }
 
@@ -98,8 +95,6 @@ namespace SerpentsHand
             PlayerEvent.Shooting -= OnShooting;
             PlayerEvent.ActivatingGenerator -= OnActivatingGenerator;
             PlayerEvent.ChangingRole -= OnChangingRole;
-
-            ServerEvent.EndingRound -= OnEndingRound;
 
             base.UnsubscribeEvents();
         }
@@ -135,59 +130,6 @@ namespace SerpentsHand
         {
             if (AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled)
                 AddRole(ev.Player);
-        }
-
-        private void OnEndingRound(EndingRoundEventArgs ev)
-        {
-            bool mtfAlive = false;
-            bool ciAlive = false;
-            bool scpAlive = false;
-            bool dclassAlive = false;
-            bool scientistsAlive = false;
-            bool shAlive = TrackedPlayers.Count > 0;
-
-            foreach (Player player in Player.List)
-            {
-                switch (player.Role.Team)
-                {
-                    case Team.FoundationForces:
-                        mtfAlive = true;
-                        break;
-                    case Team.ChaosInsurgency:
-                        ciAlive = true;
-                        break;
-                    case Team.SCPs:
-                        scpAlive = true;
-                        break;
-                    case Team.ClassD:
-                        dclassAlive = true;
-                        break;
-                    case Team.Scientists:
-                        scientistsAlive = true;
-                        break;
-                }
-            }
-
-            if (shAlive && ((ciAlive && !ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
-                ev.IsRoundEnded = false;
-            else if (shAlive && scpAlive && !mtfAlive && !dclassAlive && !scientistsAlive)
-            {
-                if (!ScpsWinWithChaos)
-                {
-                    if (!ciAlive)
-                    {
-                        ev.LeadingTeam = LeadingTeam.Anomalies;
-                        ev.IsRoundEnded = true;
-                    }
-                }
-                else
-                {
-                    ev.LeadingTeam = LeadingTeam.Anomalies;
-                    ev.IsRoundEnded = true;
-                }
-            }
-            else if ((shAlive || scpAlive) && ciAlive && !ScpsWinWithChaos)
-                ev.IsRoundEnded = false;
         }
     }
 }
