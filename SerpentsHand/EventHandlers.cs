@@ -30,6 +30,10 @@ namespace SerpentsHand
                 SHRespawns < plugin.Config.SerpentsHand.MaxSpawns &&
                 ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
             {
+                bool scpAlive = Player.List.Count(x => x.Role.Team == Team.SCPs) > 0;
+                if (!scpAlive && !plugin.Config.SerpentsHand.CanSpawnWithoutScps)
+                    return;
+
                 List<Player> players = new List<Player>();
                 if (ev.Players.Count > plugin.Config.SerpentsHand.MaxSquad)
                     players = ev.Players.GetRange(0, plugin.Config.SerpentsHand.MaxSquad);
