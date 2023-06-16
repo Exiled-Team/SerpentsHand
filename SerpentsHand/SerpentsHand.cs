@@ -1,115 +1,193 @@
+﻿using Exiled.API.Enums;
 using Exiled.API.Features;
-using HarmonyLib;
-using SerpentsHand.Events;
-using System;
-using Player = Exiled.Events.Handlers.Player;
-using Scp106 = Exiled.Events.Handlers.Scp106;
-using Server = Exiled.Events.Handlers.Server;
-using Warhead = Exiled.Events.Handlers.Warhead;
+using Exiled.API.Features.Attributes;
+using Exiled.API.Features.Spawn;
+using Exiled.CustomRoles.API.Features;
+using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Server;
+using PlayerRoles;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+using PlayerEvent = Exiled.Events.Handlers.Player;
+using ServerEvent = Exiled.Events.Handlers.Server;
 
 namespace SerpentsHand
 {
-    public class SerpentsHand : Plugin<Config>
+    [CustomRole(RoleTypeId.Tutorial)]
+    public class SerpentsHand : CustomRole
     {
-        public static SerpentsHand Singleton;
+        public override uint Id { get; set; } = 1;
+        public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
+        public override int MaxHealth { get; set; } = 120;
+        public override string Name { get; set; } = "Serpents Hand";
+        public override string Description { get; set; } = "Help the SCPs by killing all other classes";
+        public override string CustomInfo { get; set; } = "Serpents Hand";
+        public override float SpawnChance { get; set; } = 75f;
 
-        public override string Name => "Serpents Hand";
-        public override string Author => "yanox, Michal78900 and Marco15453";
-        public override Version RequiredExiledVersion => new Version(5, 3, 0);
-        public override Version Version => new Version(4, 5, 1);
+        [Description("The maximum size of a Serpents Hand squad.")]
+        public int MaxSquad { get; set; } = 8;
 
-        public int TeamRespawnCount;
-        public int SerpentsRespawnCount;
-        public bool IsSpawnable;
+        [Description("How many respawn waves must occur before considering Serpents Hand to spawn.")]
+        public int RespawnDelay { get; set; } = 1;
 
-        private PlayerHandler playerHandler;
-        private ServerHandler serverHandler;
-        private WarheadHandler warheadHandler;
-        private Scp106Handler scp106Handler;
+        [Description("The maximum number of times Serpents can spawn per game.")]
+        public int MaxSpawns { get; set; } = 1;
 
-        private Harmony harmony;
+        [Description("Should Tutorial automaticly be converted to Serpends Hand?")]
+        public bool AutoConvertTutorial { get; set; } = false;
 
-        public override void OnEnabled()
+        [Description("Determines if Serpents Hand should be able to spawn when there is no SCPs.")]
+        public bool CanSpawnWithoutScps { get; set; } = false;
+
+        [Description("Set this to false if Chaos and SCPs CANNOT win together on your server")]
+        public bool ScpsWinWithChaos { get; set; } = true;
+
+        [Description("The message annouced by CASSIE when Serpents hand spawn. (Empty = Disabled)")]
+        public string EntryAnnoucement { get; set; } = "SERPENTS HAND HASENTERED";
+
+        [Description("The broadcast shown to SCPs when the Serpents Hand respawns.")]
+        public Exiled.API.Features.Broadcast EntryBroadcast { get; set; } = new Exiled.API.Features.Broadcast("<color=orange>Serpents Hand has entered the facility!</color>");
+
+
+        public override List<string> Inventory { get; set; } = new()
         {
-            Singleton = this;
+            $"{ItemType.GunCrossvec}",
+            $"{ItemType.KeycardChaosInsurgency}",
+            $"{ItemType.GrenadeFlash}",
+            $"{ItemType.Radio}",
+            $"{ItemType.Medkit}",
+            $"{ItemType.ArmorCombat}"
+        };
 
-            harmony = new Harmony($"marco15453.serpentshand-{DateTime.Now.Ticks}");
-            harmony.PatchAll();
+        public override Dictionary<AmmoType, ushort> Ammo { get; set; } = new()
+        {
+            { AmmoType.Nato9, 120 }
+        };
 
-            RegisterEvents();
-            base.OnEnabled();
+        public override SpawnProperties SpawnProperties { get; set; } = new()
+        {
+            StaticSpawnPoints = new List<StaticSpawnPoint>
+            {
+                new()
+                {
+                    Name = "Spawn Point",
+                    Position = new UnityEngine.Vector3(63f, 992f, -50f),
+                    Chance = 100
+                }
+            }
+        };
+
+        protected override void SubscribeEvents()
+        {
+            PlayerEvent.EnteringPocketDimension += OnEnteringPocketDimension;
+            PlayerEvent.Hurting += OnHurting;
+            PlayerEvent.Shooting += OnShooting;
+            PlayerEvent.ActivatingGenerator += OnActivatingGenerator;
+            PlayerEvent.ChangingRole += OnChangingRole;
+
+            ServerEvent.EndingRound += OnEndingRound;
+
+            base.SubscribeEvents();
         }
 
-        public override void OnDisabled()
+        protected override void UnsubscribeEvents()
         {
-            harmony.UnpatchAll();
+            PlayerEvent.EnteringPocketDimension -= OnEnteringPocketDimension;
+            PlayerEvent.Hurting -= OnHurting;
+            PlayerEvent.Shooting -= OnShooting;
+            PlayerEvent.ActivatingGenerator -= OnActivatingGenerator;
+            PlayerEvent.ChangingRole -= OnChangingRole;
 
-            UnregisterEvents();
-            base.OnDisabled();
+            ServerEvent.EndingRound -= OnEndingRound;
+
+            base.UnsubscribeEvents();
         }
 
-        private void RegisterEvents()
+        private void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
-            playerHandler = new PlayerHandler();
-            serverHandler = new ServerHandler();
-            warheadHandler = new WarheadHandler();
-            scp106Handler = new Scp106Handler();
-
-            // Player
-            Player.FailingEscapePocketDimension += playerHandler.OnFailingEscapePocketDimension;
-            Player.EscapingPocketDimension += playerHandler.OnEscapingPocketDimension;
-            Player.Hurting += playerHandler.OnHurting;
-            Player.Shooting += playerHandler.OnShooting;
-            Player.ActivatingGenerator += playerHandler.OnActivatingGenerator;
-            Player.EnteringFemurBreaker += playerHandler.OnEnteringFemurBreaker;
-            Player.Destroying += playerHandler.OnDestroying;
-            Player.Died += playerHandler.OnDied;
-            Player.ChangingRole += playerHandler.OnChangingRole;
-            Player.SpawningRagdoll += playerHandler.OnSpawningRagdoll;
-
-            // Server
-            Server.WaitingForPlayers += serverHandler.OnWaitingForPlayers;
-            Server.RespawningTeam += serverHandler.OnRespawningTeam;
-            Server.EndingRound += serverHandler.OnEndingRound;
-
-            // Warhead
-            Warhead.Detonated += warheadHandler.OnDetonated;
-
-            // Scp-106
-            Scp106.Containing += scp106Handler.OnContaining;
-
+            if (Check(ev.Player))
+                ev.IsAllowed = false;
         }
 
-        private void UnregisterEvents()
+        private void OnHurting(HurtingEventArgs ev)
         {
-            // Player
-            Player.FailingEscapePocketDimension -= playerHandler.OnFailingEscapePocketDimension;
-            Player.EscapingPocketDimension -= playerHandler.OnEscapingPocketDimension;
-            Player.Hurting -= playerHandler.OnHurting;
-            Player.Shooting -= playerHandler.OnShooting;
-            Player.ActivatingGenerator -= playerHandler.OnActivatingGenerator;
-            Player.EnteringFemurBreaker -= playerHandler.OnEnteringFemurBreaker;
-            Player.Destroying -= playerHandler.OnDestroying;
-            Player.Died -= playerHandler.OnDied;
-            Player.ChangingRole -= playerHandler.OnChangingRole;
-            Player.SpawningRagdoll -= playerHandler.OnSpawningRagdoll;
+            if((Check(ev.Player) && ev.Attacker.Role.Team == Team.SCPs) ||
+                (ev.Attacker != null && Check(ev.Attacker) && ev.Player.Role.Team == Team.SCPs) ||
+                (ev.Attacker != null && Check(ev.Attacker) && Check(ev.Player) && ev.Player != ev.Attacker))
+                ev.IsAllowed = false;
+        }
 
-            // Server
-            Server.WaitingForPlayers -= serverHandler.OnWaitingForPlayers;
-            Server.RespawningTeam -= serverHandler.OnRespawningTeam;
-            Server.EndingRound -= serverHandler.OnEndingRound;
+        private void OnShooting(ShootingEventArgs ev)
+        {
+            Player? target = Player.Get(ev.TargetNetId);
+            if (target != null && target.Role == RoleTypeId.Scp096 && Check(ev.Player))
+                ev.IsAllowed = false;
+        }
 
-            // Warhead
-            Warhead.Detonated -= warheadHandler.OnDetonated;
+        private void OnActivatingGenerator(ActivatingGeneratorEventArgs ev)
+        {
+            if(Check(ev.Player))
+                ev.IsAllowed = false;
+        }
 
-            // Scp-106
-            Scp106.Containing -= scp106Handler.OnContaining;
+        private void OnChangingRole(ChangingRoleEventArgs ev)
+        {
+            if(AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled)
+                AddRole(ev.Player);
+        }
 
+        private void OnEndingRound(EndingRoundEventArgs ev)
+        {
+            bool mtfAlive = false;
+            bool ciAlive = false;
+            bool scpAlive = false;
+            bool dclassAlive = false;
+            bool scientistsAlive = false;
+            bool shAlive = TrackedPlayers.Count > 0;
 
-            playerHandler = null;
-            serverHandler = null;
-            warheadHandler = null;
-            scp106Handler = null;
+            foreach(Player player in Player.List)
+            {
+                switch(player.Role.Team)
+                {
+                    case Team.FoundationForces:
+                        mtfAlive = true;
+                        break;
+                    case Team.ChaosInsurgency:
+                        ciAlive = true;
+                        break;
+                    case Team.SCPs:
+                        scpAlive = true;
+                        break;
+                    case Team.ClassD:
+                        dclassAlive = true;
+                        break;
+                    case Team.Scientists:
+                        scientistsAlive = true;
+                        break;
+                }
+            }
+
+            if (shAlive && ((ciAlive && !ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
+                ev.IsRoundEnded = false;
+            else if (shAlive && scpAlive && !mtfAlive && !dclassAlive && !scientistsAlive)
+            {
+                if (!ScpsWinWithChaos)
+                {
+                    if (!ciAlive)
+                    {
+                        ev.LeadingTeam = LeadingTeam.Anomalies;
+                        ev.IsRoundEnded = true;
+                    }
+                }
+                else
+                {
+                    ev.LeadingTeam = LeadingTeam.Anomalies;
+                    ev.IsRoundEnded = true;
+                }
+            }
+            else if ((shAlive || scpAlive) && ciAlive && !ScpsWinWithChaos)
+                ev.IsRoundEnded = false;
         }
     }
 }
