@@ -91,6 +91,11 @@ namespace SerpentsHand
                         scientistsAlive = true;
                         break;
                 }
+
+                if ((shAlive && ((ciAlive && !plugin.Config.SerpentsHand.ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
+                    || (shAlive && scpAlive && !mtfAlive && !dclassAlive && !scientistsAlive)
+                    || ((shAlive || scpAlive) && ciAlive && !plugin.Config.SerpentsHand.ScpsWinWithChaos))
+                    break;
             }
 
             if (shAlive && ((ciAlive && !plugin.Config.SerpentsHand.ScpsWinWithChaos) || dclassAlive || mtfAlive || scientistsAlive))
