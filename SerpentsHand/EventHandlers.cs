@@ -40,7 +40,7 @@ namespace SerpentsHand
                 else
                     players = ev.Players.GetRange(0, ev.Players.Count);
 
-                foreach (Player player in ev.Players)
+                foreach (Player player in players)
                 {
                     if (player is null)
                         continue;
