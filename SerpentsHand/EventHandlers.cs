@@ -2,8 +2,10 @@
 using Exiled.API.Features;
 using Exiled.Events.EventArgs.Server;
 using Exiled.Loader;
+using MEC;
 using PlayerRoles;
 using Respawning;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,19 +18,42 @@ namespace SerpentsHand
 
         private int Respawns = 0;
         private int SHRespawns = 0;
+        private CoroutineHandle calcuationCoroutine;
 
         public void OnRoundStarted()
         {
+            plugin.IsSpawnable = false;
             Respawns = 0;
             SHRespawns = 0;
+
+            if (calcuationCoroutine.IsRunning)
+                Timing.KillCoroutines(calcuationCoroutine);
+
+            calcuationCoroutine = Timing.RunCoroutine(spawnCalculation());
+        }
+
+        private IEnumerator<float> spawnCalculation()
+        {
+            while (true)
+            {
+                yield return Timing.WaitForSeconds(1f);
+
+                if (Round.IsEnded)
+                    break;
+
+                if (Math.Round(Respawn.TimeUntilSpawnWave.TotalSeconds, 0) != plugin.Config.SpawnWaveCalculation)
+                    continue;
+
+                if (Respawn.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
+                    plugin.IsSpawnable = Loader.Random.Next(100) <= plugin.Config.SerpentsHand.SpawnChance && 
+                        Respawns >= plugin.Config.SerpentsHand.RespawnDelay && 
+                        SHRespawns < plugin.Config.SerpentsHand.MaxSpawns;
+            }
         }
 
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
         {
-            if (Loader.Random.Next(100) <= plugin.Config.SerpentsHand.SpawnChance &&
-                Respawns >= plugin.Config.SerpentsHand.RespawnDelay &&
-                SHRespawns < plugin.Config.SerpentsHand.MaxSpawns &&
-                ev.NextKnownTeam == SpawnableTeamType.ChaosInsurgency)
+            if (plugin.IsSpawnable)
             {
                 bool scpAlive = Player.List.Count(x => x.Role.Team == Team.SCPs) > 0;
                 if (!scpAlive && !plugin.Config.SerpentsHand.CanSpawnWithoutScps)
@@ -54,6 +79,7 @@ namespace SerpentsHand
                     foreach (Player player in Player.List.Where(x => x.Role.Team == Team.SCPs))
                         player.Broadcast(plugin.Config.SerpentsHand.EntryBroadcast);
 
+                plugin.IsSpawnable = false;
                 ev.IsAllowed = false;
                 ev.NextKnownTeam = SpawnableTeamType.None;
             }

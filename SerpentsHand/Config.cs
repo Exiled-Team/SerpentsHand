@@ -11,6 +11,9 @@ namespace SerpentsHand
         [Description("Whether or not debug messages will be shown")]
         public bool Debug { get; set; } = false;
 
+        [Description("How many seconds before a spawnwave occurs should it calculate the spawn chance")]
+        public int SpawnWaveCalculation { get; set; } = 10;
+
         public SerpentsHand SerpentsHand { get; set; } = new();
     }
 }
