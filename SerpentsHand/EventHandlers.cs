@@ -47,9 +47,8 @@ namespace SerpentsHand
                     plugin.Config.SerpentsHand.AddRole(player);
                 }
                 SHRespawns++;
-
                 if (!string.IsNullOrEmpty(plugin.Config.SerpentsHand.EntryAnnoucement))
-                    Cassie.GlitchyMessage(plugin.Config.SerpentsHand.EntryAnnoucement, 0.05f, 0.05f);
+                    Cassie.Message(plugin.Config.SerpentsHand.EntryAnnoucement, isSubtitles: plugin.Config.SerpentsHand.Subtitles);
 
                 if (plugin.Config.SerpentsHand.EntryBroadcast.Duration > 0 || !string.IsNullOrEmpty(plugin.Config.SerpentsHand.EntryBroadcast.Content))
                     foreach (Player player in Player.List.Where(x => x.Role.Team == Team.SCPs))

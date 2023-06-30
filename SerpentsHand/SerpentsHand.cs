@@ -33,9 +33,6 @@ namespace SerpentsHand
         [Description("The maximum number of times Serpents can spawn per game.")]
         public int MaxSpawns { get; set; } = 1;
 
-        [Description("Should Tutorial automaticly be converted to Serpends Hand?")]
-        public bool AutoConvertTutorial { get; set; } = false;
-
         [Description("Determines if Serpents Hand should be able to spawn when there is no SCPs.")]
         public bool CanSpawnWithoutScps { get; set; } = false;
 
@@ -44,6 +41,9 @@ namespace SerpentsHand
 
         [Description("The message annouced by CASSIE when Serpents hand spawn. (Empty = Disabled)")]
         public string EntryAnnoucement { get; set; } = "SERPENTS HAND HASENTERED";
+
+        [Description("Should the Cassie Message use subtitles")]
+        public bool Subtitles { get; set;} = false;
 
         [Description("The broadcast shown to SCPs when the Serpents Hand respawns.")]
         public Exiled.API.Features.Broadcast EntryBroadcast { get; set; } = new Exiled.API.Features.Broadcast("<color=orange>Serpents Hand has entered the facility!</color>");
@@ -83,7 +83,6 @@ namespace SerpentsHand
             PlayerEvent.Hurting += OnHurting;
             PlayerEvent.Shooting += OnShooting;
             PlayerEvent.ActivatingGenerator += OnActivatingGenerator;
-            PlayerEvent.ChangingRole += OnChangingRole;
 
             base.SubscribeEvents();
         }
@@ -94,7 +93,6 @@ namespace SerpentsHand
             PlayerEvent.Hurting -= OnHurting;
             PlayerEvent.Shooting -= OnShooting;
             PlayerEvent.ActivatingGenerator -= OnActivatingGenerator;
-            PlayerEvent.ChangingRole -= OnChangingRole;
 
             base.UnsubscribeEvents();
         }
@@ -124,12 +122,6 @@ namespace SerpentsHand
         {
             if (Check(ev.Player))
                 ev.IsAllowed = false;
-        }
-
-        private void OnChangingRole(ChangingRoleEventArgs ev)
-        {
-            if (AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled)
-                AddRole(ev.Player);
         }
     }
 }
