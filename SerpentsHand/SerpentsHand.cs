@@ -33,6 +33,9 @@ namespace SerpentsHand
         [Description("The maximum number of times Serpents can spawn per game.")]
         public int MaxSpawns { get; set; } = 1;
 
+        [Description("Should Tutorial automaticly be converted to Serpends Hand?")]
+        public bool AutoConvertTutorial { get; set; } = false;
+
         [Description("Determines if Serpents Hand should be able to spawn when there is no SCPs.")]
         public bool CanSpawnWithoutScps { get; set; } = false;
 
@@ -83,6 +86,7 @@ namespace SerpentsHand
             PlayerEvent.Hurting += OnHurting;
             PlayerEvent.Shooting += OnShooting;
             PlayerEvent.ActivatingGenerator += OnActivatingGenerator;
+            PlayerEvent.ChangingRole += OnChangingRole;
 
             base.SubscribeEvents();
         }
@@ -93,6 +97,7 @@ namespace SerpentsHand
             PlayerEvent.Hurting -= OnHurting;
             PlayerEvent.Shooting -= OnShooting;
             PlayerEvent.ActivatingGenerator -= OnActivatingGenerator;
+            PlayerEvent.ChangingRole -= OnChangingRole;
 
             base.UnsubscribeEvents();
         }
@@ -122,6 +127,12 @@ namespace SerpentsHand
         {
             if (Check(ev.Player))
                 ev.IsAllowed = false;
+        }
+
+        private void OnChangingRole(ChangingRoleEventArgs ev)
+        {
+            if (AutoConvertTutorial && ev.NewRole == Role && !ev.Player.IsOverwatchEnabled && !Check(ev.Player))
+                AddRole(ev.Player);
         }
     }
 }
