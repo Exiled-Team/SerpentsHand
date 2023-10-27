@@ -4,7 +4,6 @@ using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
-using Exiled.Events.EventArgs.Server;
 using PlayerRoles;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -110,7 +109,7 @@ namespace SerpentsHand
 
         private void OnHurting(HurtingEventArgs ev)
         {
-            if ((Check(ev.Player) && ev.Attacker.Role.Team == Team.SCPs) ||
+            if ((Check(ev.Player) && ev.Attacker != null && ev.Attacker.Role.Team == Team.SCPs) ||
                 (ev.Attacker != null && Check(ev.Attacker) && ev.Player.Role.Team == Team.SCPs) ||
                 (ev.Attacker != null && Check(ev.Attacker) && Check(ev.Player) && ev.Player != ev.Attacker))
                 ev.IsAllowed = false;
